@@ -1,0 +1,349 @@
+.welcome-area {
+    /* background: rgba(0, 0, 0, 0) url("https://images.pexels.com/photos/2471234/pexels-photo-2471234.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260") no-repeat scroll center center / cover; */
+    background: none;
+}
+.bg-overlay::after {
+    /* background: linear-gradient(-47deg, #00000000 0%, #000000 100%); */
+    background: none;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: black;
+}
+
+.navbar-brand-regular{
+    height: 40px;
+}
+
+.page-subtitle {
+    font-weight: lighter;
+    font-size: 28px;
+    line-height: 40px;
+}
+
+.btn-blits {
+    background: #222;
+}
+
+.btn-blits-black {
+    background: black;
+}
+
+.btn-light {
+    background: #e9ecef;
+    color: black;
+    border-radius: 25px;
+}
+
+.btn-light:hover {
+    color: black;
+}
+
+.btn-blits-white {
+    background: #f8f9fa !important;
+    color: black;
+    border-radius: 25px;
+}
+
+.btn-blits-white:hover {
+    color: black;
+}
+
+.image-box {
+    background: white;
+}
+
+.feature-text {
+    font-size: 18px;
+}
+
+footer {
+    background:black !important;
+}
+
+.footer-link {
+    color: white;
+}
+
+.social-icons > a.blits {
+    background-color: black !important;
+}
+
+.download-area {
+    background: rgba(0, 0, 0, 0) url("https://images.pexels.com/photos/2471234/pexels-photo-2471234.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260") no-repeat fixed center center / cover;
+}
+
+.overylay-blits::after {
+    background-color: rgb(16 16 45 / 54%) !important;
+}
+
+.dark-link {
+    color: #32ccdd;
+}
+
+.dark-link:hover {
+    color: white;
+}
+
+.icon-btn {
+	width: 20px;
+    padding: 0px 20px !important;
+    background: none;
+    border: none;
+}
+
+.icon-btn:focus {
+    border: none;
+}
+
+.modal-title {
+    font-size: 28px;    
+    text-align: center;
+    color: white;
+}
+
+.modal-image {
+    height: 100px;
+}
+
+.app-section {
+    margin-top: 16rem;
+   
+}
+
+@media only screen and (max-width: 480px) {
+    .app-section {
+        margin-top: 6rem;
+    }
+    .app-card {
+        padding: 60px 30px !important;
+    }
+}
+
+.app-option-btn {
+    padding: 60px;
+    color: white;
+    border-radius: 10px;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    /* max-width: 400px;
+    margin-left: auto;
+    margin-right: auto; */
+}
+
+.app-card {
+    padding: 60px;
+    color: white;
+    border-radius: 25px;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+::selection {
+    background: rgba(164, 47, 255, 0.2);
+    color: #a42fff;
+}
+
+.main-color-bg {
+    background-color: #32CCDD;
+}
+
+.secondary-color-bg {
+    background-color: black;
+}
+
+.option-title {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.option-desc {
+    font-size: 18px;
+}
+
+.text-black {
+    color: black !important;
+}
+
+.app-page-subtitle {
+    font-size: 22px;
+}
+
+.label-title {
+    color: black;
+}
+
+.label-value {
+    font-weight: 600;
+    font-size: 20px;
+    color: black;
+}
+
+.app-form-label {
+    font-weight: 600;
+    font-size:18px;
+}
+.rc-slider-track {
+    height: 14px;
+    background-color: transparent !important;
+}
+
+.rc-slider-rail {
+    height: 14px;
+    background: linear-gradient(to right, #0790cc 0%, #d60199 100%) !important;
+}
+
+.rc-slider-handle {
+    width: 28px;
+    height: 28px;
+    margin-top: -8px;
+    background-color: black !important;
+    border-color: white !important;
+}
+
+.rc-slider-handle:hover {
+    border-color: white !important;
+}
+
+.metamask-btn-img {
+    height: 16px;
+    margin-right: 10px;
+    margin-left: -20px;
+}
+
+.active-loan-details {
+    font-size: 18px !important;
+}
+
+.loading-icon {
+    display:inline-block;
+}
+
+table > tbody > tr > td {
+    color: black;
+}
+
+.details-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.details-label {
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+/* Toast styles */
+.Toastify__toast--success {
+    background-color: #32CCDD !important;
+}
+.Toastify__toast--error {
+    background-color: rgb(233, 30, 99) !important;    
+}
+
+body {
+    font-family: monospace !important;
+}
+
+/* .styles_particles__5dxGv, .styles_wrapper__3KXDn {
+    width: 100%;
+} */
+
+.invalid-feedback {
+    color: red !important;
+}
+
+.loans-table td {
+    border-top: 1px solid #343a401a !important;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table thead th {
+    border-bottom: 1px solid #343a401a !important;
+    padding: 20px;
+}
+
+.table-hover tbody tr:hover {
+    /* background: rgba(164, 47, 255, 0.2); */
+    background: rgb(34 34 34 / 11%);
+    color: #a42fff;
+}
+
+.table th {
+    border-top: none;
+}
+
+.connect-btn {
+    font-size: 14px;
+    background: linear-gradient(-47deg, #8731E8 0%, #4528DC 100%);
+    margin-top: 20px;
+    padding: 15px 20px;
+}
+
+.modal-wallet-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.modal-wallet-name {
+    font-weight: bold;
+}
+
+.btn {
+    z-index: 0;
+}
+
+.react-tabs {
+    background: #f8f9fa;
+    border-radius: 25px; 
+}
+
+.react-tabs__tab-list {
+    border-bottom: 1px solid #e4e6e7;
+}
+
+.react-tabs__tab--selected {
+    background-color: rgb(33, 37, 41);
+    font-weight: bold;
+    color: white;
+}
+
+.loading-table {
+    font-size: 18px;
+    /* font-weight: bold; */
+    min-height: 80px;
+    vertical-align: middle;
+    margin-top:50px;
+}
+
+a {
+    color: black;
+    font-weight: bold;
+}
+
+/* a:hover {
+    color: black;
+    font-weight: bold;
+} */
+
+.navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
+    color: rgb(50 204 221);
+}
+
+@media (max-width: 991px) {
+    .navbar-dark .navbar-toggler-icon {
+        background: black;
+    }
+    .navbar-dark .navbar-toggler-icon:before, .navbar-dark .navbar-toggler-icon:after  {
+        background: black;
+    }
+    .navbar-toggler-icon.active {
+        background: transparent !important;
+    }
+}
