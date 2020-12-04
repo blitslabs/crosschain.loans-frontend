@@ -27,8 +27,8 @@ module.exports = {
                     'css-loader'
                 ]
             },
-            
-            
+
+
         ]
     },
     resolve: {
@@ -42,6 +42,11 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new Dotenv(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production')
+            }
+        })
     ],
     devServer: {
         historyApiFallback: true,
