@@ -44,7 +44,7 @@ module.exports = {
         new Dotenv(),
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('production')
+                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         })
     ],
