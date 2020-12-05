@@ -219,13 +219,19 @@ class NewLoan extends Component {
             return
         }
 
+        if(!window.ethereum) {
+            this.setState({ btnLoading: false, showDownloadModal: true, missingWallet: 'ETH' })
+            toast.error('Missing web3 provider', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
+        }
+
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Nonce: ${parseInt(loansCount) + 1}`
         const response = await ETH.generateSecret(message)
 
         if (response.status !== 'OK') {
             console.log(response)
             toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ btnLoading: false, showDownloadModal: true, missingWallet: 'ETH' })
+            this.setState({ btnLoading: false, })
             return
         }
 
