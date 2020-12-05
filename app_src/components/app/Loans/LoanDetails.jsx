@@ -62,7 +62,7 @@ class LoanDetails extends Component {
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
             })
-            .then((data) => {
+            .then(async (data) => {
                 console.log(data)
 
                 if (data[0].status === 'OK') {
@@ -73,9 +73,17 @@ class LoanDetails extends Component {
                     dispatch(saveLoanDetails(data[1].payload))
                 }
 
-                this.setState({ loanId, loading: false })
+                let account
+                try {
+                    account = await ETH.getAccount()
+                } catch (e) {
+                    console.log(e)
+                }
+                this.setState({ loanId, loading: false, account: 'payload' in account ? account.payload : '' })
                 this.checkLoanStatus(loanId)
             })
+
+
     }
 
 
@@ -271,10 +279,7 @@ class LoanDetails extends Component {
                 .then((res) => {
                     console.log('Loan Status: ', res.payload.status)
                     if (res.status === 'OK') {
-                        if (
-                            (status != res.payload.status) ||
-                            (collateralLock && 'status' in collateralLock && collateralLock.status != res.payload.collateralLock.status)
-                        ) {
+                        if (status != res.payload.status) {
                             console.log(res)
                             this.setState({ loadingBtn: false })
                             dispatch(saveLoanDetails(res.payload))
@@ -292,7 +297,7 @@ class LoanDetails extends Component {
     render() {
 
         const { loanDetails, prices } = this.props
-        const { loanId, loading, loadingBtn } = this.state
+        const { loanId, loading, loadingBtn, account } = this.state
 
         if (loading) {
             return <Loading />
@@ -403,12 +408,16 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 4 && !loadingBtn) && (
+                                                    (status == 4 && !loadingBtn && account.toUpperCase() == lender.toUpperCase()) ? (
                                                         <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Accept Repayment
                                                         </button>
-                                                    )
+                                                    ) : (
+                                                            <div class="text-left mt-2 mb-4" style="color: black;">
+                                                                You will receive the borrower's seizable collateral to this address if he fails to repay the loan.
+                                                            </div>
+                                                        )
                                                 }
 
                                                 {

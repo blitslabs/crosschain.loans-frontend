@@ -34,7 +34,7 @@ app.use('/', routesAdmin)
 // global variable
 global.APP_ROOT = path.resolve(__dirname)
 
-app.use((err, req, res, next) => {    
+app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401)
         res.json({ status: 'ERROR', message: 'Unauthorized user' })

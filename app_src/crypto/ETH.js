@@ -110,10 +110,35 @@ const ETH = {
             const accounts = await web3.eth.getAccounts()
             const account = accounts[0]
             return { status: 'OK', payload: account }
-            
+
         } catch (e) {
             return { status: 'ERROR', payload: 'Error loading ETH account' }
         }
+    },
+
+    listenEvents: async () => {
+        console.log('Listening LoanCreated Events...')
+        // Events test        
+        const CONTRACT = '0x80a355E4E0dA302c2850d6f6fBe1F8c66363a286'
+        const HTTP_PROVIDER = 'wss://mainnet.infura.io/ws/v3/6e11c619f5c549d594a10d92161224f6'
+
+        const web3 = new Web3(HTTP_PROVIDER)
+
+        let contract
+        try {
+            contract = new web3.eth.Contract(ABI.LOANS.abi, CONTRACT)
+        } catch (e) {
+            return { status: 'ERROR', message: 'Error instantiating contract' }
+        }
+
+        contract.events.LoanCreated((err, event) => {
+            if(err) {
+                console.log(err)
+                return
+            }
+
+            console.log(event)
+        })
     }
 }
 
