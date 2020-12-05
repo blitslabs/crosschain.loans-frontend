@@ -82,8 +82,6 @@ class LoanDetails extends Component {
                 this.setState({ loanId, loading: false, account: 'payload' in account ? account.payload : '' })
                 this.checkLoanStatus(loanId)
             })
-
-
     }
 
 
@@ -430,47 +428,7 @@ class LoanDetails extends Component {
                                                 }
 
                                             </div>
-                                        </div>
-
-                                        {/* <div className="row mt-4">
-
-                                            <div className="c0l-sm-12 col-md-12 text-center">
-                                                {
-                                                    this.state.loading
-                                                        ?
-                                                        <div style={{ marginTop: '15px', textAlign: 'center' }}>
-                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm. Please be patient, Ethereum can be slow sometimes :)</div>
-                                                            <ReactLoading className="loading-icon" type={'cubes'} color="#32CCDD" height={40} width={60} />
-                                                        </div>
-                                                        :
-                                                        this.state.loadingHarmony
-                                                            ?
-                                                            <div style={{ marginTop: '15px', textAlign: 'center' }}>
-                                                                <ReactLoading className="loading-icon" type={'cubes'} color="#32CCDD" height={40} width={60} />
-                                                            </div>
-                                                            :
-                                                            this.state.loan.bCoinState === 'APPROVED'
-                                                                ?
-                                                                <button onClick={this.handleWithdrawBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                                    <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                    Withdraw Principal</button>
-                                                                :
-                                                                this.state.loan.bCoinState === 'WITHDRAWN'
-                                                                    ?
-                                                                    <button onClick={this.handleRepayBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                                        <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                    Repay Loan</button>
-                                                                    :
-                                                                    this.state.loan.bCoinState === 'CLOSED' && this.state.loan.aCoinState === 'LOCKED'
-                                                                        ? <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />Unlock Collateral</button>
-
-                                                                        : null
-
-                                                }
-
-                                            </div>
-                                        </div> */}
+                                        </div>                                       
                                     </div>
                                 </div>
                             </div>
