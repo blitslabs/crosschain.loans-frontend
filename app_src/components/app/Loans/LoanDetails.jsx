@@ -78,6 +78,7 @@ class LoanDetails extends Component {
                 let eth_account
                 try {
                     eth_account = await ETH.getAccount()
+                    eth_account = eth_account.payload
                 } catch (e) {
                     console.log(e)
                 }
@@ -95,7 +96,7 @@ class LoanDetails extends Component {
                 this.setState({
                     loanId,
                     loading: false,
-                    eth_account: 'payload' in eth_account ? eth_account.payload : '',
+                    eth_account,
                     one_account,
                 })
                 this.checkLoanStatus(loanId)

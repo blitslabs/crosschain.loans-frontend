@@ -72,3 +72,12 @@ export function getLoansHistory() {
         }
     })
 }
+
+export function getAccountLoansCount(params) {
+    return fetch(API_WALLET + 'loans/accountCount/' + params.account, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}

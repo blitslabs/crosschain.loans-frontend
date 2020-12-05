@@ -18,7 +18,7 @@ import { saveLoanAssets } from '../../../actions/loanAssets'
 
 // API
 import {
-    getLoansSettings, getLoanAssets
+    getLoansSettings, getLoanAssets, getAccountLoansCount
 } from '../../../utils/api'
 
 // Libraries
@@ -51,7 +51,8 @@ class NewLoan extends Component {
         loading: true,
         duration: '30',
         showDownloadModal: false,
-        missingWallet: ''
+        missingWallet: '',
+        loansCount: ''
     }
 
     componentDidMount() {
@@ -69,9 +70,19 @@ class NewLoan extends Component {
 
         const network = window.ethereum.chainId === '0x1' ? 'mainnet' : 'testnet'
 
+        let account
+        try {
+            account = await ETH.getAccount()
+            account = account.payload
+        } catch (e) {
+            account = ''
+        }
+
+
         Promise.all([
             getLoansSettings({ network }),
-            getLoanAssets({ operation: 'LEND', network })
+            getLoanAssets({ operation: 'LEND', network }),
+            getAccountLoansCount({ account })
         ])
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
@@ -80,9 +91,11 @@ class NewLoan extends Component {
                 console.log(data)
                 const loanSettings = data[0].payload
                 const loanAssets = data[1].payload
+                const loansCount = data[2].payload
 
                 dispatch(saveLoanSettings(loanSettings))
                 dispatch(saveLoanAssets(loanAssets))
+
 
                 const dai = Object.values(loanAssets).filter((a) => a.symbol === 'DAI')[0]
 
@@ -91,7 +104,11 @@ class NewLoan extends Component {
                     .then((data) => {
                         console.log(data)
                         dispatch(saveLendRequest(data))
-                        this.setState({ asset: dai.contractAddress, network, amount: data.minLoanAmount })
+                        this.setState({
+                            asset: dai.contractAddress,
+                            network, amount: data.minLoanAmount,
+                            loansCount
+                        })
                     })
                     .catch((err) => {
                         console.log(err)
@@ -189,7 +206,7 @@ class NewLoan extends Component {
 
     handleContinueBtn = async (e) => {
         e.preventDefault()
-        const { asset, amount, aCoinLender, duration, network } = this.state
+        const { asset, amount, aCoinLender, duration, network, loansCount } = this.state
         const { dispatch, history } = this.props
         this.setState({ btnLoading: true })
 
@@ -202,7 +219,7 @@ class NewLoan extends Component {
             return
         }
 
-        const message = 'You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan.'
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Nonce: ${parseInt(loansCount) + 1}`
         const response = await ETH.generateSecret(message)
 
         if (response.status !== 'OK') {

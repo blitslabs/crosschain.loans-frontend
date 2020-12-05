@@ -71,6 +71,35 @@ const BlitsLoans = {
             return payload
         },
 
+        getAccountLoans: async(loansContractAddress) => {
+            if(!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected'}
+            }
+
+            if(!loansContractAddress) return { status: 'ERROR', message: 'Missing loans contract address'}
+
+            await window.ethereum.enable()
+
+            // Connect to web3 provider
+            const web3 = new Web3(window.ethereum)
+
+            // Get Lender Account
+            const accounts = await web3.eth.getAccounts()
+            const lender = accounts[0]
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract  = new web3.eth.Contract(ABI.LOANS.abi, loansContractAddress)
+            } catch(e) {
+                return { status: 'ERROR', message: 'Error instantiating contract'}
+            }
+
+            const accountLoans = await contract.methods.userLoans(lender).call()
+            console.log(accountLoans)
+            return accountLoans
+        },
+
 
         createLoan: async (lenderAuto, secretHashB1, secretHashAutoB1, principal, tokenContractAddress, loansContractAddress, aCoinLenderAddress) => {
 
