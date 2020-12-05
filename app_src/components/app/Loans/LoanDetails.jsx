@@ -22,6 +22,7 @@ import { toast } from 'react-toastify'
 import Stepper from 'react-stepper-horizontal'
 import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
+import ONE from '../../../crypto/ONE'
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
 import ABI from '../../../crypto/ABI'
@@ -73,13 +74,30 @@ class LoanDetails extends Component {
                     dispatch(saveLoanDetails(data[1].payload))
                 }
 
-                let account
+                // Get ETH Account
+                let eth_account
                 try {
-                    account = await ETH.getAccount()
+                    eth_account = await ETH.getAccount()
                 } catch (e) {
                     console.log(e)
                 }
-                this.setState({ loanId, loading: false, account: 'payload' in account ? account.payload : '' })
+
+                // Get ONE Account
+                let one_account
+                try {
+                    one_account = await ONE.getAccount()
+                    one_account = one_account.payload.address
+                } catch (e) {
+                    console.log(e)
+                    one_account = ''
+                }
+
+                this.setState({
+                    loanId,
+                    loading: false,
+                    eth_account: 'payload' in eth_account ? eth_account.payload : '',
+                    one_account,
+                })
                 this.checkLoanStatus(loanId)
             })
     }
@@ -295,7 +313,7 @@ class LoanDetails extends Component {
     render() {
 
         const { loanDetails, prices } = this.props
-        const { loanId, loading, loadingBtn, account } = this.state
+        const { loanId, loading, loadingBtn, eth_account, one_account } = this.state
 
         if (loading) {
             return <Loading />
@@ -303,7 +321,7 @@ class LoanDetails extends Component {
 
         const {
             tokenSymbol, tokenName, tokenContractAddress, principal, interest, loanExpiration,
-            status, lender, borrower, blockchainLoanId, collateralLock,
+            status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress
         } = loanDetails
 
         const collateralPrice = BigNumber(prices.ONE.priceBTC).times(prices.BTC.priceUSD)
@@ -406,29 +424,33 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 4 && !loadingBtn && account.toUpperCase() == lender.toUpperCase()) ? (
+                                                    (status == 4 && !loadingBtn && eth_account.toUpperCase() == lender.toUpperCase()) && (
                                                         <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Accept Repayment
                                                         </button>
-                                                    ) : (
-                                                            <div class="text-left mt-2 mb-4" style="color: black;">
-                                                                You will receive the borrower's seizable collateral to this address if he fails to repay the loan.
-                                                            </div>
-                                                        )
+                                                    )
                                                 }
 
                                                 {
-                                                    (status == 6 && !loadingBtn && collateralStatus === 'LOCKED') && (
+                                                    (status == 4 && !loadingBtn && eth_account.toUpperCase() != lender.toUpperCase()) && (
+                                                        <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
+                                                            Waiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral. 
+                                                            If the repayment is not accepted before the expiration, then you'll be able to refund your repayment and unlock your refundable collateral.
+                                                        </div>
+                                                    )
+                                                }
+
+                                                {
+                                                    (status == 6 && !loadingBtn && collateralStatus === 'LOCKED' && one_account.toUpperCase() == aCoinLenderAddress.toUpperCase()) && (
                                                         <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Unlock Collateral
                                                         </button>
                                                     )
                                                 }
-
                                             </div>
-                                        </div>                                       
+                                        </div>
                                     </div>
                                 </div>
                             </div>
