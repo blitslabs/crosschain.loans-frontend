@@ -28,7 +28,7 @@ import MyParticles from './MyParticles'
 import ABI from '../../../crypto/ABI'
 
 // API
-import { getLoanDetails, getLoansSettings, getAccountLoansCount } from '../../../utils/api'
+import { getLoanDetails, getLoansSettings, getAccountLoansCount, getLoanNonce } from '../../../utils/api'
 
 // Actions
 import { saveLoanDetails } from '../../../actions/loanDetails'
@@ -136,10 +136,11 @@ class LoanDetails extends Component {
         // Get Nonce
         let loansCount
         try{
-            loansCount = (await (await getAccountLoansCount({ account: bCoinBorrowerAddress, actor: 'borrower' })).json()).payload
+            loansCount = (await (await getAccountLoansCount({ account: bCoinBorrowerAddress, actor: 'borrower', blockchain: 'ETH' })).json()).payload
         } catch(e) {
             console.log(e)
             toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
         }
 
         // Generate secretHash
@@ -187,8 +188,18 @@ class LoanDetails extends Component {
 
         this.setState({ loadingBtn: true })
 
+        // Get Loan Nonce
+        let borrowerLoanNonce
+        try{
+            borrowerLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.borrowerNonce
+        } catch(e) {
+            console.log(e)
+            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
+        }
+
         // Generate secretHash
-        const message = 'You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral.'
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. Borrower Loan Nonce: ${borrowerLoanNonce}`
         const signResponse = await ETH.generateSecret(message)
 
         if (signResponse.status !== 'OK') {
@@ -243,8 +254,18 @@ class LoanDetails extends Component {
 
         this.setState({ loadingBtn: true })
 
+        // Get Loan Nonce
+        let lenderLoanNonce
+        try{
+            lenderLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.lenderNonce
+        } catch(e) {
+            console.log(e)
+            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
+        }
+
         // Generate secretHash        
-        const message = 'You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan.'
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Loan Nonce: ${lenderLoanNonce}`
         const signResponse = await ETH.generateSecret(message)
 
         if (signResponse.status !== 'OK') {

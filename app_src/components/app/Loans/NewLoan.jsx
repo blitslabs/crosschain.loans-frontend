@@ -82,7 +82,7 @@ class NewLoan extends Component {
         Promise.all([
             getLoansSettings({ network }),
             getLoanAssets({ operation: 'LEND', network }),
-            getAccountLoansCount({ account, actor: 'lender' })
+            getAccountLoansCount({ account, actor: 'lender', blockchain: 'ETH' })
         ])
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
