@@ -38,7 +38,7 @@ import { saveLoanSettings } from '../../../actions/loanSettings'
 class LoanDetails extends Component {
 
     intervalId = 0
-    
+
     state = {
         loading: true,
         loadingBtn: false,
@@ -62,7 +62,7 @@ class LoanDetails extends Component {
         Promise.all([
             getLoansSettings({ network }),
             getLoanDetails({ loanId }),
-            
+
         ])
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
@@ -139,12 +139,12 @@ class LoanDetails extends Component {
         }
 
         const bCoinBorrowerAddress = ethAccountResponse.payload
-        
+
         // Get Nonce
         let loansCount
-        try{
+        try {
             loansCount = (await (await getAccountLoansCount({ account: bCoinBorrowerAddress, actor: 'borrower', blockchain: 'ETH' })).json()).payload
-        } catch(e) {
+        } catch (e) {
             console.log(e)
             toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             return
@@ -164,7 +164,7 @@ class LoanDetails extends Component {
         const { secret, secretHash } = signResponse.payload
         const secretA1 = secret
         const secretHashA1 = secretHash
-        
+
 
         const response = await BlitsLoans.ONE.lockCollateral(
             //requiredCollateral,
@@ -197,9 +197,9 @@ class LoanDetails extends Component {
 
         // Get Loan Nonce
         let borrowerLoanNonce
-        try{
+        try {
             borrowerLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.borrowerNonce
-        } catch(e) {
+        } catch (e) {
             console.log(e)
             toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             return
@@ -263,9 +263,9 @@ class LoanDetails extends Component {
 
         // Get Loan Nonce
         let lenderLoanNonce
-        try{
+        try {
             lenderLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.lenderNonce
-        } catch(e) {
+        } catch (e) {
             console.log(e)
             toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             return
@@ -324,15 +324,15 @@ class LoanDetails extends Component {
 
     checkLoanStatus = async (loanId) => {
 
-        const { loanDetails, dispatch } = this.props
-        const { status, collateralLock } = loanDetails
-
-        if (!loanId || !status) return
+        if (!loanId) return
+        const self = this
 
         this.intervalId = setInterval(() => {
             getLoanDetails({ loanId })
                 .then(data => data.json())
                 .then((res) => {
+                    const { loanDetails, dispatch } = self.props
+                    const { status } = loanDetails
                     console.log('Loan Status: ', res.payload.status)
                     if (res.status === 'OK') {
                         if (status != res.payload.status) {
@@ -475,7 +475,7 @@ class LoanDetails extends Component {
                                                 {
                                                     (status == 4 && !loadingBtn && eth_account.toUpperCase() != lender.toUpperCase()) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
-                                                            Waiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral. 
+                                                            Waiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral.
                                                             If the repayment is not accepted before the expiration, then you'll be able to refund your repayment and unlock your refundable collateral.
                                                         </div>
                                                     )
