@@ -74,7 +74,7 @@ export function getLoansHistory() {
 }
 
 export function getAccountLoansCount(params) {
-    return fetch(API_WALLET + 'loans/accountCount/' + params.account, {
+    return fetch(API_WALLET + `loans/accountCount/${params.account}/${params.actor}` , {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

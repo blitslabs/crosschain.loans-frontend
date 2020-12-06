@@ -82,7 +82,7 @@ class NewLoan extends Component {
         Promise.all([
             getLoansSettings({ network }),
             getLoanAssets({ operation: 'LEND', network }),
-            getAccountLoansCount({ account })
+            getAccountLoansCount({ account, actor: 'lender' })
         ])
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
@@ -225,7 +225,7 @@ class NewLoan extends Component {
             return
         }
 
-        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Nonce: ${parseInt(loansCount) + 1}`
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Loan Nonce: ${parseInt(loansCount) + 1}`
         const response = await ETH.generateSecret(message)
 
         if (response.status !== 'OK') {
