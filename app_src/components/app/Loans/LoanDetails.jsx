@@ -36,6 +36,9 @@ import { saveLoanSettings } from '../../../actions/loanSettings'
 
 
 class LoanDetails extends Component {
+
+    intervalId = 0
+    
     state = {
         loading: true,
         loadingBtn: false,
@@ -100,10 +103,14 @@ class LoanDetails extends Component {
                     eth_account,
                     one_account,
                 })
+
                 this.checkLoanStatus(loanId)
             })
     }
 
+    componentWillUnmount() {
+        clearInterval(this.intervalId)
+    }
 
     /**
      * @dev Lock Collateral
@@ -322,7 +329,7 @@ class LoanDetails extends Component {
 
         if (!loanId || !status) return
 
-        setInterval(() => {
+        this.intervalId = setInterval(() => {
             getLoanDetails({ loanId })
                 .then(data => data.json())
                 .then((res) => {
