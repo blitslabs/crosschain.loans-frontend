@@ -28,7 +28,7 @@ import MyParticles from './MyParticles'
 import ABI from '../../../crypto/ABI'
 
 // API
-import { getLoanDetails, getLoansSettings } from '../../../utils/api'
+import { getLoanDetails, getLoansSettings, getAccountLoansCount } from '../../../utils/api'
 
 // Actions
 import { saveLoanDetails } from '../../../actions/loanDetails'
@@ -58,7 +58,8 @@ class LoanDetails extends Component {
 
         Promise.all([
             getLoansSettings({ network }),
-            getLoanDetails({ loanId })
+            getLoanDetails({ loanId }),
+            
         ])
             .then((responses) => {
                 return Promise.all(responses.map(res => res.json()))
@@ -120,8 +121,29 @@ class LoanDetails extends Component {
 
         this.setState({ loadingBtn: true })
 
+        // Get ETH account
+        const ethAccountResponse = await ETH.getAccount()
+
+        if (ethAccountResponse.status !== 'OK') {
+            console.log(ethAccountResponse)
+            toast.error(ethAccountResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const bCoinBorrowerAddress = ethAccountResponse.payload
+        
+        // Get Nonce
+        let loansCount
+        try{
+            loansCount = (await (await getAccountLoansCount({ account: bCoinBorrowerAddress, actor: 'borrower' })).json()).payload
+        } catch(e) {
+            console.log(e)
+            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        }
+
         // Generate secretHash
-        const message = 'You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral.'
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. Borrower Loan Nonce: ${parseInt(loansCount) + 1}`
         const signResponse = await ETH.generateSecret(message)
 
         if (signResponse.status !== 'OK') {
@@ -134,18 +156,7 @@ class LoanDetails extends Component {
         const { secret, secretHash } = signResponse.payload
         const secretA1 = secret
         const secretHashA1 = secretHash
-
-        // Get ETH account
-        const ethAccountResponse = await ETH.getAccount()
-
-        if (ethAccountResponse.status !== 'OK') {
-            console.log(ethAccountResponse)
-            toast.error(ethAccountResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loadingBtn: false })
-            return
-        }
-
-        const bCoinBorrowerAddress = ethAccountResponse.payload
+        
 
         const response = await BlitsLoans.ONE.lockCollateral(
             //requiredCollateral,
