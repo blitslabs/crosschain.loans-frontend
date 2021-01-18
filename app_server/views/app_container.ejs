@@ -4,52 +4,164 @@
 <head>
 
 	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="apple-touch-icon" sizes="180x180" href="<%= host %>/assets/images/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="<%= host %>/assets/images/favicon/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="<%= host %>/assets/images/favicon/favicon-16x16.png">
-	<link rel="manifest" href="<%= host %>/assets/images/favicon/site.webmanifest">
+    <title>Cross-chain Loans</title>
+    <!-- Enable Zoom on Mobile Device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta property="og:image" content="#" />
 
-	<!-- Title  -->
-	<title>Cross-chain Loans</title>
+    <!-- Favicon  -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= host %>/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= host %>/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= host %>/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="<%= host %>/assets/images/favicon/site.webmanifest">
+    <link rel="icon" href="<%= host %>/assets/img/favicon.png">
 
-	<!-- Favicon  -->
-	<link rel="icon" href="<%= host %>/assets/img/favicon.png">
+    <!-- Fonts CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700" rel="stylesheet">
+    <link href="<%= host %>/assets/dist/fonts/SFProDisplay.css" rel="stylesheet">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="assets/dist/css/app.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=IBM Plex Mono' rel='stylesheet'>
+    <style>
+        * {
+            font-family: 'IBM Plex Mono', monospace;
+        }
 
-	<!-- ***** All CSS Files ***** -->
+        a {
+            color: rgb(50, 204, 221);
+        }
 
-	<!-- Style css -->
-	<link rel="stylesheet" href="<%= host %>/assets/css/style.css">
+        a:hover {
+            color: #a93aff;
+        }
 
-	<!-- Responsive css -->
-	<link rel="stylesheet" href="<%= host %>/assets/css/responsive.css">
+        .footer-three .footer .footer-social li {
+            background-color: black;
+        }
+
+        .footer-three .footer .footer-social li:hover {
+            background: #32CCDD;
+        }
+
+        .footer-three .footer .footer-widget li a:hover,
+        .footer-three .footer-bottom-nav a:hover {
+            color: #32CCDD;
+        }
+
+        .db-btn__outline:before {
+            background: black;
+            color: white;
+        }
+
+        .hero-thirteen {
+            background: url(assets/images/bg.jpg);
+        }
+
+        .btn {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            background-color: black;
+            line-height: 1;
+            text-align: center;
+            padding: 18px 30px;
+            border: 0 none;
+            border-radius: 25px;
+            outline: 0 none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn:hover,
+        .btn:active {
+            color: white;
+            background: linear-gradient(-47deg, #8731E8 0%, #4528DC 100%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .navigation.sticky-nav {
+            background-color: black;
+        }
+
+        .navigation-main__logo,
+        .navigation.sticky-nav .sticky-nav__logo {
+            height: 30px;
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .features-four .feature {
+                margin-right: 0px !important;
+            }
+
+            .features-four .feature__icon {
+                margin-right: 0px !important;
+            }
+        }
+
+        @media only screen and (min-width: 992px) {
+            .features-four .feature {
+                align-items: center !important;
+            }
+
+            .features-four .feature__icon {
+                margin-right: 0px !important;
+            }
+
+            #wallet_mockup_02 {
+                margin-top: 100px;
+            }
+
+            .switchable-2:before {
+                background: transparent !important;
+            }
+
+            #globe-img {
+                margin-top: -150px;
+                margin-right: 150px
+            }
+
+            #puzzle-img {
+                margin-top: -180px;
+                margin-left: 150px;
+            }
+
+            .testimonial-three {
+                padding-bottom: 5.625rem;
+            }
+        }
+
+        .feature__title {
+            margin-top: 1.25rem;
+        }
+
+        ::selection {
+            background: #edd5ff;
+            color: #a93aff;
+        }
+    </style>
 </head>
 
 <body class="stretched">
 
-	<div id="root"></div>
+	<div id="root" class="main-wrapper home-13 layout-strong"></div>
 
-
-	<!-- ***** All jQuery Plugins ***** -->
-
-	<!-- jQuery(necessary for all JavaScript plugins) -->
-	<script src="<%= host %>/assets/js/jquery/jquery-3.3.1.min.js"></script>
-
-	<!-- Bootstrap js -->
-	<script src="<%= host %>/assets/js/bootstrap/popper.min.js"></script>
-	<script src="<%= host %>/assets/js/bootstrap/bootstrap.min.js"></script>
-
-	<!-- Plugins js -->
-	<script src="<%= host %>/assets/js/plugins/plugins.min.js"></script>
-
-	<!-- Active js -->
-	<script src="<%= host %>/assets/js/active.js"></script>
+	 <!-- Main JS Files -->
+	 <script src="<%= host %>/assets/dist/js/app.min.js"></script>	 
 
 	<!-- React -->
-	<script src="<%= react_host %>/js/app.js"></script>
+	<script src="<%= react_host %>/assets/bundle.js"></script>
 </body>
 
 </html>

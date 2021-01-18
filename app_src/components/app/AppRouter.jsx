@@ -3,6 +3,7 @@ import { Redirect, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 // Components
+import Home from './Loans/Home'
 import LoansHome from './Loans/LoansHome'
 import NewLoan from './Loans/NewLoan'
 import ConfirmLoan from './Loans/ConfirmLoan'
@@ -22,7 +23,7 @@ class AppRouter extends Component {
 
         return (
             <Fragment>
-                <Route path={match.path} exact component={LoansHome} />
+                <Route path={match.path} exact component={Home} />
                 <Route path={`${match.path}loans`} exact component={LoansHome} />
                 <Route path={`${match.path}borrow`} component={BorrowDashboard} />
                 <Route path={`${match.path}lend`} exact={true} component={NewLoan} />

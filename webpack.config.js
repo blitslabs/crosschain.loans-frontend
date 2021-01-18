@@ -50,14 +50,14 @@ module.exports = {
         historyApiFallback: true,
         hot: true,
         inline: true,
-        host: 'genesisblock.ddns.net', // genesisblock.ddns.net
+        host: 'localhost', // localhost
         port: 8080,
         contentBase: path.join(__dirname, '/public'),
         watchContentBase: true,
         proxy: [
             {
                 context: ['^/api/*', '^/app/*'],
-                target: 'http://genesisblock.ddns.net:3000/',
+                target: 'http://localhost:3000/',
                 secure: false
             }
         ],

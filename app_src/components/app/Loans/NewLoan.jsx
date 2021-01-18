@@ -112,6 +112,7 @@ class NewLoan extends Component {
                     })
                     .catch((err) => {
                         console.log(err)
+                        this.setState({ loading: false })
                     })
             })
     }

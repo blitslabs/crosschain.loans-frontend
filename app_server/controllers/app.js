@@ -10,3 +10,9 @@ module.exports.renderApp = function(req, res) {
         react_host: process.env.REACT_HOST,
     })
 }
+
+module.exports.renderHome = (req, res) => {
+    res.render('home', {
+        host: process.env.SERVER_HOST
+    })
+}

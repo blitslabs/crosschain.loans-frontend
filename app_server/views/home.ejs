@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Blits | DeFi For Humans - Blits Labs</title>
+    <!-- Enable Zoom on Mobile Device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta property="og:image" content="#" />
+
+    <!-- Favicon  -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= host %>/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= host %>/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= host %>/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="<%= host %>/assets/images/favicon/site.webmanifest">
+    <link rel="icon" href="<%= host %>/assets/img/favicon.png">
+
+    <!-- Fonts CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700" rel="stylesheet">
+    <link href="assets/dist/fonts/SFProDisplay.css" rel="stylesheet">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="assets/dist/css/app.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=IBM Plex Mono' rel='stylesheet'>
+    <style>
+        * {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        a {
+            color: rgb(50, 204, 221);
+        }
+
+        a:hover {
+            color: #a93aff;
+        }
+
+        .footer-three .footer .footer-social li {
+            background-color: black;
+        }
+
+        .footer-three .footer .footer-social li:hover {
+            background: #32CCDD;
+        }
+
+        .footer-three .footer .footer-widget li a:hover,
+        .footer-three .footer-bottom-nav a:hover {
+            color: #32CCDD;
+        }
+
+        .db-btn__outline:before {
+            background: black;
+            color: white;
+        }
+
+        .hero-thirteen {
+            background: url(assets/images/bg.jpg);
+        }
+
+        .btn {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            background-color: black;
+            line-height: 1;
+            text-align: center;
+            padding: 18px 30px;
+            border: 0 none;
+            border-radius: 25px;
+            outline: 0 none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn:hover,
+        .btn:active,
+        .btn:not(:disabled):not(.disabled):active,
+        .btn:not(:disabled):not(.disabled).active {
+            color: white;
+            background: linear-gradient(-47deg, #8731E8 0%, #4528DC 100%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:focus, .btn.focus {
+            box-shadow: 0 0 0 0.2rem rgb(0 255 230 / 25%);
+        }
+
+        .navigation.sticky-nav {
+            background-color: black;
+        }
+
+        .navigation-main__logo,
+        .navigation.sticky-nav .sticky-nav__logo {
+            height: 30px;
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .features-four .feature {
+                margin-right: 0px !important;
+            }
+
+            .features-four .feature__icon {
+                margin-right: 0px !important;
+            }
+        }
+
+        @media only screen and (min-width: 992px) {
+            .features-four .feature {
+                align-items: center !important;
+            }
+
+            .features-four .feature__icon {
+                margin-right: 0px !important;
+            }
+
+            #wallet_mockup_02 {
+                margin-top: 100px;
+            }
+
+            .switchable-2:before {
+                background: transparent !important;
+            }
+
+            #globe-img {
+                margin-top: -150px;
+                margin-right: 150px
+            }
+
+            #puzzle-img {
+                margin-top: -180px;
+                margin-left: 150px;
+            }
+
+            .testimonial-three {
+                padding-bottom: 5.625rem;
+            }
+        }
+
+        .feature__title {
+            margin-top: 1.25rem;
+        }
+
+        ::selection {
+            background: #edd5ff;
+            color: #a93aff;
+        }
+
+        .navigation-menu__link {
+            color: black;
+        }
+        .hero-seven .hero-content {
+            padding-top: 24.875rem !important;
+        }
+
+        .launch-app-btn {
+            font-size: 18px !important;
+            border-radius: 50px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main-wrapper home-13 layout-strong">
+        <!-- =========== Navigation Start ============ -->
+        <header
+            class="navigation navigation__transparent navigation__caps navigation__separate navigation__right navigation__btn-fill">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="navigation-content">
+                            <a href="#" class="navigation__brand">
+                                <img class="navigation-main__logo" src="assets/images/logo.png"
+                                    alt="blits logo">
+                                <img class="sticky-nav__logo" src="assets/images/logo_white.png" alt="blits logo">
+                            </a>
+                            <button class="navigation__toggler"></button>
+                            <!-- offcanvas toggle button -->
+                            <nav class="navigation-wrapper">
+                                <button class="offcanvas__close">✕</button>
+                                <!-- offcanvas close button -->
+                                <ul class="navigation-menu" id="nav">
+                                    <li class="navigation-menu__item">
+                                        <a class="navigation-menu__link" href="#feature">Features</a>
+                                    </li>
+                                    <li class="navigation-menu__item">
+                                        <a class="navigation-menu__link" target="_blank"
+                                            href="https://t.me/blits_community">Telegram</a>
+                                    </li>
+                                    <li class="navigation-menu__item">
+                                        <a class="navigation-menu__link" href="#">Blog</a>
+                                    </li>
+
+                                    <li class="navigation-menu__item">
+                                        <a class="navigation-menu__link"
+                                            href="https://crosschain.loans">crosschain.loans</a>
+                                    </li>
+                                    <!-- <li class="navigation-menu__item">
+                                        <a class="navigation-menu__link" href="#">Pages</a>
+                                        
+                                        <ul class="navigation-dropdown">
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="#">Blog</a>
+                                                <ul class="navigation-dropdown">
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link"
+                                                            href="blog-right-sidebar.html">Blog Right Sidebar</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link"
+                                                            href="blog-left-sidebar.html">Blog Left Sidebar</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link" href="blog-full.html">Blog
+                                                            Full</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link"
+                                                            href="blog-details-right-sidebar.html">Blog details Right
+                                                            Sidebar</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link"
+                                                            href="blog-details-left-sidebar.html">Blog Details Left
+                                                            Sidebar</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link"
+                                                            href="blog-details-full.html">Blog Details Full</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="#">Download</a>
+                                                <ul class="navigation-dropdown algin-left">
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link" href="download.html">Download
+                                                            One</a>
+                                                    </li>
+                                                    <li class="navigation-menu__item">
+                                                        <a class="navigation-menu__link" href="download-2.html">Download
+                                                            Two</a>
+                                                    </li>
+                                                </ul>
+
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="reviews.html">Reviews Page</a>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="faq.html">FAQs</a>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="sign-in.html">Login</a>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="sign-up.html">Sign up</a>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="thank-you.html">Thank you</a>
+                                            </li>
+                                            <li class="navigation-menu__item">
+                                                <a class="navigation-menu__link" href="404.html">Error Page</a>
+                                            </li>
+                                        </ul>
+                                    </li> -->
+                                </ul>
+                            </nav>
+                            <!-- nav item end -->
+                            <div class="navigation-button navigation-button-couple">
+
+                                <a href="#download" style="background-color:black"
+                                    class="db-btn nav-cta-btn navigation-button-couple__fill">Download</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+            </div>
+        </header>
+        <!-- =========== Navigation End ============ -->
+
+        <!-- =========== Hero Start ============ -->
+        <section class="hero-seven hero-text-light content-left " style="background-color:whitesmoke; height: 100vh;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="hero">
+                            <div class="hero-wrapper">
+                                <div class="hero-content">
+                                    <h1 class="hero__title" style="color:black">Cross-chain Loans</h1>
+                                    <p class="hero__caption" style="color:black">A decentralized lending marketplace
+                                        across blockchains.</p>
+                                    <div class="cta__buttons">
+                                        <a href="#" class="btn launch-app-btn">Launch App</a>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-media" style="top: 1%; right: 14%;">
+                <picture class="hero-img">
+                    <img src="<%= host %>/assets/images/abs_3.png" style="width: 15%" alt="cross-chain loans">
+                </picture>
+            </div>
+            <div class="hero-media" style="top: 38%; ">
+                <picture class="hero-img">
+                    <img src="<%= host %>/assets/images/abs_2_1.png" style="width: 55%;" alt="cross-chain loans">
+                </picture>
+            </div>
+            <div class="hero-media" style="right:-20%; top: 90%">
+                <picture class="hero-img">
+                    <img src="<%= host %>/assets/images/24_3.png" style="width:20%" alt="cross-chain loans">
+                </picture>
+            </div>
+        </section>
+        <!-- =========== Hero End ============ -->
+
+
+
+        <!-- =========== Features-4 Start ============ -->
+        <section class="features-four" id="feature">
+            <div class="container">
+                <!-- section title row end -->
+                <div class="row">
+
+                    <div class="col-12 col-md-4">
+                        <div class="feature">
+                            <span class="feature__icon">
+                                <img style="height:135px" src="assets/images/21_3.png" />
+                            </span>
+                            <h5 class="feature__title">Non-custodial</h5>
+                            <p class="feature__description">You never share your private keys so only you control your
+                                assets.</p>
+                        </div>
+                    </div>
+                    <!-- single item end -->
+                    <div class="col-12 col-md-4">
+                        <div class="feature">
+                            <span class="feature__icon">
+                                <img style="height:135px" src="assets/images/24_2.png" />
+                            </span>
+                            <h5 class="feature__title">Cross-chain</h5>
+                            <p class="feature__description">Manage your Harmony, Ethereum, HRC20, HRC721, ERC20 & ERC721
+                                Tokens in a trustless manner.</p>
+                        </div>
+                    </div>
+                    <!-- single item end -->
+                    <div class="col-12 col-md-4">
+                        <div class="feature">
+                            <span class="feature__icon">
+                                <img style="height:135px" src="assets/images/23_1.png" />
+                            </span>
+                            <h5 class="feature__title">Mobile Native DeFi</h5>
+                            <p class="feature__description">The easiest way to access DEFI protocols across multiple
+                                Harmony & Ethereum.</p>
+                        </div>
+                    </div>
+                    <!-- single item end -->
+
+
+                </div>
+                <!-- row end -->
+            </div>
+        </section>
+        <!-- =========== Features-4 End ============ -->
+
+        <!-- =========== Features-2 Start ============ -->
+        <section class="features-two" id="feature" style="padding-top: 0px !important;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-title" style="margin-bottom: 5.25rem !important;">
+                            <h2>Welcome to a New DeFi Experience</h2>
+                        </div>
+                    </div>
+                    <!-- section title end -->
+                </div>
+                <!-- section title row end -->
+                <div class="row">
+                    <div class="col-12 col-md-11 offset-md-1">
+                        <div class="feature-wrapper">
+                            <ul class="feature">
+                                <li class="feature__list">
+                                    <span class="feature__icon"></span>
+                                    <div>
+                                        <h5 class="feature__title">Mobile Native DeFi Protocols</h5>
+                                        <p class="feature__description">All of your favorite DeFi protocols for the
+                                            mobile world.</p>
+                                    </div>
+                                </li>
+                                <!-- single item end -->
+                                <li class="feature__list">
+                                    <span class="feature__icon"></span>
+                                    <div>
+                                        <h5 class="feature__title">Cross-chain DeFi</h5>
+                                        <p class="feature__description">Explore new DeFi worlds beyond the Ethereum
+                                            blockchain.</p>
+                                    </div>
+                                </li>
+                                <!-- single item end -->
+                                <li class="feature__list">
+                                    <span class="feature__icon"></span>
+                                    <div>
+                                        <h5 class="feature__title">CeFi - DeFi Interoperability</h5>
+                                        <p class="feature__description">Combine the best of Tradicional Finance and DeFi
+                                            in a seamless experience.
+                                        </p>
+                                    </div>
+                                </li>
+                                <!-- single item end -->
+                            </ul>
+                            <!-- feature content end -->
+                            <div id="wallet_mockup_02" class="feature-media reveal">
+                                <picture class="feature-media__img">
+                                    <source srcset="assets/images/mockup_white_hd-min.png" media="(min-width: 768px)">
+                                    <img style="max-width: 450px;" src="assets/images/mockup_white_hd-min.png"
+                                        alt="features--smaller">
+                                </picture>
+                            </div>
+                            <!-- media content end -->
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+            </div>
+        </section>
+        <!-- =========== Features-2 End ============ -->
+
+        <!-- =========== switchable content End ============ -->
+        <section class="switchable switchable-2" style="margin-top:5rem">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="switchable-wrapper">
+                            <div class="switchable-content">
+                                <h2 class="switchable__title">DeFi For Everyone</h2>
+                                <p class="switchable__description">We make DeFi protocols easy to use and understand by
+                                    building human-focused interfaces and seamless integration between Tradicional
+                                    Finance and Decentralized Finance.
+                                </p>
+
+                            </div>
+                            <!-- content end -->
+                            <div id="globe-img" class="switchable-media reveal">
+                                <picture class="switchable-media__img">
+                                    <img style="height: auto; max-width: 200px" src="assets/images/globe.png" alt="">
+                                </picture>
+                                <!-- media end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+            </div>
+        </section>
+        <!-- =========== switchable content End ============ -->
+
+        <!-- =========== switchable content start ============ -->
+        <section class="switchable switchable-2 reverse">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="switchable-wrapper">
+                            <div class="switchable-content">
+                                <h2 class="switchable__title">Decentralized Economy (DeEco)</h2>
+                                <p class="switchable__description">First we Decentralize Finance, then we Decentralize
+                                    the Economy, then we Decentralize the World.
+                                </p>
+
+                            </div>
+                            <!-- content end -->
+                            <div id="puzzle-img" class="switchable-media reveal">
+                                <picture class="switchable-media__img">
+                                    <img style="height: auto; max-width: 200px" src="assets/images/puzzle.png" alt="">
+                                </picture>
+                                <!-- media end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+            </div>
+        </section>
+        <!-- =========== switchable content End ============ -->
+
+        <!-- =========== Testimonial-3 Start ============ -->
+        <section class="testimonial-three" id="testimonial">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-title">
+                            <h2>What People Are Saying About <a target="_blank"
+                                    href="https://twitter.com/blitslabs">@blitslabs</a></h2>
+
+                        </div>
+                    </div>
+                    <!-- section title end -->
+                </div>
+                <!-- section title row end -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="testimonial reveal">
+                            <div class="testimonial-item">
+                                <div class="testimonial-content">
+                                    <div>
+                                        <blockquote class="twitter-tweet" width=“325>
+                                            <p lang="en" dir="ltr">can&#39;t wait for this to pop up on the app
+                                                store! <br><br>impressed by the <a
+                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
+                                                team&#39;s execution. <a
+                                                    href="https://t.co/SEYu0kRGhU">https://t.co/SEYu0kRGhU</a></p>
+                                            &mdash; Li Jiang 🎽 (@lijiang2087) <a
+                                                href="https://twitter.com/lijiang2087/status/1346225607584133120?ref_src=twsrc%5Etfw">January
+                                                4, 2021</a>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- single item end -->
+                            <div class="testimonial-item">
+                                <div class="testimonial-content">
+                                    <div>
+                                        <blockquote class="twitter-tweet">
+                                            <p lang="en" dir="ltr">Blits is a GO 🚀🚀🚀 <a
+                                                    href="https://t.co/DmLU3XLas3">https://t.co/DmLU3XLas3</a></p>
+                                            &mdash; Crypto&#39;s Wolf Of All Streets (@danboyden) <a
+                                                href="https://twitter.com/danboyden/status/1346221268497006597?ref_src=twsrc%5Etfw">January
+                                                4, 2021</a>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- single item end -->
+
+                            <!-- single item end -->
+                            <div class="testimonial-item">
+                                <div class="testimonial-content">
+                                    <div>
+                                        <blockquote class="twitter-tweet">
+                                            <p lang="en" dir="ltr">Congrats to the <a
+                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
+                                                team. Our community is very excited for this. <a
+                                                    href="https://t.co/2ZpjNeZkzw">https://t.co/2ZpjNeZkzw</a> <a
+                                                    href="https://t.co/sC8tDwsxqv">pic.twitter.com/sC8tDwsxqv</a></p>
+                                            &mdash; Harmony (@harmonyprotocol) <a
+                                                href="https://twitter.com/harmonyprotocol/status/1346230318794084353?ref_src=twsrc%5Etfw">January
+                                                4, 2021</a>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- single item end -->
+
+                            <!-- single item end -->
+                            <div class="testimonial-item">
+                                <div class="testimonial-content">
+                                    <div>
+                                        <blockquote class="twitter-tweet">
+                                            <p lang="en" dir="ltr">anticipating, good work by <a
+                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
+                                                <a href="https://t.co/rkI4cOirPt">https://t.co/rkI4cOirPt</a>
+                                            </p>&mdash;
+                                            Leo Chen (@leo_hao) <a
+                                                href="https://twitter.com/leo_hao/status/1346222290195738624?ref_src=twsrc%5Etfw">January
+                                                4, 2021</a>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- single item end -->
+                        </div>
+                    </div>
+                </div>
+                <!-- testimonial row end -->
+            </div>
+        </section>
+        <!-- =========== Testimonial-3 End ============ -->
+
+
+
+
+
+
+        <!-- =========== cta-3 Start ============ -->
+        <section id="download" class="cta-one" style="background-color: black; padding-top: 20px">
+            <img src="assets/images/shape-1.svg" alt="" class="media__content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-11 offset-lg-1">
+                        <div class="cta-wrapper reveal">
+                            <div class="cta-content">
+                                <h2 class="cta__title" style="color: white">Download Blits Wallet Now</h2>
+                                <p class="cta__description" style="color: white">
+                                    Supported Blockchains: <br />
+                                    - Harmony (ONE)<br />
+                                    - Ethereum (ETH)<br />
+                                </p>
+                                <!-- title end -->
+                                <div class="cta__buttons">
+                                    <a href="https://play.google.com/store/apps/details?id=com.blits.wallet"
+                                        class="db-btn db-btn__type-sm db-btn__outline">
+                                        <i class="db-btn__icon nc-icon nc-ic_android_48px"></i>Play store
+                                    </a>
+                                    <a href="https://apps.apple.com/app/blits-wallet/id1533509547"
+                                        class="db-btn db-btn__type-sm db-btn__outline">
+                                        <i class="db-btn__icon nc-icon nc-apple"></i> App store
+                                    </a>
+
+                                </div>
+
+
+                            </div>
+                            <!-- content end -->
+                            <div class="cta-media">
+                                <picture class="cta-media__img">
+                                    <source srcset="assets/images/mockup_front.png" media="(min-width: 1200px)">
+                                    <source srcset="assets/images/mockup_front.png" media="(min-width: 992px)">
+                                    <img style="height: auto; width: 300px; margin-right: 100px; margin-bottom: 30px;"
+                                        src="assets/images/mockup_front.png" alt="cta-mobile" />
+                                </picture>
+                            </div>
+                            <!-- media content end -->
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+            </div>
+        </section>
+        <!-- =========== cta-3 End ============ -->
+
+
+        <!-- =========== footer-2 End ============ -->
+        <footer class="footer-three">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="footer">
+                            <div class="footer-nav-wrapper">
+                                <nav class="footer-widget">
+                                    <h5>Useful Links</h5>
+                                    <ul>
+                                        <li>
+                                            <a href="https://crosschain.loans">Cross-chain Loans</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://blits.net/blog">Blog</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://twitter.com/blitslabs">Twitter</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <!-- widget end -->
+                                <nav class="footer-widget">
+                                    <h5>Product Help</h5>
+                                    <ul>
+                                        <li>
+                                            <a href="https://blits.net/faq">FAQ</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://t.me/blitslabs">Telegram</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://blits.net/privacy">Privacy Policy</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://blits.net/terms">Terms</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+                            <div class="footer-about">
+                                <div class="brand-logo">
+                                    <a href="#">
+                                        <img style="height: 40px;" src="assets/images/logo.png" alt="blits labs logo">
+                                    </a>
+                                </div>
+                                <p class="brand-info">
+                                    <span class="brand__name">Genesis Block SAPI de CV</span>
+                                    <br>
+                                </p>
+                                <ul class="footer-social">
+                                    <li>
+                                        <a target="_blank" href="https://twitter.com/blitslabs">
+                                            <i class="fa fa-twitter"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a target="_blank" href="https://t.me/blitslabs">
+                                            <i class="fa fa-telegram"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a target="_blank" href="https://medium.com/@blitslabs">
+                                            <i class="fa fa-medium"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a target="_blank" href="https://github.com/blitslabs">
+                                            <i class="fa fa-github"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a target="_blank" href="https://instagram.com/@blitslabs">
+                                            <i class="fa fa-instagram"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a target="_blank" href="https://facebook.com/blitslabs">
+                                            <i class="fa fa-facebook"></i>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                            <!-- about end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="footer-bottom-wrapper">
+                                <nav class="footer-bottom-nav">
+                                    <a href="https://blits.net/privacy">Privacy Policy</a>
+                                    <a href="https://blits.net/terms">Terms and Conditions</a>
+                                </nav>
+                                <div class="footer-copyright">
+                                    <span class="footer-copyright__text">© 2020-2021 Copyright, All Rights Reserved by
+                                        <a href="#">Blits Labs</a>
+                                    </span>
+                                </div>
+                                <!-- copyright content end -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- =========== footer-2 End ============ -->
+    </div>
+    <!-- Main JS Files -->
+    <script src="assets/dist/js/app.min.js"></script>
+    
+</body>
+
+</html>
