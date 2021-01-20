@@ -12,7 +12,13 @@ module.exports.renderApp = function(req, res) {
 }
 
 module.exports.renderHome = (req, res) => {
-    const { theme } = req.query
+    let { theme } = req.query
+
+    if(!theme) {
+        const random = Math.round(Math.random())
+        theme = random === 1 ? 'white' : 'dark'
+    }
+
     res.render('home', {
         host: process.env.SERVER_HOST,
         theme: theme
