@@ -2,6 +2,34 @@
 <html lang="en">
 
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCWN639LZ4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-VCWN639LZ4');
+    </script>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '440631876973069');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=440631876973069&ev=PageView&noscript=1" /></noscript>
+    <!-- End Facebook Pixel Code -->
     <meta charset="UTF-8">
     <title>Blits | DeFi For Humans - Blits Labs</title>
     <!-- Enable Zoom on Mobile Device -->
@@ -188,7 +216,7 @@
                                 <button class="offcanvas__close">✕</button>
                                 <!-- offcanvas close button -->
                                 <ul class="navigation-menu" id="nav">
-                                    
+
                                     <li class="navigation-menu__item">
                                         <a class="navigation-menu__link" target="_blank"
                                             href="https://t.me/blits_community">Telegram</a>
@@ -198,8 +226,7 @@
                                     </li>
 
                                     <li class="navigation-menu__item">
-                                        <a class="navigation-menu__link"
-                                            href="https://blits.net">Blits Wallet</a>
+                                        <a class="navigation-menu__link" href="https://blits.net">Blits Wallet</a>
                                     </li>
                                     <!-- <li class="navigation-menu__item">
                                         <a class="navigation-menu__link" href="#">Pages</a>
@@ -366,7 +393,8 @@
                                 <img style="height:135px" src="assets/images/21_3.png" />
                             </span>
                             <h5 class="feature__title">Non-custodial</h5>
-                            <p class="feature__description">With Cross-chain Loans your assets are locked by smart contracts so you do not have to trust a central entity.</p>
+                            <p class="feature__description">With Cross-chain Loans your assets are locked by smart
+                                contracts so you do not have to trust a central entity.</p>
                         </div>
                     </div>
                     <!-- single item end -->
@@ -376,7 +404,8 @@
                                 <img style="height:135px" src="assets/images/24_2.png" />
                             </span>
                             <h5 class="feature__title">Cross-chain</h5>
-                            <p class="feature__description">Enter the world of cross-chain DeFi and discover assets beyond Ethereum's blockchain.</p>
+                            <p class="feature__description">Enter the world of cross-chain DeFi and discover assets
+                                beyond Ethereum's blockchain.</p>
                         </div>
                     </div>
                     <!-- single item end -->
@@ -386,7 +415,8 @@
                                 <img style="height:135px" src="assets/images/23_1.png" />
                             </span>
                             <h5 class="feature__title">Mobile Native DeFi</h5>
-                            <p class="feature__description">Access the Cross-chain Loans Protocol from your mobile phone. We believe DeFi should be easy and for everyone.</p>
+                            <p class="feature__description">Access the Cross-chain Loans Protocol from your mobile
+                                phone. We believe DeFi should be easy and for everyone.</p>
                         </div>
                     </div>
                     <!-- single item end -->
@@ -412,7 +442,9 @@
                         <div class="switchable-wrapper">
                             <div class="switchable-content">
                                 <h2 class="switchable__title">Borrow assets on any Blockchain</h2>
-                                <p class="switchable__description">Borrow any token on Ethereum from the Cross-chain Loans Protocol using assets from other blockchains as collateral. Enter the world of multi-chain DeFi.
+                                <p class="switchable__description">Borrow any token on Ethereum from the Cross-chain
+                                    Loans Protocol using assets from other blockchains as collateral. Enter the world of
+                                    multi-chain DeFi.
                                 </p>
                                 <a href="#" class="db-btn db-btn__outline db-btn__type-sm">Coming Soon</a>
                             </div>
@@ -443,7 +475,8 @@
                             <div style="margin-right: 0px" class="switchable-content">
                                 <h2 class="switchable__title">Earn interest on your assets</h2>
                                 <p class="switchable__description">
-                                    Lend your assets across blockchains to earn APY's based on the market demand for that asset. 
+                                    Lend your assets across blockchains to earn APY's based on the market demand for
+                                    that asset.
                                 </p>
                                 <div class="text-left">
                                     <a href="#" class="db-btn db-btn__outline db-btn__type-sm">Coming Soon</a>
@@ -554,7 +587,9 @@
                             <div class="footer-about">
                                 <div class="brand-logo">
                                     <a href="#">
-                                        <img style="height: 40px;" src="<%- theme === 'dark' ? 'assets/images/logo_white.png' : 'assets/images/logo.png' %>" alt="blits labs logo">
+                                        <img style="height: 40px;"
+                                            src="<%- theme === 'dark' ? 'assets/images/logo_white.png' : 'assets/images/logo.png' %>"
+                                            alt="blits labs logo">
                                     </a>
                                 </div>
                                 <p class="brand-info">
@@ -632,12 +667,12 @@
     </div>
     <!-- Main JS Files -->
     <script src="assets/dist/js/app.min.js"></script>
-    
+
     <script>
         (() => {
-           document.getElementById('launchAppBtn').addEventListener('click', () => {
-               alert('Coming soon!')
-           })
+            document.getElementById('launchAppBtn').addEventListener('click', () => {
+                alert('Coming soon!')
+            })
         })()
     </script>
 </body>
