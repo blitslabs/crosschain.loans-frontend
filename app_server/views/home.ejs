@@ -87,45 +87,65 @@
             height: 30px;
         }
 
-        @media only screen and (min-width: 1200px) {
-            .features-four .feature {
-                margin-right: 0px !important;
-            }
+        .features-four .feature {
+            margin-right: 0px !important;
+            align-items: center !important;
+        }
 
-            .features-four .feature__icon {
-                margin-right: 0px !important;
-            }
+        .features-four .feature__icon {
+            margin-right: 0px !important;
+            align-items: center !important;
+        }
 
+        @media only screen and (min-height: 1180px) {
             .hero-seven .hero-content {
                 padding-top: 26.875rem !important;
             }
+
+
         }
 
-        @media only screen and (min-width: 992px) and (max-width: 1200px){
+        @media only screen and (min-width: 992px) and (max-width: 1920px) and (max-height: 1920px) {
             .hero-seven .hero-content {
-                padding-top: 22.875rem !important;
+                padding-top: 22.5% !important;
             }
-            .hero-media {
+
+            /* .hero-media {
                 display: block !important;
-            }
-            
+            } */
+
         }
 
-        @media only screen and (max-width: 992px) { 
+        @media only screen and (min-width: 1150px) and (max-width: 1450px) and (max-height: 1200px) {
+            .hero-seven .hero-content {
+                padding-top: 15% !important;
+            }
+
+            /* .hero-media {
+                display: block !important;
+            } */
+
+        }
+
+        @media only screen and (max-width: 992px) {
             #header {
                 height: auto !important;
             }
+
             .hero-media {
-                display: block !important;
+                display: flex !important;
             }
+
             .features-four {
                 margin-bottom: 0px !important;
                 border-bottom: none !important;
             }
+
             .switchable {
                 margin-bottom: 0px !important;
                 border-bottom: none !important;
             }
+
             #mobile-mockup {
                 margin-right: 0px !important;
             }
@@ -492,7 +512,8 @@
                                         media="(min-width: 1200px)">
                                     <source srcset="assets/images/crosschain_loans_mockup.png"
                                         media="(min-width: 992px)">
-                                    <img id="mobile-mockup" style="height: auto; width: 300px; margin-right: 100px; margin-bottom: 30px;"
+                                    <img id="mobile-mockup"
+                                        style="height: auto; width: 300px; margin-right: 100px; margin-bottom: 30px;"
                                         src="assets/images/crosschain_loans_mockup.png" alt="blits wallet" />
                                 </picture>
                             </div>
