@@ -25,9 +25,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=IBM Plex Mono' rel='stylesheet'>
+    <link rel="stylesheet" href="assets/css/<%= theme %>-theme.css">
     <style>
         * {
-            font-family: 'IBM Plex Mono', monospace;
+            /* font-family: 'IBM Plex Mono', monospace; */
+            font-family: 'Poppins', sans-serif;
         }
 
         a {
@@ -60,28 +62,7 @@
             background: url(assets/images/bg.jpg);
         }
 
-        .btn {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            font-size: 15px;
-            font-weight: bold;
-            color: #fff;
-            background-color: black;
-            line-height: 1;
-            text-align: center;
-            padding: 18px 30px;
-            border: 0 none;
-            border-radius: 25px;
-            outline: 0 none;
-            position: relative;
-            z-index: 1;
-        }
+
 
         .btn:hover,
         .btn:active,
@@ -92,7 +73,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .btn:focus, .btn.focus {
+        .btn:focus,
+        .btn.focus {
             box-shadow: 0 0 0 0.2rem rgb(0 255 230 / 25%);
         }
 
@@ -113,37 +95,39 @@
             .features-four .feature__icon {
                 margin-right: 0px !important;
             }
+
+            .hero-seven .hero-content {
+                padding-top: 26.875rem !important;
+            }
         }
 
-        @media only screen and (min-width: 992px) {
-            .features-four .feature {
-                align-items: center !important;
+        @media only screen and (min-width: 992px) and (max-width: 1200px){
+            .hero-seven .hero-content {
+                padding-top: 22.875rem !important;
             }
+            .hero-media {
+                display: block !important;
+            }
+            
+        }
 
-            .features-four .feature__icon {
+        @media only screen and (max-width: 992px) { 
+            #header {
+                height: auto !important;
+            }
+            .hero-media {
+                display: block !important;
+            }
+            .features-four {
+                margin-bottom: 0px !important;
+                border-bottom: none !important;
+            }
+            .switchable {
+                margin-bottom: 0px !important;
+                border-bottom: none !important;
+            }
+            #mobile-mockup {
                 margin-right: 0px !important;
-            }
-
-            #wallet_mockup_02 {
-                margin-top: 100px;
-            }
-
-            .switchable-2:before {
-                background: transparent !important;
-            }
-
-            #globe-img {
-                margin-top: -150px;
-                margin-right: 150px
-            }
-
-            #puzzle-img {
-                margin-top: -180px;
-                margin-left: 150px;
-            }
-
-            .testimonial-three {
-                padding-bottom: 5.625rem;
             }
         }
 
@@ -156,12 +140,9 @@
             color: #a93aff;
         }
 
-        .navigation-menu__link {
-            color: black;
-        }
-        .hero-seven .hero-content {
-            padding-top: 24.875rem !important;
-        }
+
+
+
 
         .launch-app-btn {
             font-size: 18px !important;
@@ -182,7 +163,8 @@
                     <div class="col-12">
                         <div class="navigation-content">
                             <a href="#" class="navigation__brand">
-                                <img class="navigation-main__logo" src="assets/images/logo.png"
+                                <img class="navigation-main__logo"
+                                    src="<%- theme === 'dark' ? 'assets/images/logo_white.png' : 'assets/images/logo.png' %>"
                                     alt="blits logo">
                                 <img class="sticky-nav__logo" src="assets/images/logo_white.png" alt="blits logo">
                             </a>
@@ -294,20 +276,32 @@
         <!-- =========== Navigation End ============ -->
 
         <!-- =========== Hero Start ============ -->
-        <section class="hero-seven hero-text-light content-left " style="background-color:whitesmoke; height: 100vh;">
+        <section class="hero-seven hero-text-light content-left " id="header" style="height: 100vh;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="hero">
                             <div class="hero-wrapper">
                                 <div class="hero-content">
-                                    <h1 class="hero__title" style="color:black">Cross-chain Loans</h1>
-                                    <p class="hero__caption" style="color:black">A decentralized lending marketplace
+                                    <h1 class="hero__title">Cross-chain Loans</h1>
+                                    <p class="hero__caption" style="margin-bottom:1.0rem">A decentralized lending
+                                        marketplace
                                         across blockchains.</p>
                                     <div class="cta__buttons">
                                         <a href="#" class="btn launch-app-btn">Launch App</a>
+                                        <hr class="download-hr mt-5">
+                                        <div class="download-or" style="">or</div>
 
 
+                                        <div class="mt-5">
+                                            <div class="download-caption">Download Mobile Version</div>
+                                            <a href="https://play.google.com/store/apps/details?id=com.blits.wallet">
+                                                <img style="height: 62px;" src="assets/images/play.png">
+                                            </a>
+                                            <a href="https://apps.apple.com/app/blits-wallet/id1533509547">
+                                                <img style="height: 60px;" src="assets/images/Appstore.png">
+                                            </a>
+                                        </div>
                                     </div>
 
 
@@ -317,20 +311,20 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="hero-media" style="top: 1%; right: 14%;">
                 <picture class="hero-img">
-                    <img src="<%= host %>/assets/images/abs_3.png" style="width: 15%" alt="cross-chain loans">
+                    <img src="assets/images/abs_3.png" style="width: 15%" alt="cross-chain loans">
                 </picture>
             </div>
             <div class="hero-media" style="top: 38%; ">
                 <picture class="hero-img">
-                    <img src="<%= host %>/assets/images/abs_2_1.png" style="width: 55%;" alt="cross-chain loans">
+                    <img src="assets/images/abs_2_1.png" style="width: 55%;" alt="cross-chain loans">
                 </picture>
             </div>
-            <div class="hero-media" style="right:-20%; top: 90%">
+            <div class="hero-media" style="right:-20%; top: 85%">
                 <picture class="hero-img">
-                    <img src="<%= host %>/assets/images/24_3.png" style="width:20%" alt="cross-chain loans">
+                    <img src="assets/images/24_3.png" style="width:20%" alt="cross-chain loans">
                 </picture>
             </div>
         </section>
@@ -339,8 +333,18 @@
 
 
         <!-- =========== Features-4 Start ============ -->
-        <section class="features-four" id="feature">
+        <section class="features-four" id="feature" style="padding-top: 8.625rem">
             <div class="container">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-title" style="margin-bottom: 5.25rem !important;">
+                            <h2>The world’s first decentralized lending marketplace between blockchains.</h2>
+                        </div>
+                    </div>
+                    <!-- section title end -->
+                </div>
+
                 <!-- section title row end -->
                 <div class="row">
 
@@ -384,87 +388,34 @@
             </div>
         </section>
         <!-- =========== Features-4 End ============ -->
-
-        <!-- =========== Features-2 Start ============ -->
-        <section class="features-two" id="feature" style="padding-top: 0px !important;">
+        <section class="switchable">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="section-title" style="margin-bottom: 5.25rem !important;">
-                            <h2>Welcome to a New DeFi Experience</h2>
+                            <h2>Lending across blockchains</h2>
                         </div>
                     </div>
                     <!-- section title end -->
                 </div>
-                <!-- section title row end -->
                 <div class="row">
-                    <div class="col-12 col-md-11 offset-md-1">
-                        <div class="feature-wrapper">
-                            <ul class="feature">
-                                <li class="feature__list">
-                                    <span class="feature__icon"></span>
-                                    <div>
-                                        <h5 class="feature__title">Mobile Native DeFi Protocols</h5>
-                                        <p class="feature__description">All of your favorite DeFi protocols for the
-                                            mobile world.</p>
-                                    </div>
-                                </li>
-                                <!-- single item end -->
-                                <li class="feature__list">
-                                    <span class="feature__icon"></span>
-                                    <div>
-                                        <h5 class="feature__title">Cross-chain DeFi</h5>
-                                        <p class="feature__description">Explore new DeFi worlds beyond the Ethereum
-                                            blockchain.</p>
-                                    </div>
-                                </li>
-                                <!-- single item end -->
-                                <li class="feature__list">
-                                    <span class="feature__icon"></span>
-                                    <div>
-                                        <h5 class="feature__title">CeFi - DeFi Interoperability</h5>
-                                        <p class="feature__description">Combine the best of Tradicional Finance and DeFi
-                                            in a seamless experience.
-                                        </p>
-                                    </div>
-                                </li>
-                                <!-- single item end -->
-                            </ul>
-                            <!-- feature content end -->
-                            <div id="wallet_mockup_02" class="feature-media reveal">
-                                <picture class="feature-media__img">
-                                    <source srcset="assets/images/mockup_white_hd-min.png" media="(min-width: 768px)">
-                                    <img style="max-width: 450px;" src="assets/images/mockup_white_hd-min.png"
-                                        alt="features--smaller">
-                                </picture>
-                            </div>
-                            <!-- media content end -->
-                        </div>
-                    </div>
-                </div>
-                <!-- row end -->
-            </div>
-        </section>
-        <!-- =========== Features-2 End ============ -->
-
-        <!-- =========== switchable content End ============ -->
-        <section class="switchable switchable-2" style="margin-top:5rem">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-lg-11 mx-auto">
                         <div class="switchable-wrapper">
                             <div class="switchable-content">
-                                <h2 class="switchable__title">DeFi For Everyone</h2>
-                                <p class="switchable__description">We make DeFi protocols easy to use and understand by
-                                    building human-focused interfaces and seamless integration between Tradicional
-                                    Finance and Decentralized Finance.
+                                <h2 class="switchable__title">Borrow assets on any Blockchain</h2>
+                                <p class="switchable__description">Sitting proudly atop M3565 is the two-storey
+                                    penthouse. The master bedroom suite is phenomenally spacious and opens out to a
+                                    breathtaking plunge pool and bar area that makes the most of its unrivalled
+                                    position.
                                 </p>
-
+                                <a href="#" class="db-btn db-btn__outline db-btn__type-sm">Launch App</a>
                             </div>
                             <!-- content end -->
-                            <div id="globe-img" class="switchable-media reveal">
+                            <div class="switchable-media reveal" data-sr-id="8"
+                                style="; visibility: visible;  -webkit-transform: translateY(0) scale(1); opacity: 1;transform: translateY(0) scale(1); opacity: 1;-webkit-transition: -webkit-transform 1s ease-in-out 0s, opacity 1s ease-in-out 0s; transition: transform 1s ease-in-out 0s, opacity 1s ease-in-out 0s; ">
                                 <picture class="switchable-media__img">
-                                    <img style="height: auto; max-width: 200px" src="assets/images/globe.png" alt="">
+                                    <source srcset="assets/images/21.png" media="(min-width: 576px)">
+                                    <img style="max-width: 80%;" src="assets/images/21.png" alt="">
                                 </picture>
                                 <!-- media end -->
                             </div>
@@ -472,135 +423,37 @@
                     </div>
                 </div>
                 <!-- row end -->
-            </div>
-        </section>
-        <!-- =========== switchable content End ============ -->
-
-        <!-- =========== switchable content start ============ -->
-        <section class="switchable switchable-2 reverse">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
+                <div class="row" style="margin-top: 10rem">
+                    <div class="col-12 col-lg-11 mx-auto">
                         <div class="switchable-wrapper">
-                            <div class="switchable-content">
-                                <h2 class="switchable__title">Decentralized Economy (DeEco)</h2>
-                                <p class="switchable__description">First we Decentralize Finance, then we Decentralize
-                                    the Economy, then we Decentralize the World.
-                                </p>
-
-                            </div>
-                            <!-- content end -->
-                            <div id="puzzle-img" class="switchable-media reveal">
+                            <div class="switchable-media reveal" data-sr-id="8"
+                                style="; visibility: visible;  -webkit-transform: translateY(0) scale(1); opacity: 1;transform: translateY(0) scale(1); opacity: 1;-webkit-transition: -webkit-transform 1s ease-in-out 0s, opacity 1s ease-in-out 0s; transition: transform 1s ease-in-out 0s, opacity 1s ease-in-out 0s; ">
                                 <picture class="switchable-media__img">
-                                    <img style="height: auto; max-width: 200px" src="assets/images/puzzle.png" alt="">
+                                    <source srcset="assets/images/2_3.png" media="(min-width: 576px)">
+                                    <img style="max-width: 80%;" src="assets/images/2_3.png" alt="">
                                 </picture>
                                 <!-- media end -->
                             </div>
+                            <div style="margin-right: 0px" class="switchable-content">
+                                <h2 class="switchable__title">Earn yield on your assets</h2>
+                                <p class="switchable__description">Sitting proudly atop M3565 is the
+                                    two-storey
+                                    penthouse. The master bedroom suite is phenomenally spacious and opens out to a
+                                    breathtaking plunge pool and bar area that makes the most of its unrivalled
+                                    position.
+                                </p>
+                                <div class="text-left">
+                                    <a href="#" class="db-btn db-btn__outline db-btn__type-sm">Launch App</a>
+                                </div>
+                            </div>
+                            <!-- content end -->
+
                         </div>
                     </div>
                 </div>
                 <!-- row end -->
             </div>
         </section>
-        <!-- =========== switchable content End ============ -->
-
-        <!-- =========== Testimonial-3 Start ============ -->
-        <section class="testimonial-three" id="testimonial">
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section-title">
-                            <h2>What People Are Saying About <a target="_blank"
-                                    href="https://twitter.com/blitslabs">@blitslabs</a></h2>
-
-                        </div>
-                    </div>
-                    <!-- section title end -->
-                </div>
-                <!-- section title row end -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="testimonial reveal">
-                            <div class="testimonial-item">
-                                <div class="testimonial-content">
-                                    <div>
-                                        <blockquote class="twitter-tweet" width=“325>
-                                            <p lang="en" dir="ltr">can&#39;t wait for this to pop up on the app
-                                                store! <br><br>impressed by the <a
-                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
-                                                team&#39;s execution. <a
-                                                    href="https://t.co/SEYu0kRGhU">https://t.co/SEYu0kRGhU</a></p>
-                                            &mdash; Li Jiang 🎽 (@lijiang2087) <a
-                                                href="https://twitter.com/lijiang2087/status/1346225607584133120?ref_src=twsrc%5Etfw">January
-                                                4, 2021</a>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single item end -->
-                            <div class="testimonial-item">
-                                <div class="testimonial-content">
-                                    <div>
-                                        <blockquote class="twitter-tweet">
-                                            <p lang="en" dir="ltr">Blits is a GO 🚀🚀🚀 <a
-                                                    href="https://t.co/DmLU3XLas3">https://t.co/DmLU3XLas3</a></p>
-                                            &mdash; Crypto&#39;s Wolf Of All Streets (@danboyden) <a
-                                                href="https://twitter.com/danboyden/status/1346221268497006597?ref_src=twsrc%5Etfw">January
-                                                4, 2021</a>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single item end -->
-
-                            <!-- single item end -->
-                            <div class="testimonial-item">
-                                <div class="testimonial-content">
-                                    <div>
-                                        <blockquote class="twitter-tweet">
-                                            <p lang="en" dir="ltr">Congrats to the <a
-                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
-                                                team. Our community is very excited for this. <a
-                                                    href="https://t.co/2ZpjNeZkzw">https://t.co/2ZpjNeZkzw</a> <a
-                                                    href="https://t.co/sC8tDwsxqv">pic.twitter.com/sC8tDwsxqv</a></p>
-                                            &mdash; Harmony (@harmonyprotocol) <a
-                                                href="https://twitter.com/harmonyprotocol/status/1346230318794084353?ref_src=twsrc%5Etfw">January
-                                                4, 2021</a>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single item end -->
-
-                            <!-- single item end -->
-                            <div class="testimonial-item">
-                                <div class="testimonial-content">
-                                    <div>
-                                        <blockquote class="twitter-tweet">
-                                            <p lang="en" dir="ltr">anticipating, good work by <a
-                                                    href="https://twitter.com/blitslabs?ref_src=twsrc%5Etfw">@blitslabs</a>
-                                                <a href="https://t.co/rkI4cOirPt">https://t.co/rkI4cOirPt</a>
-                                            </p>&mdash;
-                                            Leo Chen (@leo_hao) <a
-                                                href="https://twitter.com/leo_hao/status/1346222290195738624?ref_src=twsrc%5Etfw">January
-                                                4, 2021</a>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single item end -->
-                        </div>
-                    </div>
-                </div>
-                <!-- testimonial row end -->
-            </div>
-        </section>
-        <!-- =========== Testimonial-3 End ============ -->
-
-
-
-
 
 
         <!-- =========== cta-3 Start ============ -->
@@ -611,7 +464,7 @@
                     <div class="col-12 col-lg-11 offset-lg-1">
                         <div class="cta-wrapper reveal">
                             <div class="cta-content">
-                                <h2 class="cta__title" style="color: white">Download Blits Wallet Now</h2>
+                                <h2 class="cta__title" style="color: white">Cross-chain Loans on Mobile</h2>
                                 <p class="cta__description" style="color: white">
                                     Supported Blockchains: <br />
                                     - Harmony (ONE)<br />
@@ -635,10 +488,12 @@
                             <!-- content end -->
                             <div class="cta-media">
                                 <picture class="cta-media__img">
-                                    <source srcset="assets/images/mockup_front.png" media="(min-width: 1200px)">
-                                    <source srcset="assets/images/mockup_front.png" media="(min-width: 992px)">
-                                    <img style="height: auto; width: 300px; margin-right: 100px; margin-bottom: 30px;"
-                                        src="assets/images/mockup_front.png" alt="cta-mobile" />
+                                    <source srcset="assets/images/crosschain_loans_mockup.png"
+                                        media="(min-width: 1200px)">
+                                    <source srcset="assets/images/crosschain_loans_mockup.png"
+                                        media="(min-width: 992px)">
+                                    <img id="mobile-mockup" style="height: auto; width: 300px; margin-right: 100px; margin-bottom: 30px;"
+                                        src="assets/images/crosschain_loans_mockup.png" alt="blits wallet" />
                                 </picture>
                             </div>
                             <!-- media content end -->
@@ -773,7 +628,7 @@
     </div>
     <!-- Main JS Files -->
     <script src="assets/dist/js/app.min.js"></script>
-    
+
 </body>
 
 </html>

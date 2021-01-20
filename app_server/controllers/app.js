@@ -12,7 +12,9 @@ module.exports.renderApp = function(req, res) {
 }
 
 module.exports.renderHome = (req, res) => {
+    const { theme } = req.query
     res.render('home', {
-        host: process.env.SERVER_HOST
+        host: process.env.SERVER_HOST,
+        theme: theme
     })
 }
