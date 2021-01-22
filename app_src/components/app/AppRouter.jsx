@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 // Components
 import Home from './Loans/Home'
 import LoansHome from './Loans/LoansHome'
-import NewLoan from './Loans/NewLoan'
+import NewLoan from './Loans/NewLoan_old'
 import ConfirmLoan from './Loans/ConfirmLoan'
 import BorrowDashboard from './Loans/BorrowDashboard'
 import LoanDetails from './Loans/LoanDetails'
@@ -20,11 +20,11 @@ import './Loans/loans_styles.css'
 class AppRouter extends Component {
     render() {
         const { match, auth } = this.props
-
+        console.log(match.path)
         return (
             <Fragment>
                 <Route path={match.path} exact component={Home} />
-                <Route path={`${match.path}loans`} exact component={LoansHome} />
+                <Route path={`${match.path}loans`} exact component={Home} />
                 <Route path={`${match.path}borrow`} component={BorrowDashboard} />
                 <Route path={`${match.path}lend`} exact={true} component={NewLoan} />
                 <Route path={`${match.path}lend/confirm`} component={ConfirmLoan} />

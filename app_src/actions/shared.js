@@ -5,6 +5,14 @@ export const HIDE_SIDEBAR = 'HIDE_SIDEBAR'
 export const RESET_SIDEBAR = 'RESET_SIDEBAR'
 export const SET_PROVIDER_STATUS = 'SET_PROVIDER_STATUS'
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
+export const SET_BLOCKCHAIN_NETWORK = 'SET_BLOCKCHAIN_NETWORK'
+
+export function setBlockchainNetwork(details) {
+    return {
+        type: SET_BLOCKCHAIN_NETWORK,
+        details,
+    }
+}
 
 export function setProviderStatus(providerStatus) {
     return {

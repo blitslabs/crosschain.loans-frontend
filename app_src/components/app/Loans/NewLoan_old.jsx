@@ -48,7 +48,7 @@ class NewLoan extends Component {
         aCoinLender: '',
         aCoinLenderIsInvalid: false,
         aCoinLenderErrorMsg: 'This field is required',
-        loading: false,
+        loading: true,
         duration: '30',
         showDownloadModal: false,
         missingWallet: '',
@@ -56,7 +56,7 @@ class NewLoan extends Component {
     }
 
     componentDidMount() {
-        document.title = "New Loan | Cross-chain Loans"
+        document.title = "🚀 New Loan | Cross-chain Loans"
         this.loadInitialData()
     }
 
@@ -272,7 +272,7 @@ class NewLoan extends Component {
                                 <div className="col-sm-12 col-md-8 offset-md-2">
 
                                     <div className="mb-4 text-center">
-                                        <h2>New Loan</h2>
+                                        <h2>New Loan<Emoji text=":rocket:" onlyEmojiClassName="make-emojis-large" /></h2>
                                         <div className="app-page-subtitle mt-2">Enter the loan details to create the offer</div>
                                     </div>
                                     <div className="app-card shadow-lg">

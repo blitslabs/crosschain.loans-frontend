@@ -347,3 +347,29 @@ a {
         background: transparent !important;
     }
 }
+
+.assetCard {
+    background: #f8f9fa;
+    border-radius: 25px; 
+    text-align: center; 
+    padding: 1em; 
+    border: 1px solid #e6e6e6;
+    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
+    /* box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.175) !important; */
+}
+
+.card-title {
+    font-size: 12px;
+    margin-bottom: 0px;
+    margin-top:10px;
+}
+
+.card-value {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.navigation__portrait .navigation__toggler:before {
+    box-shadow: 0 0.5em 0 0 #000, 0 1em 0 0 #000;
+    background-color: #000;
+}

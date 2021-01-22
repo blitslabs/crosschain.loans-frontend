@@ -1,17 +1,9 @@
-const API_WALLET = process.env.API_WALLET
+const API_HOST = process.env.API_HOST
 
 // CROSS-CHAIN LOANS
-export function getAvailableLoans() {
-    return fetch(API_WALLET + 'loans/available', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-}
 
 export function getLoanAssets(params) {
-    return fetch(API_WALLET + `loans/assets/${params.operation}/${params.network}`, {
+    return fetch(API_HOST + `loanAssets/${params.blockchain}/${params.network}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -19,8 +11,27 @@ export function getLoanAssets(params) {
     })
 }
 
+export function getProtocolContracts() {
+    return fetch(API_HOST + `protocolContracts`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function getAvailableLoans() {
+    return fetch(API_HOST + 'loans/available', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+
 export function getLoansSettings(params) {
-    return fetch(API_WALLET + 'loans/settings/' + params.network, {
+    return fetch(API_HOST + 'loans/settings/' + params.network, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -29,7 +40,7 @@ export function getLoansSettings(params) {
 }
 
 export function getPrices() {
-    return fetch(API_WALLET + 'prices', {
+    return fetch(API_HOST + 'prices', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -38,7 +49,7 @@ export function getPrices() {
 }
 
 export function getLoanDetails(params) {
-    return fetch(API_WALLET + 'loan/' + params.loanId, {
+    return fetch(API_HOST + 'loan/' + params.loanId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -47,7 +58,7 @@ export function getLoanDetails(params) {
 }
 
 export function getAccountLoans(params) {
-    return fetch(API_WALLET + 'loans/account/' + params.account, {
+    return fetch(API_HOST + 'loans/account/' + params.account, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -56,7 +67,7 @@ export function getAccountLoans(params) {
 }
 
 export function getLockedCollateral(params) {
-    return fetch(API_WALLET + 'lockedCollateral/' + params.account, {
+    return fetch(API_HOST + 'lockedCollateral/' + params.account, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -65,7 +76,7 @@ export function getLockedCollateral(params) {
 }
 
 export function getLoansHistory() {
-    return fetch(API_WALLET + 'loans/history', {
+    return fetch(API_HOST + 'loans/history', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -74,7 +85,7 @@ export function getLoansHistory() {
 }
 
 export function getAccountLoansCount(params) {
-    return fetch(API_WALLET + `loans/accountCount/${params.account}/${params.actor}/${params.blockchain}` , {
+    return fetch(API_HOST + `loans/accountCount/${params.account}/${params.actor}/${params.blockchain}` , {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -83,7 +94,7 @@ export function getAccountLoansCount(params) {
 }
 
 export function getLoanNonce(params) {
-    return fetch(API_WALLET + `loans/loanNonce/${params.loanId}/${params.blockchain}`, {
+    return fetch(API_HOST + `loans/loanNonce/${params.loanId}/${params.blockchain}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

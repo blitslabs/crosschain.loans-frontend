@@ -1,4 +1,4 @@
-import { saveLoanAssets, SAVE_LOAN_ASSETS } from '../actions/loanAssets'
+import { SAVE_LOAN_ASSETS } from '../actions/loanAssets'
 
 export default function loanAssets(state = {}, action) {
     switch (action.type) {

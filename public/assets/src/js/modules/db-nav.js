@@ -64,18 +64,17 @@
         });
 
         // offcanvas reveal 
-        $('.navigation__toggler').on('click', function () {
-
-            $('.navigation-wrapper').addClass('offcanvas__is-open');
-            $('.navigation').addClass('offcanvas__overlay');
-            $('body').toggleClass('scroll-prevent');
-        });
+        // $('.navigation__toggler').on('click', function () {
+        //     $('.navigation-wrapper').addClass('offcanvas__is-open');
+        //     $('.navigation').addClass('offcanvas__overlay');
+        //     $('body').toggleClass('scroll-prevent');
+        // });
         // offcanvas remove class 
-        $('body, .offcanvas__close, .navigation-menu__item').on('click', function () {
-            $('.navigation-wrapper').removeClass('offcanvas__is-open')
-            $(element).removeClass('offcanvas__overlay');
-            $('body').removeClass('scroll-prevent');
-        });
+        // $('body').on('click', function () {
+        //     $('.navigation-wrapper').removeClass('offcanvas__is-open')
+        //     $(element).removeClass('offcanvas__overlay');
+        //     $('body').removeClass('scroll-prevent');
+        // });
 
         // offcanvas prevent from toggle 
         $('.navigation__toggler').on('click', function (e) {

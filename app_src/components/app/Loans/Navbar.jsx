@@ -18,6 +18,7 @@ import Web3 from 'web3'
 import ONE from '../../../crypto/ONE'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MediaQuery from 'react-responsive'
 
 // Components
 import ConnectModal from './ConnectModal'
@@ -27,22 +28,29 @@ class Navbar extends Component {
     state = {
         ethereum: false,
         onewallet: false,
-        showConnectModal: false
+        showConnectModal: false,
     }
 
     componentDidMount() {
         const { dispatch } = this.props
+        dispatch(toggleSidebar(false))
+        // getPrices()
+        //     .then(data => data.json())
+        //     .then((res) => {
+        //         console.log(res)
+        //         if (res.status === 'OK') {
+        //             dispatch(savePrices(res.payload))
+        //         }
+        //     })
 
-        getPrices()
-            .then(data => data.json())
-            .then((res) => {
-                console.log(res)
-                if (res.status === 'OK') {
-                    dispatch(savePrices(res.payload))
-                }
-            })
+        // this.loandInitialData()
 
-        this.loandInitialData()
+        document.body.addEventListener('click', () => {
+            const { dispatch, shared } = this.props
+            if(shared.sidebar === true) {
+                dispatch(toggleSidebar(false))
+            }
+        })
     }
 
     loandInitialData = async () => {
@@ -59,9 +67,9 @@ class Navbar extends Component {
         // Check network
         const networkId = await web3.eth.net.getId()
 
-        if(networkId != 3) {
-            toast.error('Please connect to the Ropsten Network', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-        }
+        // if (networkId != 3) {
+        //     toast.error('Please connect to the Ropsten Network', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        // }
 
         if (window.ethereum && accounts.length > 0) {
             dispatch(setProviderStatus({ name: 'ethereum', status: true }))
@@ -73,7 +81,7 @@ class Navbar extends Component {
 
         let harmonyAccount
         try {
-            const res = await ONE.getAccount()            
+            const res = await ONE.getAccount()
             if (res.status === 'OK') {
                 harmonyAccount = res.payload
             }
@@ -97,83 +105,105 @@ class Navbar extends Component {
         dispatch(toggleSidebar(!shared.sidebar))
     }
 
+    toggleMenu = (e) => {
+        e.preventDefault()
+        const { dispatch, shared } = this.props
+        dispatch(toggleSidebar(!shared.sidebar))
+    }
+
     render() {
 
         const { showConnectModal } = this.state
         const { shared, accounts } = this.props
-        const { ethereum } = shared
+        const { sidebar } = shared
+
 
         return (
             <Fragment>
                 <ToastContainer />
+                {/* =========== Navigation Start ============ */}
+                <MediaQuery minDeviceWidth={1224}>
+                    <header className={sidebar ? 'navigation navigation__transparent navigation__caps navigation__separate navigation__right navigation__btn-fill navigation__portrait offcanvas__overlay' : 'navigation navigation__transparent navigation__caps navigation__separate navigation__right navigation__btn-fill navigation__landscape'}>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="navigation-content">
+                                        <a href="#" className="navigation__brand">
+                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + '/assets/images/logo.png'} alt="blits logo" />
+                                            <img className="sticky-nav__logo" src={process.env.SERVER_HOST + '/assets/images/logo_white.png'} alt="blits logo" />
+                                        </a>
+                                        <button onClick={this.toggleMenu} className="navigation__toggler" />
+                                        {/* offcanvas toggle button */}
+                                        <nav className={sidebar ? "navigation-wrapper offcanvas__is-open" : "navigation-wrapper"}>
+                                            <button onClick={this.toggleMenu} className="offcanvas__close">✕</button>
+                                            {/* offcanvas close button */}
+                                            <ul className="navigation-menu" id="nav">
 
-                <header className={!shared.sidebar ? "navbar navbar-sticky navbar-expand-lg navbar-dark" : "navbar navbar-sticky navbar-expand-lg navbar-dark active"} >
-                    <div className="container position-relative">
-                        <a className="navbar-brand" href="/loans">
-                            <img
-                                className="navbar-brand-regular"
-                                src={process.env.SERVER_HOST + "/assets/images/logo.png"}
-                                alt="brand-logo"
-                            />
-                            <img
-                                className="navbar-brand-sticky"
-                                src={process.env.SERVER_HOST + "/assets/images/logo.png"}
-                                alt="sticky brand-logo"
-                            />
-                        </a>
-                        <button
-                            className="navbar-toggler d-lg-none"
-                            type="button"
-                            data-toggle="navbarToggler"
-                            aria-label="Toggle navigation"
-                            onClick={this.handleMobileNavbarBtn}
-                        >
-                            <span className={"navbar-toggler-icon"} />
-                        </button>
-                        <div className="navbar-inner">
-                            {/*  Mobile Menu Toggler */}
-                            <button
-                                className="navbar-toggler d-lg-none"
-                                type="button"
-                                data-toggle="navbarToggler"
-                                aria-label="Toggle navigation"
-                                onClick={this.handleMobileNavbarBtn}
-                            >
-                                <span className={!shared.sidebar ? "navbar-toggler-icon" : "navbar-toggler-icon active"} />
-                            </button>
-                            <nav>
-                                <ul className="navbar-nav" id="navbar-nav">
-                                    <li className="nav-item">
-                                        <Link className="nav-link scroll" to="/borrow">Borrow</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link scroll" to="/lend">Lend</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link scroll" to="/activity">Activity</Link>
-                                    </li>
-                                    {
-                                        !ethereum || ethereum.status === false ? (
-                                            <li className="nav-item">
-                                                <button onClick={(e) => { e.preventDefault(); this.handleToggleConnectModal(true) }} className="btn btn-blits connect-btn" style={{ fontSize: '14px', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
-                                                    <Emoji text="🔓" onlyEmojiClassName="sm-emoji" />
-                                                    Connect
-                                                </button>
-                                            </li>
-                                        ) : (
-                                                <li className="nav-item">
-                                                    <Link className="nav-link scroll" to={"/myloans/"}>My Loans</Link>
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" target="_blank" href="https://t.me/blits_community">Borrow</a>
                                                 </li>
-                                            )
-                                    }
-                                </ul>
-                            </nav>
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" href="https://blits.net/blog">Lend</a>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" href="https://blits.net">Activity</a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                        {/* nav item end */}
+                                        <div className="navigation-button navigation-button-couple">
+                                            <a href="#download" style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* row end */}
                         </div>
-                    </div>
-                </header>
-                                    
+                    </header>
+                </MediaQuery>
+                <MediaQuery maxDeviceWidth={1224}>
+                    <header className={sidebar ? 'navigation navigation__transparent navigation__caps navigation__separate navigation__right navigation__btn-fill navigation__portrait offcanvas__overlay' : 'navigation navigation__transparent navigation__caps navigation__separate navigation__right navigation__btn-fill navigation__portrait'}>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="navigation-content">
+                                        <a href="#" className="navigation__brand">
+                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + '/assets/images/logo.png'} alt="blits logo" />
+                                            <img className="sticky-nav__logo" src={process.env.SERVER_HOST + '/assets/images/logo_white.png'} alt="blits logo" />
+                                        </a>
+                                        <button onClick={this.toggleMenu} className="navigation__toggler" />
+                                        {/* offcanvas toggle button */}
+                                        <nav className={sidebar ? "navigation-wrapper offcanvas__is-open" : "navigation-wrapper"}>
+                                            <button onClick={this.toggleMenu} className="offcanvas__close">✕</button>
+                                            {/* offcanvas close button */}
+                                            <ul className="navigation-menu" id="nav">
+
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" target="_blank" href="https://t.me/blits_community">Borrow</a>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" href="https://blits.net/blog">Lend</a>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <a className="navigation-menu__link" href="https://blits.net">Activity</a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                        {/* nav item end */}
+                                        <div className="navigation-button navigation-button-couple">
+                                            <a href="#download" style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* row end */}
+                        </div>
+                    </header>
+                </MediaQuery>
                 <ConnectModal isOpen={showConnectModal} toggleModal={this.handleToggleConnectModal} />
-            </Fragment>
+            </Fragment >
 
         )
     }

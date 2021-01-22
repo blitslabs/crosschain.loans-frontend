@@ -2,9 +2,36 @@
 <html>
 
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCWN639LZ4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-	<meta charset="UTF-8">
-    <title>Cross-chain Loans</title>
+        gtag('config', 'G-VCWN639LZ4');
+    </script>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '440631876973069');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=440631876973069&ev=PageView&noscript=1" /></noscript>
+    <!-- End Facebook Pixel Code -->
+    <meta charset="UTF-8">
+    <title>Cross-chain Loans | A Decentralized Lending Marketplace Across Blockchains</title>
     <!-- Enable Zoom on Mobile Device -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="">
@@ -20,15 +47,17 @@
 
     <!-- Fonts CSS -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700" rel="stylesheet">
-    <link href="<%= host %>/assets/dist/fonts/SFProDisplay.css" rel="stylesheet">
+    <link href="assets/dist/fonts/SFProDisplay.css" rel="stylesheet">
     <!-- Style CSS -->
-    <link rel="stylesheet" href="assets/dist/css/app.min.css">
+    <link rel="stylesheet" href="<%= host %>/assets/dist/css/app.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=IBM Plex Mono' rel='stylesheet'>
+    <link rel="stylesheet" href="<%= host %>/assets/css/white-theme.css">
     <style>
         * {
-            font-family: 'IBM Plex Mono', monospace;
+            /* font-family: 'IBM Plex Mono', monospace; */
+            font-family: 'Poppins', sans-serif;
         }
 
         a {
@@ -61,34 +90,18 @@
             background: url(assets/images/bg.jpg);
         }
 
-        .btn {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            font-size: 15px;
-            font-weight: bold;
-            color: #fff;
-            background-color: black;
-            line-height: 1;
-            text-align: center;
-            padding: 18px 30px;
-            border: 0 none;
-            border-radius: 25px;
-            outline: 0 none;
-            position: relative;
-            z-index: 1;
-        }
-
         .btn:hover,
-        .btn:active {
+        .btn:active,
+        .btn:not(:disabled):not(.disabled):active,
+        .btn:not(:disabled):not(.disabled).active {
             color: white;
             background: linear-gradient(-47deg, #8731E8 0%, #4528DC 100%);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:focus,
+        .btn.focus {
+            box-shadow: 0 0 0 0.2rem rgb(0 255 230 / 25%);
         }
 
         .navigation.sticky-nav {
@@ -100,45 +113,67 @@
             height: 30px;
         }
 
-        @media only screen and (min-width: 1200px) {
-            .features-four .feature {
-                margin-right: 0px !important;
-            }
-
-            .features-four .feature__icon {
-                margin-right: 0px !important;
-            }
+        .features-four .feature {
+            margin-right: 0px !important;
+            align-items: center !important;
         }
 
-        @media only screen and (min-width: 992px) {
-            .features-four .feature {
-                align-items: center !important;
+        .features-four .feature__icon {
+            margin-right: 0px !important;
+            align-items: center !important;
+        }
+
+        @media only screen and (min-height: 1180px) {
+            .hero-seven .hero-content {
+                padding-top: 26.875rem !important;
             }
 
-            .features-four .feature__icon {
+
+        }
+
+        @media only screen and (min-width: 992px) and (max-width: 1920px) and (max-height: 1920px) {
+            .hero-seven .hero-content {
+                padding-top: 22.5% !important;
+            }
+
+            /* .hero-media {
+                display: block !important;
+            } */
+
+        }
+
+        @media only screen and (min-width: 1150px) and (max-width: 1450px) and (max-height: 1200px) {
+            .hero-seven .hero-content {
+                padding-top: 15% !important;
+            }
+
+            /* .hero-media {
+                display: block !important;
+            } */
+
+        }
+
+        @media only screen and (max-width: 992px) {
+            #header {
+                height: auto !important;
+            }
+
+            .hero-media {
+                display: flex !important;
+            }
+
+            .features-four {
+                margin-bottom: 0px !important;
+                border-bottom: none !important;
+            }
+
+            .switchable {
+                margin-bottom: 0px !important;
+                border-bottom: none !important;
+            }
+
+            #mobile-mockup {
                 margin-right: 0px !important;
-            }
-
-            #wallet_mockup_02 {
-                margin-top: 100px;
-            }
-
-            .switchable-2:before {
-                background: transparent !important;
-            }
-
-            #globe-img {
-                margin-top: -150px;
-                margin-right: 150px
-            }
-
-            #puzzle-img {
-                margin-top: -180px;
-                margin-left: 150px;
-            }
-
-            .testimonial-three {
-                padding-bottom: 5.625rem;
             }
         }
 
@@ -147,21 +182,26 @@
         }
 
         ::selection {
-            background: #edd5ff;
-            color: #a93aff;
+            background: #a93aff;
+            color: white;
+        }
+
+        .launch-app-btn {
+            font-size: 18px !important;
+            border-radius: 50px;
         }
     </style>
 </head>
 
 <body class="stretched">
 
-	<div id="root" class="main-wrapper home-13 layout-strong"></div>
+    <div id="root" class="main-wrapper home-13 layout-strong"></div>
+    
+    <!-- Main JS Files -->
+    <script src="<%= host %>/assets/dist/js/app.min.js"></script>
 
-	 <!-- Main JS Files -->
-	 <script src="<%= host %>/assets/dist/js/app.min.js"></script>	 
-
-	<!-- React -->
-	<script src="<%= react_host %>/assets/bundle.js"></script>
+    <!-- React -->
+    <script src="<%= react_host %>/js/app.js"></script>
 </body>
 
 </html>

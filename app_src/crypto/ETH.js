@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import { sha256 } from '@liquality-dev/crypto'
 import ABI from './ABI'
+import BigNumber from 'bignumber.js'
 
 const ETH = {
     generateSecret: async (message) => {
@@ -30,6 +31,38 @@ const ETH = {
 
         } catch (e) {
             return { status: 'ERROR', message: 'Error signing message' }
+        }
+    },
+
+    getERC20Balance: async (account, tokenContractAddress) => {
+        if (!window.ethereum) {
+            return { status: 'ERROR', message: 'No web3 provider detected' }
+        }
+
+        if (!account) return { status: 'ERROR', message: 'Missing account' }
+        if (!tokenContractAddress) return { status: 'ERROR', message: 'Missing token contract address' }
+
+        await window.ethereum.enable()
+
+        // Connect to HTTP Provider
+        const web3 = new Web3(window.ethereum)
+
+        // Instantiate Token
+        let token
+        try {
+            token = new web3.eth.Contract(ABI.ERC20.abi, tokenContractAddress)
+        } catch (e) {
+            return { status: 'ERROR', message: 'Error instantiating token contract' }
+        }
+
+        try {
+            const decimals = await token.methods.decimals().call()
+            let balance = await token.methods.balanceOf(account).call()            
+            balance = BigNumber(balance).dividedBy(ETH.pad(1, decimals)).toString()
+            return { status: 'OK', payload: balance }
+        } catch (e) {
+            console.log(e)
+            return { status: 'ERROR', message: 'Error getting token balance' }
         }
     },
 
@@ -115,6 +148,12 @@ const ETH = {
             return { status: 'ERROR', payload: 'Error loading ETH account' }
         }
     },
+
+    pad: (num, size) => {
+        let decimals = '1'
+        while (decimals.length <= parseInt(size)) decimals = decimals + '0'
+        return Number(BigNumber(num).multipliedBy(decimals).toString()).toLocaleString('fullwide', { useGrouping: false })
+    }
 }
 
 export default ETH
