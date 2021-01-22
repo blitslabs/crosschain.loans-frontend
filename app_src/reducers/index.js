@@ -12,6 +12,7 @@ import accounts from './accounts'
 import accountLoans from './accountLoans'
 import protocolContracts from './protocolContracts'
 import providers from './providers'
+import assetTypes from './assetTypes'
 
 const appReducer = combineReducers({    
     loading,    
@@ -26,6 +27,7 @@ const appReducer = combineReducers({
     accountLoans,
     protocolContracts,
     providers,
+    assetTypes
 })
 
 const rootReducer = (state, action) => {

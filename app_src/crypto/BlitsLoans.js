@@ -32,6 +32,27 @@ const ONE = {
 
 const BlitsLoans = {
     ETH: {
+
+        getUserLoansCount: async (account, loansContract) => {
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
+            }
+
+            // Connect to HTTP Provider
+            const web3 = new Web3(window.ethereum)
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract = new web3.eth.Contract(ABI.LOANS.abi, loansContract)
+            } catch (e) {
+                return { status: 'ERROR', message: 'Error instantiating contract' }
+            }
+
+            const userLoansCount = await contract.methods.userLoansCount(account).call()
+            return { status: 'OK', payload: userLoansCount }
+        },
+
         getAssetTypeData: async (tokenContractAddress, loansContract) => {
 
             if (!window.ethereum) {
@@ -71,12 +92,12 @@ const BlitsLoans = {
             return payload
         },
 
-        getAccountLoans: async(loansContractAddress) => {
-            if(!window.ethereum) {
-                return { status: 'ERROR', message: 'No web3 provider detected'}
+        getAccountLoans: async (loansContractAddress) => {
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
             }
 
-            if(!loansContractAddress) return { status: 'ERROR', message: 'Missing loans contract address'}
+            if (!loansContractAddress) return { status: 'ERROR', message: 'Missing loans contract address' }
 
             await window.ethereum.enable()
 
@@ -90,9 +111,9 @@ const BlitsLoans = {
             // Instantiate Contract
             let contract
             try {
-                contract  = new web3.eth.Contract(ABI.LOANS.abi, loansContractAddress)
-            } catch(e) {
-                return { status: 'ERROR', message: 'Error instantiating contract'}
+                contract = new web3.eth.Contract(ABI.LOANS.abi, loansContractAddress)
+            } catch (e) {
+                return { status: 'ERROR', message: 'Error instantiating contract' }
             }
 
             const accountLoans = await contract.methods.userLoans(lender).call()
@@ -308,7 +329,7 @@ const BlitsLoans = {
 
             const endpoint = network === 'mainnet' ? ONE.mainnet_endpoints['shard_' + shard + '_endpoint'] : ONE.testnet_endpoints['shard_' + shard + '_endpoint']
             const chainId = network === 'mainnet' ? ChainID.HmyMainnet : ChainID.HmyTestnet
-            
+
             // Connect HTTP Provider
             let harmony, hmy
             try {
@@ -366,7 +387,7 @@ const BlitsLoans = {
                         console.log(error)
                         return { status: 'ERROR', message: error ? error : 'Error unlocking collateral' }
                     })
-                
+
                 return { status: 'OK', payload: 'tx' }
 
             } catch (e) {

@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import { connect } from 'react-redux'
 import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
 import BigNumber from 'bignumber.js'
+
+// Actions
+import { saveAssetType } from '../../../actions/assetTypes'
+import { saveLendRequest } from '../../../actions/lendRequest'
 
 class AssetCard extends Component {
 
@@ -17,7 +21,7 @@ class AssetCard extends Component {
     }
 
     loadAssetTypeData = async () => {
-        const { protocolContracts, providers, asset } = this.props
+        const { protocolContracts, providers, asset, dispatch } = this.props
 
         let account, assetTypeData, liquidity
         if (asset.blockchain === 'ETH') {
@@ -26,6 +30,8 @@ class AssetCard extends Component {
                 asset.contractAddress,
                 contract
             )
+            dispatch(saveAssetType({ contractAddress: asset.contractAddress, ...assetTypeData }))
+
             const apy = parseFloat(BigNumber(assetTypeData.interestRate).multipliedBy(12).multipliedBy(100)).toFixed(2)
             liquidity = (await ETH.getERC20Balance(contract, asset.contractAddress)).payload
             this.setState({
@@ -34,12 +40,12 @@ class AssetCard extends Component {
             })
         }
     }
-     
+
     handleLendBtn = (e) => {
         e.preventDefault()
-        const { asset } = this.props
-        
-        this.history.push('/lend/' + asset.contractAddress)
+        const { dispatch, asset, history } = this.props
+        dispatch(saveLendRequest({ contractAddress: asset.contractAddress }))
+        history.push('lend/new')
     }
 
     render() {
@@ -75,7 +81,7 @@ class AssetCard extends Component {
                 </div>
                 <div className="row mt-4">
                     <div className="col-12">
-                        <Link to={'lend/' + asset.contractAddress} className="btn" style={{ width: '100%' }}>LEND</Link>
+                        <button onClick={this.handleLendBtn} className="btn" style={{ width: '100%' }}>LEND</button>
                     </div>
                 </div>
             </div>
@@ -90,4 +96,4 @@ function mapStateToProps({ protocolContracts, providers }) {
     }
 }
 
-export default connect(mapStateToProps)(AssetCard)
+export default connect(mapStateToProps)(withRouter(AssetCard))

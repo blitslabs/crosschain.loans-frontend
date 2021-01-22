@@ -354,7 +354,7 @@ a {
     text-align: center; 
     padding: 1em; 
     border: 1px solid #e6e6e6;
-    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important;
     /* box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.175) !important; */
 }
 
@@ -372,4 +372,11 @@ a {
 .navigation__portrait .navigation__toggler:before {
     box-shadow: 0 0.5em 0 0 #000, 0 1em 0 0 #000;
     background-color: #000;
+}
+
+.details-container {
+    border-radius: 5px;
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    color:#000000 !important;
 }

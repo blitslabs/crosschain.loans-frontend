@@ -61,7 +61,9 @@ class NewLoan extends Component {
     }
 
     loadInitialData = async () => {
-        const { dispatch } = this.props
+        const { dispatch, match, assetTypes } = this.props
+        const { contractAddress } = match.params
+
 
         if (!window.ethereum) {
             this.setState({ loading: false })
@@ -78,43 +80,8 @@ class NewLoan extends Component {
             account = ''
         }
 
-        this.setState({ loading: false })
-        // Promise.all([
-        //     getLoansSettings({ network }),
-        //     getLoanAssets({ operation: 'LEND', network }),
-        //     getAccountLoansCount({ account, actor: 'lender', blockchain: 'ETH' })
-        // ])
-        //     .then((responses) => {
-        //         return Promise.all(responses.map(res => res.json()))
-        //     })
-        //     .then((data) => {
-        //         console.log(data)
-        //         const loanSettings = data[0].payload
-        //         const loanAssets = data[1].payload
-        //         const loansCount = data[2].payload
-
-        //         dispatch(saveLoanSettings(loanSettings))
-        //         dispatch(saveLoanAssets(loanAssets))
 
 
-        //         const dai = Object.values(loanAssets).filter((a) => a.symbol === 'DAI')[0]
-
-        //         this.setState({ loading: false })
-        //         BlitsLoans.ETH.getAssetTypeData(dai.contractAddress, loanSettings.eth_loans_contract)
-        //             .then((data) => {
-        //                 console.log(data)
-        //                 dispatch(saveLendRequest(data))
-        //                 this.setState({
-        //                     asset: dai.contractAddress,
-        //                     network, amount: data.minLoanAmount,
-        //                     loansCount
-        //                 })
-        //             })
-        //             .catch((err) => {
-        //                 console.log(err)
-        //                 this.setState({ loading: false })
-        //             })
-        //     })
     }
 
     handleAmountChange = (e) => {
@@ -207,8 +174,9 @@ class NewLoan extends Component {
 
     handleContinueBtn = async (e) => {
         e.preventDefault()
-        const { asset, amount, aCoinLender, duration, network, loansCount } = this.state
-        const { dispatch, history } = this.props
+        const { amount, aCoinLender, duration,  } = this.state
+        const { dispatch, history, lendRequest, loanAssets, providers, protocolContracts } = this.props
+        const asset = loanAssets[lendRequest.contractAddress]
         this.setState({ btnLoading: true })
 
         if (!asset || !amount || !aCoinLender) {
@@ -226,7 +194,12 @@ class NewLoan extends Component {
             return
         }
 
-        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Loan Nonce: ${parseInt(loansCount) + 1}`
+        // Get userLoansCount
+        const account = (await ETH.getAccount()).payload
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const userLoansCount = (await BlitsLoans.ETH.getUserLoansCount(account, loansContract)).payload
+        
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${parseInt(userLoansCount) + 1}. Loans Contract: ${loansContract}`
         const response = await ETH.generateSecret(message)
 
         if (response.status !== 'OK') {
@@ -239,7 +212,7 @@ class NewLoan extends Component {
         const { secret, secretHash } = response.payload
 
         const params = {
-            tokenContractAddress: asset, amount, aCoinLender, secret, secretHash, duration, network
+            amount, aCoinLender, secret, secretHash, duration
         }
 
         dispatch(saveLendRequest(params))
@@ -253,9 +226,11 @@ class NewLoan extends Component {
 
     render() {
 
-        const { loanAssets, lendRequest } = this.props
+        const { loanAssets, lendRequest, assetTypes } = this.props
         const { loading } = this.state
-
+        const assetType = assetTypes[lendRequest.contractAddress]
+        const asset = loanAssets[lendRequest.contractAddress]
+        
         if (loading) {
             return <Loading />
         }
@@ -279,18 +254,15 @@ class NewLoan extends Component {
 
                                         <div className="form-group">
                                             <div className="app-form-label text-black">1. Asset</div>
-                                            <select value={this.state.asset} onChange={this.handleAssetChange} className={this.state.assetSymbolIsInvalid ? "form-control is-invalid" : "form-control"}>
-                                                {
-                                                    Object.values(loanAssets).length > 0
-                                                        ? Object.values(loanAssets).map((a, i) => (
-                                                            <option key={i} value={a.contractAddress}>{a.name}</option>
-                                                        ))
-                                                        : <option>Loading...</option>
-                                                }
-                                            </select>
-                                            <div className="invalid-feedback">
-                                                Select an asset to lend
+                                            <div className="details-container mt-2">
+                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Name: </span> {asset.name}</div>
+                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Blockchain: </span> {asset.blockchain}</div>
+                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Contract: </span> {asset.contractAddress}</div>
                                             </div>
+                                            {/* <div className="input-group mt-3">
+                                                <input value={asset.contractAddress} readOnly={true} type="text" className={"form-control"} placeholder="Harmony Address" autoCorrect="false" autoComplete="false" />
+                                            </div> */}
+
                                         </div>
 
                                         {/* <div className="form-group mt-4">
@@ -310,11 +282,11 @@ class NewLoan extends Component {
                                         <div className="form-group mt-4">
                                             <div className="app-form-label text-black">2. Amount: {this.state.amount ? this.state.amount : '0'} {this.state.assetSymbol.toUpperCase()}</div>
                                             <div className="mt-3">
-                                                <Slider min={100} max={1000} step={10} value={this.state.amount} onChange={value => this.setState({ amount: value })} />
+                                                <Slider min={parseInt(assetType.minLoanAmount)} max={parseInt(assetType.maxLoanAmount)} step={10} value={this.state.amount} onChange={value => this.setState({ amount: value })} />
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                 <div className="text-black mt-3"></div>
-                                                <div className="text-black mt-3">Min: {lendRequest.minLoanAmount} | Max: {lendRequest.maxLoanAmount}</div>
+                                                <div className="text-black mt-3">Min: {assetType.minLoanAmount} | Max: {assetType.maxLoanAmount}</div>
                                             </div>
                                         </div>
 
@@ -389,7 +361,7 @@ class NewLoan extends Component {
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">APR:</td>
-                                                        <td className="details-label">{(parseFloat(BigNumber(lendRequest.interestRate).multipliedBy(12).multipliedBy(100))).toFixed(2)}% <Emoji text="💸" /></td>
+                                                        <td className="details-label">{(parseFloat(BigNumber(assetType.interestRate).multipliedBy(12).multipliedBy(100))).toFixed(2)}% <Emoji text="💸" /></td>
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">Allowed collateral:</td>
@@ -433,11 +405,14 @@ class NewLoan extends Component {
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, loanSettings }) {
+function mapStateToProps({ lendRequest, loanAssets, loanSettings, assetTypes, protocolContracts, providers }) {
     return {
         lendRequest,
         loanAssets,
-        loanSettings
+        loanSettings,
+        assetTypes,
+        protocolContracts,
+        providers
     }
 }
 

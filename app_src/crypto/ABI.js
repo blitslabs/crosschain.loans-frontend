@@ -61,7 +61,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -130,7 +130,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -168,7 +168,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -205,7 +205,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -230,7 +230,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -299,7 +299,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -330,7 +330,7 @@ const ABI = {
           },
           {
             "indexed": false,
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           }
@@ -362,7 +362,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -434,7 +435,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -453,7 +455,22 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "contractEnabled",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -480,7 +497,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -493,7 +511,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -519,7 +538,53 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "userLoans",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "userLoansCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -543,7 +608,8 @@ const ABI = {
           }
         ],
         "stateMutability": "pure",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -562,7 +628,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -592,9 +659,9 @@ const ABI = {
             "type": "address"
           },
           {
-            "internalType": "bytes",
+            "internalType": "address",
             "name": "_aCoinLenderAddress",
-            "type": "bytes"
+            "type": "address"
           }
         ],
         "name": "createLoan",
@@ -768,7 +835,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -806,12 +874,12 @@ const ABI = {
             "type": "uint256[2]"
           },
           {
-            "internalType": "bytes",
+            "internalType": "address",
             "name": "aCoinLenderAddress",
-            "type": "bytes"
+            "type": "address"
           },
           {
-            "internalType": "enum BlitsLoans.State",
+            "internalType": "enum CrosschainLoans.State",
             "name": "state",
             "type": "uint8"
           },
@@ -822,7 +890,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [
@@ -841,7 +910,8 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [

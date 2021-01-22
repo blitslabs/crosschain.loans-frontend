@@ -83,7 +83,7 @@ class App extends Component {
                 <Route path='/app' exact component={Home} />
                 <Route path='/app/borrow' component={BorrowDashboard} />
                 <Route path='/app/lend' exact component={Lend} />
-                <Route path='/app/lend/:contractAddress' component={NewLoan} />
+                <Route path='/app/lend/new' component={NewLoan} />
                 {/* <Route path='/admin' component={Admin} /> */}
               </Fragment>
           }
