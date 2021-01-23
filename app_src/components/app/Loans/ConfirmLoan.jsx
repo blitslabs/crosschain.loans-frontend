@@ -18,6 +18,8 @@ import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
 import MyParticles from './MyParticles'
 
+// API
+import { getNewEngineSecretHash, confirmLoanOperation } from '../../../utils/api'
 
 class LoanTerms extends Component {
     state = {
@@ -34,15 +36,14 @@ class LoanTerms extends Component {
     }
 
     componentDidMount = async () => {
-        document.title = '🚀 Confirm Loan | Cross-chain Loans'
-        const { lendRequest, loanSettings, history } = this.props
+        document.title = 'Confirm Loan | Cross-chain Loans'
+        const { lendRequest, providers, protocolContracts } = this.props
         const { amount, tokenContractAddress } = lendRequest
-        const { eth_loans_contract } = loanSettings
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
-        let allowanceRes = await ETH.getAllowance(eth_loans_contract, tokenContractAddress)
-
+        let allowanceRes = await ETH.getAllowance(loansContract, tokenContractAddress)
+        console.log('Allowance: ', allowanceRes)
         if (allowanceRes.status === 'OK') {
-            console.log('Allowance: ', allowanceRes)
             let allowance = BigNumber(allowanceRes.payload)
             if (allowance.lt(amount)) {
                 this.setState({ showAllowanceBtn: true, loading: false })
@@ -55,49 +56,63 @@ class LoanTerms extends Component {
 
     handleAllowanceBtn = async (e) => {
         e.preventDefault()
-        const { loanSettings, lendRequest } = this.props
-        const { eth_loans_contract } = loanSettings
+        const { lendRequest, providers, protocolContracts } = this.props
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
         const { amount, tokenContractAddress } = lendRequest
 
         this.setState({ loading: true, btnLoading: true })
-        const response = await ETH.approveAllowance(eth_loans_contract, '1000000000', tokenContractAddress)
+        const response = await ETH.approveAllowance(loansContract, '10000', tokenContractAddress)
         console.log(response)
 
-        let allowanceInterval = setInterval(async () => {
+        if (response.status === 'OK') {
+            let allowanceInterval = setInterval(async () => {
 
-            let allowanceRes = await ETH.getAllowance(eth_loans_contract, tokenContractAddress)
+                let allowanceRes = await ETH.getAllowance(loansContract, tokenContractAddress)
 
-            if (allowanceRes.status === 'OK') {
-                console.log('Allowance: ', allowanceRes)
-                let allowance = BigNumber(allowanceRes.payload)
-                if (allowance.gte(amount)) {
-                    clearInterval(allowanceInterval)
-                    this.setState({ showAllowanceBtn: false, loading: false, btnLoading: false })
-                    return
+                if (allowanceRes.status === 'OK') {
+                    console.log('Allowance: ', allowanceRes)
+                    let allowance = BigNumber(allowanceRes.payload)
+                    if (allowance.gte(amount)) {
+                        clearInterval(allowanceInterval)
+                        this.setState({ showAllowanceBtn: false, loading: false, btnLoading: false })
+                        return
+                    }
                 }
-            }
 
-        }, 1000)
+            }, 1000)
+        } else {
+            this.setState({ loading: false, btnLoading: false })
+        }
     }
 
     handleCreateLoanBtn = async (e) => {
         e.preventDefault()
 
-        const { lendRequest, loanSettings, dispatch, history } = this.props
+        const { lendRequest, protocolContracts, providers, dispatch, history } = this.props
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+
         const {
             secretHash, amount, tokenContractAddress, aCoinLender
         } = lendRequest
-        const { eth_public_key, eth_loans_contract, autolender_secret_hash } = loanSettings
 
         this.setState({ loading: true, btnLoading: true })
 
+        let arbiter
+        try {
+            arbiter = (await (await getNewEngineSecretHash({ blockchain: 'ETH' })).json()).payload
+        } catch (e) {
+            toast.error('Error fetching arbiter data', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loading: false, btnLoading: false })
+            return
+        }
+
         const response = await BlitsLoans.ETH.createLoan(
-            eth_public_key,
+            arbiter.account,
             secretHash,
-            autolender_secret_hash,
+            arbiter.secretHash,
             amount,
             tokenContractAddress,
-            eth_loans_contract,
+            loansContract,
             aCoinLender
         )
 
@@ -109,9 +124,27 @@ class LoanTerms extends Component {
             return
         }
 
-        toast.success('New Loan Created!', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-        this.setState({ loading: false, btnLoading: true })
-        history.push('/loan_created')
+        const params = {
+            blockchain: 'ETH',
+            network: providers.ethereum,
+            txHash: response.payload.transactionHash
+        }
+
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('New Loan Created!', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        this.setState({ loading: false, btnLoading: true })
+                        clearInterval(intervalId)
+                        history.push('/app/lend/done')
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
     }
 
 
@@ -119,24 +152,25 @@ class LoanTerms extends Component {
 
     handleBackBtn = (e) => {
         e.preventDefault()
-        this.props.history.push('/lend')
+        this.props.history.push('/app/lend/new')
     }
 
     render() {
 
-        const { lendRequest, loanAssets, loanSettings } = this.props
-        let { tokenContractAddress, amount, aCoinLender, secret, secretHash, interestRate, duration } = lendRequest
+        const { lendRequest, loanAssets, assetTypes } = this.props
+        const { interestRate } = assetTypes[lendRequest.tokenContractAddress]
+        let { tokenContractAddress, amount, aCoinLender, secret, secretHash, duration } = lendRequest
         const token = loanAssets[tokenContractAddress]
-        const interest = (amount && interestRate ? parseFloat(BigNumber(amount).multipliedBy(lendRequest.interestRate)) : 0).toFixed(2)
-        const apy = parseFloat(BigNumber(lendRequest.interestRate).multipliedBy(1200)).toFixed(2)
+        const interest = (amount && interestRate ? parseFloat(BigNumber(amount).multipliedBy(interestRate)) : 0).toFixed(2)
+        const apy = parseFloat(BigNumber(interestRate).multipliedBy(1200)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(amount).plus(interest)).toFixed(2)
 
         return (
             <Fragment>
-                <MyParticles />
+                {/* <MyParticles /> */}
                 <div className="main">
                     <Navbar />
-                    <section className="section app-section" style={{marginTop: '12rem'}}>
+                    <section className="section app-section" style={{ marginTop: '12rem' }}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12 col-md-8 offset-md-2">
@@ -193,7 +227,7 @@ class LoanTerms extends Component {
 
                                                         :
                                                         <div style={{ marginTop: '15px', }}>
-                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm. Please be patient, Ethereum can be slow sometimes :)</div>
+                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm</div>
                                                             <ReactLoading type={'cubes'} color="#32CCDD" height={40} width={60} />
                                                         </div>
                                                 }
@@ -213,11 +247,13 @@ class LoanTerms extends Component {
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, loanSettings }) {
+function mapStateToProps({ lendRequest, loanAssets, protocolContracts, providers, assetTypes }) {
     return {
         lendRequest,
+        protocolContracts,
         loanAssets,
-        loanSettings
+        providers,
+        assetTypes
     }
 }
 

@@ -20,6 +20,28 @@ export function getProtocolContracts() {
     })
 }
 
+export function getNewEngineSecretHash(params) {
+    return fetch(API_HOST + `engine/secretHash/${params.blockchain}/new`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function confirmLoanOperation(params) {
+    return fetch(API_HOST + `loan/${params.blockchain}/operation/confirm`, {
+        method:  'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+}
+
+
+//
+
 export function getAvailableLoans() {
     return fetch(API_HOST + 'loans/available', {
         method: 'GET',

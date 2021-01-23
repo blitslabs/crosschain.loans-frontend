@@ -14,6 +14,7 @@ import Home from './app/Loans/Home'
 import BorrowDashboard from './app/Loans/BorrowDashboard'
 import Lend from './app/Loans/Lend'
 import NewLoan from './app/Loans/NewLoan'
+import ConfirmLoan from './app/Loans/ConfirmLoan'
 // Admin Router
 // import Admin from './admin/Admin'
 
@@ -84,6 +85,7 @@ class App extends Component {
                 <Route path='/app/borrow' component={BorrowDashboard} />
                 <Route path='/app/lend' exact component={Lend} />
                 <Route path='/app/lend/new' component={NewLoan} />
+                <Route path='/app/lend/confirm' component={ConfirmLoan} />
                 {/* <Route path='/admin' component={Admin} /> */}
               </Fragment>
           }

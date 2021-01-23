@@ -146,7 +146,7 @@ class Navbar extends Component {
                                                     <Link className="navigation-menu__link" to="/app/lend">Lend</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" href="/app/activity">Activity</Link>
+                                                    {/* <Link className="navigation-menu__link" href="/app/activity">Activity</Link> */}
                                                 </li>
 
                                             </ul>

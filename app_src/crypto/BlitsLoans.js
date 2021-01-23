@@ -1,6 +1,8 @@
 import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
 import ABI from './ABI'
+import ETH from './ETH'
+
 
 // Harmony
 import { Harmony, HarmonyExtension } from '@harmony-js/core'
@@ -161,11 +163,15 @@ const BlitsLoans = {
                 return { status: 'ERROR', message: 'Error instantiating token contract' }
             }
 
-            let amount = BigNumber(principal)
+            // Get Token Decimals
+            const decimals = await token.methods.decimals().call()
+
+            // Format Principal Amount
+            let amount = ETH.pad(principal, decimals)
 
             // Get Token Balance
             let balance = await token.methods.balanceOf(lender).call()
-            balance = BigNumber(web3.utils.fromWei(balance))
+            balance = BigNumber(balance)
 
             // Check Balance
             if (balance.lt(amount)) {
@@ -174,16 +180,11 @@ const BlitsLoans = {
 
             // Allowance
             let allowance = await token.methods.allowance(lender, loansContractAddress).call()
-            allowance = BigNumber(web3.utils.fromWei(allowance))
+            allowance = BigNumber(allowance)
 
             if (!allowance || allowance.lt(amount)) {
                 return { status: 'ERROR', message: 'Insufficient allowance' }
             }
-
-            amount = web3.utils.toWei(amount.toString())
-
-            // Encode aCoinLenderAddress
-            aCoinLenderAddress = web3.utils.toHex(aCoinLenderAddress)
 
             try {
                 const tx = await contract.methods.createLoan(
@@ -192,6 +193,7 @@ const BlitsLoans = {
                 ).send({ from: lender })
                 return { status: 'OK', payload: tx }
             } catch (e) {
+                console.log(e)
                 return { status: 'ERROR', message: 'Error creating loan' }
             }
 

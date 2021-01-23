@@ -91,9 +91,10 @@ const ETH = {
         const account = accounts[0]
 
         try {
-
-            const allowance = await token.methods.allowance(account, spender).call()
-            return { status: 'OK', payload: web3.utils.toWei(allowance) }
+            const decimals = await token.methods.decimals().call()
+            let allowance = await token.methods.allowance(account, spender).call()
+            allowance = BigNumber(allowance).dividedBy(ETH.pad(1, decimals)).toString()
+            return { status: 'OK', payload: allowance }
 
         } catch (e) {
             return { status: 'ERROR', message: 'Error getting allowance' }
@@ -122,12 +123,18 @@ const ETH = {
         } catch (e) {
             return { status: 'ERROR', message: 'Error instantiating token contract' }
         }
+        
+        const decimals = await token.methods.decimals().call()
+        amount = ETH.pad(amount, decimals)
 
         try {
-            const tx = await token.methods.approve(spender, web3.utils.toWei(amount)).send({ from: account })
-            return { status: 'OK', payload: tx }
+            const receipt = await token.methods.approve(spender, amount).send({ from: account })
+            console.log('test')
+            console.log(receipt)
+            return { status: 'OK', payload: receipt }
 
         } catch (e) {
+            console.log(e)
             return { status: 'ERROR', message: 'Error approving allowance' }
         }
     },

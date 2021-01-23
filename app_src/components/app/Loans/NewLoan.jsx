@@ -30,6 +30,7 @@ import { toast } from 'react-toastify'
 import MyParticles from './MyParticles'
 import ParticleEffectButton from 'react-particle-effect-button'
 import Emoji from "react-emoji-render"
+import { fromBech32 } from '@harmony-js/crypto'
 
 class NewLoan extends Component {
     state = {
@@ -212,11 +213,11 @@ class NewLoan extends Component {
         const { secret, secretHash } = response.payload
 
         const params = {
-            amount, aCoinLender, secret, secretHash, duration
+            tokenContractAddress: lendRequest.contractAddress, amount, aCoinLender: fromBech32(aCoinLender), secret, secretHash, duration
         }
 
         dispatch(saveLendRequest(params))
-        history.push('/lend/confirm')
+        history.push('/app/lend/confirm')
     }
 
     handleBackBtn = (e) => {
