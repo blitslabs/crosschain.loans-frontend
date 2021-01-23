@@ -22,27 +22,28 @@ import MyParticles from './MyParticles'
 class LoanCreated extends Component {
     
     componentDidMount = async () => {
-        document.title = '✅ Loan Created | Cross-chain Loans'
+        document.title = 'Loan Created | Cross-chain Loans'
     }
 
     handleReturnBtn = (e) => {
         e.preventDefault()
         const { history } = this.props
-        history.push('/borrow')
+        history.push('/app/lend')
     }
 
     render() {
 
-        const { lendRequest, loanAssets, loanSettings } = this.props
-        let { tokenContractAddress, amount, aCoinLender, secret, secretHash, interestRate, duration } = lendRequest
+        const { lendRequest, loanAssets, assetTypes } = this.props
+        const { interestRate } = assetTypes[lendRequest.tokenContractAddress]
+        let { tokenContractAddress, amount, aCoinLender, secret, secretHash, duration } = lendRequest
         const token = loanAssets[tokenContractAddress]
-        const interest = (amount && interestRate ? parseFloat(BigNumber(amount).multipliedBy(lendRequest.interestRate)) : 0).toFixed(2)
-        const apy = parseFloat(BigNumber(lendRequest.interestRate).multipliedBy(1200)).toFixed(2)
+        const interest = (amount && interestRate ? parseFloat(BigNumber(amount).multipliedBy(interestRate)) : 0).toFixed(2)
+        const apy = parseFloat(BigNumber(interestRate).multipliedBy(1200)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(amount).plus(interest)).toFixed(2)
 
         return (
             <Fragment>
-                <MyParticles />
+                {/* <MyParticles /> */}
                 <div className="main">
                     <Navbar />
                     <section className="section app-section" style={{marginTop: '12rem'}}>
@@ -98,11 +99,13 @@ class LoanCreated extends Component {
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, loanSettings }) {
+function mapStateToProps({ lendRequest, loanAssets, protocolContracts, providers, assetTypes }) {
     return {
         lendRequest,
+        protocolContracts,
         loanAssets,
-        loanSettings
+        providers,
+        assetTypes
     }
 }
 
