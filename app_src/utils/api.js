@@ -40,8 +40,6 @@ export function confirmLoanOperation(params) {
 }
 
 
-//
-
 export function getAvailableLoans() {
     return fetch(API_HOST + 'loans/available', {
         method: 'GET',
@@ -51,7 +49,7 @@ export function getAvailableLoans() {
     })
 }
 
-
+//
 export function getLoansSettings(params) {
     return fetch(API_HOST + 'loans/settings/' + params.network, {
         method: 'GET',

@@ -22,7 +22,7 @@
 }
 
 .btn-blits {
-    background: #222;
+    background: black;
 }
 
 .btn-blits-black {
@@ -379,4 +379,56 @@ a {
     background-color: #e9ecef;
     padding: 10px 15px;
     color:#000000 !important;
+}
+
+.loanBook {
+    /* border: 1px solid#eaebeb; */
+   
+
+    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
+    padding: 1em;
+}
+
+.loanBook thead tr {
+    background-color: #f8f9fa;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.loanBook td {
+    font-size: 14px;
+    font-weight: 300;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.loanBook__apr {
+    color: rgb(15, 210, 140); 
+    background: rgb(224, 249, 240); 
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.loanBook__status {
+    color: rgb(15, 210, 140); 
+    background: rgb(224, 249, 240); 
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.loanBook__amount {
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgb(248 249 250) !important;
+}
+.table-bordered {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
 }

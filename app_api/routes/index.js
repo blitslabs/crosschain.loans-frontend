@@ -12,6 +12,8 @@ const loan = require('../controllers/loan')
 
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
+router.get('/loans/:status', loan.getLoansByStatus)
+router.get('/loan/:loanId', loan.getLoanDetails)
 
 router.get('/updateCollateralLock_ONE/:network', collateralLock.updateCollateralLockData_ONE)
 router.get('/updateCollateralLock_ETH/:network', collateralLock.updateCollateralLockData_ETH)

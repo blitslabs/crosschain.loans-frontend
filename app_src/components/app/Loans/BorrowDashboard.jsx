@@ -47,7 +47,7 @@ class LenderDashboard extends Component {
 
     handleViewDetailsBtn = async (loanId) => {
         const { history } = this.props
-        history.push('/loan/' + loanId)
+        history.push('/app/loan/' + loanId)
     }
 
     render() {
@@ -56,7 +56,7 @@ class LenderDashboard extends Component {
 
 
         return (
-            <Fragment>               
+            <Fragment>
                 <div className="main">
                     <Navbar />
                     <section className="section " style={{ paddingTop: '10rem' }}>
@@ -65,70 +65,70 @@ class LenderDashboard extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Available Loans</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Loan Book: Available Loans</div>
                                         <div style={{ fontSize: '18px', marginTop: '10px' }}>Borrow assets across different blockchains</div>
                                     </div>
 
-                                    <table className="table table-hover">
-                                        <thead>
-                                            <th>Loan ID</th>
-                                            <th>Amount</th>
-                                            <th>Term</th>
-                                            <th>APY</th>
-                                            <th>Lender</th>
-                                            <th>Created on</th>
-                                            <th>Status</th>
-                                        </thead>
-                                    </table>
 
                                     {
 
-                                        // availableLoans && Object.values(availableLoans).length > 0
-                                        //     ?
-                                        //     <table className="table table-hover loans-table" style={{ background: '#f8f9fa', borderRadius: '25px' }}>
-                                        //         <thead>
-                                        //             <tr>
-                                        //                 {/* <th>ID</th> */}
-                                        //                 <th><Emoji text="💵" /> Amount</th>
-                                        //                 <th><Emoji text="🧿" /> Blockchain</th>
-                                        //                 <th><Emoji text="💸" /> Repayment</th>
-                                        //                 <th><Emoji text="🧃" /> Interest</th>
-                                        //                 <th><Emoji text="🌈" /> APR</th>
-                                        //                 <th><Emoji text="⌛" /> Duration</th>
-                                        //                 <th><Emoji text="🎱" /> Lender</th>
-                                        //                 <th></th>
-                                        //             </tr>
-                                        //         </thead>
-                                        //         <tbody>
-                                        //             {
-                                        //                 Object.values(availableLoans).map((l, i) => (
-                                        //                     <tr key={i}>
-                                        //                         {/* <td>#{l.blockchainLoanId}</td> */}
-                                        //                         <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
-                                        //                         <td>{l.blockchain}</td>
-                                        //                         <td>
-                                        //                             {/* <Emoji text="💸" /> */}
-                                        //                             {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                        //                         </td>
-                                        //                         <td>
-                                        //                             {/* <Emoji text="🧃" /> */}
-                                        //                             {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                        //                         </td>
-                                        //                         <td>
-                                        //                             {/* <Emoji text="🌈" /> */}
-                                        //                             {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
-                                        //                         </td>
-                                        //                         <td>30 days</td>
-                                        //                         <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
-                                        //                         <td>
-                                        //                             <button onClick={e => { e.preventDefault(); this.handleViewDetailsBtn(l.id) }} className="btn btn-blits" style={{}}>Borrow</button>
-                                        //                         </td>
-                                        //                     </tr>
-                                        //                 ))
-                                        //             }
-                                        //         </tbody>
-                                        //     </table>
-                                        //     : <div className="text-center">No available loans found</div>
+                                        availableLoans && Object.values(availableLoans).length > 0
+                                            ?
+                                            <div className="panel panel-default">
+                                            <table className="table loanBook table-striped ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Amount</th>
+                                                        <th>Asset</th>
+                                                        <th>Chain</th>
+                                                        <th>APR</th>
+                                                        <th>Term</th>
+                                                        <th>Repayment</th>
+                                                        <th>Interest</th>
+                                                        <th>Lender</th>
+                                                        <th>Status</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        Object.values(availableLoans).map((l, i) => (
+                                                            <tr key={i}>
+                                                                <td>#{l.contractLoanId}</td>
+                                                                <td className="loanBook__amount">{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} </td>
+                                                                <td>{l.tokenSymbol}<img style={{ height: 20 }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img></td>
+                                                                <td>{l.blockchain}</td>
+                                                                <td>
+                                                                    <div className="loanBook__apr">
+                                                                        {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
+                                                                    </div>
+                                                                </td>
+                                                                <td>30d</td>
+
+                                                                <td>
+                                                                    {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
+                                                                </td>
+                                                                <td>
+                                                                    {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
+                                                                </td>
+                                                                <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
+                                                                <td>
+                                                                    <div className="loanBook__apr">
+                                                                        {l.status === '1' ? 'Funded' : '-'}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <button onClick={e => { e.preventDefault(); this.handleViewDetailsBtn(l.id) }} className="btn btn-blits" style={{}}>Borrow</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    }
+                                                </tbody>
+                                                
+                                            </table>
+                                            </div>
+                                            : <div className="text-center">No available loans found</div>
                                     }
 
 
