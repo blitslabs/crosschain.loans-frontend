@@ -188,7 +188,7 @@ class LoanDetails extends Component {
 
         const account = (await ETH.getAccount()).payload
         const accountLoans = (await BlitsLoans.ETH.getAccountLoans(account, loansContract))
-       
+
         let userLoansCount = 0
         for (let l of accountLoans) {
             userLoansCount++
@@ -478,6 +478,42 @@ class LoanDetails extends Component {
         }, 5000)
     }
 
+    handleRefundRepaymentBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        
+        this.setState({ loadingBtn: true })
+        
+        const response = await BlitsLoans.ETH.refundPayback(contractLoanId, loansContract)
+
+        if (response.status !== 'OK') {
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: response.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Payback Refunded', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
     checkLoanStatus = async (loanId) => {
 
         if (!loanId) return
@@ -622,10 +658,29 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 4 && !loadingBtn && eth_account.toUpperCase() == lender.toUpperCase()) && (
+                                                    (
+                                                        status == 4 &&
+                                                        !loadingBtn &&
+                                                        eth_account.toUpperCase() == lender.toUpperCase() &&
+                                                        parseInt(loanExpiration) > Math.floor(Date.now() / 1000)
+                                                    ) && (
                                                         <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Accept Repayment
+                                                        </button>
+                                                    )
+                                                }
+
+                                                {
+                                                    (
+                                                        status == 4 &&
+                                                        !loadingBtn &&
+                                                        eth_account.toUpperCase() == lender.toUpperCase() &&
+                                                        parseInt(loanExpiration) < Math.floor(Date.now() / 1000)
+                                                    ) && (
+                                                        <button onClick={this.handleRefundRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
+                                                            Refund Payback
                                                         </button>
                                                     )
                                                 }
