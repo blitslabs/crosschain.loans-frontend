@@ -469,7 +469,7 @@ class LoanDetails extends Component {
                 .then((res) => {
                     console.log(res)
                     if (res.status === 'OK') {
-                        toast.success('Collateral Unlocked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        toast.success('Collateral Seized', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
                         clearInterval(intervalId)
                         this.setState({ loadingBtn: false })
                         return
