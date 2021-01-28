@@ -26,9 +26,15 @@ import ONE from '../../../crypto/ONE'
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
 import ABI from '../../../crypto/ABI'
+import { fromBech32 } from '@harmony-js/crypto'
 
 // API
-import { getLoanDetails, getLoansSettings, getAccountLoansCount, getLoanNonce } from '../../../utils/api'
+import {
+    getLoanDetails, getNewEngineSecretHash,
+    getAccountLoansCount, getLoanNonce,
+    confirmLoanOperation,
+    confirmCollateralLockOperation
+} from '../../../utils/api'
 
 // Actions
 import { saveLoanDetails } from '../../../actions/loanDetails'
@@ -49,33 +55,19 @@ class LoanDetails extends Component {
         const { history, match, dispatch, loanDetails } = this.props
         const { loanId } = match.params
 
-        console.log(loanId)
-
-        document.title = `🦄 Loan Details #${loanId} | Cross-chain Loans`
+        document.title = `Loan Details #${loanId} | Cross-chain Loans`
 
         if (!loanId) {
             history.push('/borrow')
         }
 
-        const network = window.ethereum.chainId === '0x1' ? mainnet : 'testnet'
-
-        Promise.all([
-            getLoansSettings({ network }),
-            getLoanDetails({ loanId }),
-
-        ])
-            .then((responses) => {
-                return Promise.all(responses.map(res => res.json()))
-            })
+        getLoanDetails({ loanId })
+            .then(res => res.json())
             .then(async (data) => {
                 console.log(data)
 
-                if (data[0].status === 'OK') {
-                    dispatch(saveLoanSettings(data[0].payload))
-                }
-
-                if (data[1].status === 'OK') {
-                    dispatch(saveLoanDetails(data[1].payload))
+                if (data.status === 'OK') {
+                    dispatch(saveLoanDetails(data.payload))
                 }
 
                 // Get ETH Account
@@ -91,7 +83,8 @@ class LoanDetails extends Component {
                 let one_account
                 try {
                     one_account = await ONE.getAccount()
-                    one_account = one_account.payload.address
+                    one_account = fromBech32(one_account.payload.address)
+
                 } catch (e) {
                     console.log(e)
                     one_account = ''
@@ -117,113 +110,46 @@ class LoanDetails extends Component {
      */
     handleLockCollateralBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, prices, loanSettings } = this.props
+        const { loanDetails, prices, protocolContracts, providers } = this.props
         const {
-            aCoinLenderAddress, secretHashB1, principal
+            aCoinLenderAddress, secretHashB1, principal, contractLoanId, loansContractAddress
         } = loanDetails
-        const { one_lock_contract } = loanSettings
 
-        const collateralPrice = BigNumber(prices.ONE.priceBTC).times(prices.BTC.priceUSD)
-        const requiredCollateral = parseFloat(BigNumber(principal).div(collateralPrice).times(1.5)).toFixed(2)
+        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const requiredCollateral = parseFloat(BigNumber(principal).div(prices.ONE.usd).times(1.5)).toFixed(2)
 
         this.setState({ loadingBtn: true })
 
-        // Get ETH account
-        const ethAccountResponse = await ETH.getAccount()
-
-        if (ethAccountResponse.status !== 'OK') {
-            console.log(ethAccountResponse)
-            toast.error(ethAccountResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loadingBtn: false })
-            return
-        }
-
-        const bCoinBorrowerAddress = ethAccountResponse.payload
-
-        // Get Nonce
-        let loansCount
-        try {
-            loansCount = (await (await getAccountLoansCount({ account: bCoinBorrowerAddress, actor: 'borrower', blockchain: 'ETH' })).json()).payload
-        } catch (e) {
-            console.log(e)
-            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            return
-        }
+        const bCoinBorrowerAddress = (await ETH.getAccount()).payload
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
         // Generate secretHash
-        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. Borrower Loan Nonce: ${parseInt(loansCount) + 1}`
-        const signResponse = await ETH.generateSecret(message)
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`
+        let response = await ETH.generateSecret(message)
 
-        if (signResponse.status !== 'OK') {
-            console.log(signResponse)
-            toast.error(signResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loadingBtn: false })
+        if (response.status !== 'OK') {
+            console.log(response)
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false, })
             return
         }
 
-        const { secret, secretHash } = signResponse.payload
-        const secretA1 = secret
-        const secretHashA1 = secretHash
+        const { secret, secretHash } = response.payload
 
-
-        const response = await BlitsLoans.ONE.lockCollateral(
-            //requiredCollateral,
-            '100', // testnet - change in production
+        response = await BlitsLoans.ONE.lockCollateral(
+            requiredCollateral,
             aCoinLenderAddress,
-            secretHashA1,
+            secretHash,
             secretHashB1,
-            one_lock_contract,
+            collateralLockContract,
             bCoinBorrowerAddress,
+            contractLoanId,
+            loansContractAddress,
             '0', // shard
-            'testnet' // change in production
+            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
         )
 
-        if (response.status !== 'OK') {
-            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loadingBtn: false })
-            return
-        }
-
-        toast.success('Collateral Locked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-    }
-
-    handleWithdrawBtn = async (e) => {
-        e.preventDefault()
-        const { loanDetails, loanSettings } = this.props
-        const { blockchainLoanId } = loanDetails
-        const { eth_loans_contract } = loanSettings
-
-        this.setState({ loadingBtn: true })
-
-        // Get Loan Nonce
-        let borrowerLoanNonce
-        try {
-            borrowerLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.borrowerNonce
-        } catch (e) {
-            console.log(e)
-            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            return
-        }
-
-        // Generate secretHash
-        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. Borrower Loan Nonce: ${borrowerLoanNonce}`
-        const signResponse = await ETH.generateSecret(message)
-
-        if (signResponse.status !== 'OK') {
-            console.log(signResponse)
-            toast.error(signResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            return
-        }
-
-        const { secret, secretHash } = signResponse.payload
-        const secretA1 = `0x${secret}`
-        const secretHashA1 = secretHash
-
-        const response = await BlitsLoans.ETH.withdrawPrincipal(
-            blockchainLoanId,
-            secretA1,
-            eth_loans_contract
-        )
+        console.log(response)
 
         if (response.status !== 'OK') {
             toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
@@ -231,48 +157,46 @@ class LoanDetails extends Component {
             return
         }
 
-        toast.success('Principal Withdrawn', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-    }
-
-    handleRepayBtn = async (e) => {
-        e.preventDefault()
-        const { loanDetails, loanSettings } = this.props
-        const { blockchainLoanId } = loanDetails
-        const { eth_loans_contract } = loanSettings
-
-        this.setState({ loadingBtn: true })
-
-        const response = await BlitsLoans.ETH.repayLoan(blockchainLoanId, eth_loans_contract)
-
-        if (response.status !== 'OK') {
-            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loadingBtn: false })
-            return
+        const params = {
+            network: providers.ethereum,
+            txHash: response.payload,
+            blockchain: 'ONE',
+            operation: 'LockCollateral'
         }
 
-        toast.success('Loan Repaid', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        const intervalId = setInterval(() => {
+            confirmCollateralLockOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Collateral Locked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
     }
 
-    handleAcceptRepaymentBtn = async (e) => {
+    handleCancelBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, loanSettings } = this.props
-        const { blockchainLoanId } = loanDetails
-        const { eth_loans_contract } = loanSettings
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
         this.setState({ loadingBtn: true })
 
-        // Get Loan Nonce
-        let lenderLoanNonce
-        try {
-            lenderLoanNonce = (await (await getLoanNonce({ loanId: blockchainLoanId, blockchain: 'ETH' })).json()).payload.lenderNonce
-        } catch (e) {
-            console.log(e)
-            toast.error('Error generating secret', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            return
+        const account = (await ETH.getAccount()).payload
+        const accountLoans = (await BlitsLoans.ETH.getAccountLoans(account, loansContract))
+       
+        let userLoansCount = 0
+        for (let l of accountLoans) {
+            userLoansCount++
+            if (l == contractLoanId) break;
         }
 
         // Generate secretHash        
-        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Loan Nonce: ${lenderLoanNonce}`
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${userLoansCount}. Loans Contract: ${loansContract}`
         const signResponse = await ETH.generateSecret(message)
 
         if (signResponse.status !== 'OK') {
@@ -285,7 +209,7 @@ class LoanDetails extends Component {
         const secretB1 = `0x${secret}`
         const secretHashB1 = secretHash
 
-        const response = await BlitsLoans.ETH.acceptRepayment(blockchainLoanId, secretB1, eth_loans_contract)
+        const response = await BlitsLoans.ETH.cancelLoan(contractLoanId, secretB1, loansContract)
 
         if (response.status !== 'OK') {
             toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
@@ -293,24 +217,192 @@ class LoanDetails extends Component {
             return
         }
 
-        toast.success('Loan Payback Accepted', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: response.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Loan Canceled', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
+    handleWithdrawBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+
+        this.setState({ loadingBtn: true })
+
+        // Generate secretHash
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`
+        let response = await ETH.generateSecret(message)
+
+        if (response.status !== 'OK') {
+            console.log(response)
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false, })
+            return
+        }
+
+        const { secret, secretHash } = response.payload
+
+        const txResponse = await BlitsLoans.ETH.withdrawPrincipal(
+            contractLoanId,
+            `0x${secret}`, // secretA1
+            loansContract
+        )
+
+        if (txResponse.status !== 'OK') {
+            toast.error(txResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: txResponse.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Principal Withdrawn', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
+    handleRepayBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+
+        this.setState({ loadingBtn: true })
+
+        const response = await BlitsLoans.ETH.repayLoan(contractLoanId, loansContract)
+
+        if (response.status !== 'OK') {
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: response.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Loan Repaid', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
+    handleAcceptRepaymentBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+
+        this.setState({ loadingBtn: true })
+
+        const account = (await ETH.getAccount()).payload
+        const accountLoans = (await BlitsLoans.ETH.getAccountLoans(account, loansContract))
+        console.log(accountLoans)
+        let userLoansCount = 0
+        for (let l of accountLoans) {
+            userLoansCount++
+            if (l == contractLoanId) break;
+        }
+        console.log(userLoansCount)
+
+
+        // Generate secretHash        
+        const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${userLoansCount}. Loans Contract: ${loansContract}`
+        const signResponse = await ETH.generateSecret(message)
+
+        if (signResponse.status !== 'OK') {
+            toast.error(signResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const { secret, secretHash } = signResponse.payload
+        const secretB1 = `0x${secret}`
+        const secretHashB1 = secretHash
+
+        const response = await BlitsLoans.ETH.acceptRepayment(contractLoanId, secretB1, loansContract)
+
+        if (response.status !== 'OK') {
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: response.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Loan Payback Accepted', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
     }
 
     handleUnlockCollateralBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, loanSettings } = this.props
+        const { loanDetails, protocolContracts, providers } = this.props
         const { collateralLock, secretB1 } = loanDetails
-        const { one_lock_contract } = loanSettings
-        const { blockchainLoanId } = collateralLock
+        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const { contractLoanId } = collateralLock
 
         this.setState({ loadingBtn: true })
 
         const response = await BlitsLoans.ONE.unlockCollateral(
-            blockchainLoanId,
+            contractLoanId,
             secretB1,
-            one_lock_contract,
+            collateralLockContract,
             '0',
-            'testnet'
+            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
         )
 
         if (response.status !== 'OK') {
@@ -319,7 +411,71 @@ class LoanDetails extends Component {
             return
         }
 
-        toast.success('Collateral Unlocked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        const params = {
+            network: providers.ethereum,
+            txHash: response.payload,
+            blockchain: 'ONE',
+            operation: 'UnlockAndClose'
+        }
+
+        const intervalId = setInterval(() => {
+            confirmCollateralLockOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Collateral Unlocked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        this.setState({ loadingBtn: false })
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
+    handleSeizeCollateralBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { collateralLock, secretA1 } = loanDetails
+        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const { contractLoanId } = collateralLock
+
+        this.setState({ loadingBtn: true })
+
+        const response = await BlitsLoans.ONE.seizeCollateral(
+            contractLoanId,
+            secretA1,
+            collateralLockContract,
+            '0',
+            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
+        )
+
+        if (response.status !== 'OK') {
+            toast.error(response.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            txHash: response.payload,
+            blockchain: 'ONE',
+            operation: 'SeizeCollateral'
+        }
+
+        const intervalId = setInterval(() => {
+            confirmCollateralLockOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Collateral Unlocked', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        this.setState({ loadingBtn: false })
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
     }
 
     checkLoanStatus = async (loanId) => {
@@ -332,10 +488,12 @@ class LoanDetails extends Component {
                 .then(data => data.json())
                 .then((res) => {
                     const { loanDetails, dispatch } = self.props
-                    const { status } = loanDetails
+                    const { status, collateralLock } = loanDetails
                     console.log('Loan Status: ', res.payload.status)
                     if (res.status === 'OK') {
-                        if (status != res.payload.status) {
+                        if (status != res.payload.status ||
+                            collateralLock.status != res.payload.collateralLock.status
+                        ) {
                             console.log(res)
                             this.setState({ loadingBtn: false })
                             dispatch(saveLoanDetails(res.payload))
@@ -364,17 +522,17 @@ class LoanDetails extends Component {
             status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress
         } = loanDetails
 
-        const collateralPrice = BigNumber(prices.ONE.priceBTC).times(prices.BTC.priceUSD)
+        const collateralPrice = BigNumber(prices.ONE.usd)
         const requiredCollateral = parseFloat(BigNumber(principal).div(collateralPrice).times(1.5)).toFixed(2)
         const requiredCollateralValue = parseFloat(BigNumber(requiredCollateral).times(collateralPrice)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(principal).plus(interest)).toFixed(8)
         const apr = parseFloat(BigNumber(interest).times(100).div(principal).times(12)).toFixed(2)
         const loanStatus = status == 1 ? 'Funded' : status == 2 ? 'Approved' : status == 3 ? 'Withdrawn' : status == 4 ? 'Repaid' : status == 5 ? 'Payback Refunded' : status == 6 ? 'Closed' : status == 7 ? 'Canceled' : ''
-        const collateralStatus = collateralLock && 'status' in collateralLock && collateralLock.status == 0 ? 'Locked' : 'Unlocked'
+        const collateralStatus = collateralLock && 'status' in collateralLock && collateralLock.status == 0 ? 'Locked' : collateralLock.status == 1 ? 'Seized' : 'Unlocked'
 
         return (
             <Fragment>
-                <MyParticles />
+                {/* <MyParticles /> */}
                 <div className="main">
                     <Navbar />
                     <section className="section app-section" style={{ marginTop: '12rem' }}>
@@ -382,7 +540,7 @@ class LoanDetails extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-8 offset-md-2">
                                     <div className="mb-4 text-center">
-                                        <h2>🦄 Loan Details </h2>
+                                        <h2>Loan Details </h2>
                                         <div className="app-page-subtitle mt-2">ID #{loanId}</div>
                                     </div>
                                     <div className="app-card shadow-lg">
@@ -395,7 +553,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title mt-4">Repay</div>
                                                 <div className="label-value">{parseFloat(repaymentAmount).toFixed(2)} {tokenSymbol}</div>
                                                 <div className="label-title mt-4">Loan Expiration</div>
-                                                <div className="label-value">30 days</div>
+                                                <div className="label-value">{loanExpiration ? moment.unix(loanExpiration).format('DD/MM/YY:hh:ss') : '30 days'}</div>
                                             </div>
                                             <div className="col-sm-12 col-md-4">
                                                 <div className="label-title">APR</div>
@@ -403,7 +561,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title mt-4">Required Collateral</div>
                                                 <div className="label-value">{requiredCollateral} ONE</div>
                                                 <div className="label-title mt-4">Collateral Value</div>
-                                                <div className="label-value">${requiredCollateralValue} USDT</div>
+                                                <div className="label-value">${requiredCollateralValue}</div>
                                                 <div className="label-title mt-4">Coll. Ratio</div>
                                                 <div className="label-value">150%</div>
                                             </div>
@@ -430,7 +588,7 @@ class LoanDetails extends Component {
                                                 {
                                                     loadingBtn && (
                                                         <div style={{ marginTop: '15px', textAlign: 'center' }}>
-                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm. Please be patient, Ethereum can be slow sometimes :)</div>
+                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm</div>
                                                             <ReactLoading className="loading-icon" type={'cubes'} color="#32CCDD" height={40} width={60} />
                                                         </div>
                                                     )
@@ -482,10 +640,39 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 6 && !loadingBtn && collateralStatus === 'LOCKED' && one_account.toUpperCase() == aCoinLenderAddress.toUpperCase()) && (
+                                                    (status == 6 && !loadingBtn && collateralStatus === 'Locked' && one_account.toUpperCase() == collateralLock.borrower.toUpperCase()) && (
                                                         <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Unlock Collateral
+                                                        </button>
+                                                    )
+                                                }
+
+                                                {
+                                                    (
+                                                        !loadingBtn &&
+                                                        'loanExpiration' in collateralLock && parseInt(collateralLock.loanExpiration) < Math.floor(Date.now() / 1000) &&
+                                                        (
+                                                            one_account.toUpperCase() == collateralLock.borrower.toUpperCase() ||
+                                                            one_account.toUpperCase() == collateralLock.lender.toUpperCase()
+                                                        ) &&
+                                                        collateralStatus === 'Locked' &&
+                                                        parseInt(status) >= 3
+                                                    ) && (
+                                                        <button onClick={this.handleSeizeCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
+                                                            Seize Collateral
+                                                        </button>
+                                                    )
+                                                }
+
+                                                {
+                                                    (
+                                                        status == 1 && !loadingBtn && eth_account.toUpperCase() == lender.toUpperCase()
+                                                    ) && (
+                                                        <button onClick={this.handleCancelBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
+                                                            Cancel Loan
                                                         </button>
                                                     )
                                                 }
@@ -520,9 +707,9 @@ class LoanDetails extends Component {
 }
 
 
-function mapStateToProps({ loanDetails, prices, loanSettings }) {
+function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts }) {
     return {
-        loanDetails, prices, loanSettings
+        loanDetails, prices, loanSettings, providers, protocolContracts,
     }
 }
 

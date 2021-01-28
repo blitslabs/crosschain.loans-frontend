@@ -8,7 +8,7 @@ const Dotenv = require('dotenv-webpack')
 
 module.exports = {
     entry: {
-        app: path.join(__dirname, 'app_src', 'index.js'),
+        bundle: path.join(__dirname, 'app_src', 'index.js'),
         //admin: path.join(__dirname, 'admin_src','index.js')
     },
     module: {
@@ -26,8 +26,7 @@ module.exports = {
                     'style-loader',
                     'css-loader'
                 ]
-            },
-
+            }
 
         ]
     },

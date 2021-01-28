@@ -432,3 +432,7 @@ a {
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
 }
+
+.Toastify__toast-container {
+    z-index: 99999 !important;
+}

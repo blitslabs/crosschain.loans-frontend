@@ -159,8 +159,9 @@ class NewLoan extends Component {
 
     handleCollateralAddressBtn = async (e) => {
         e.preventDefault()
+        
         const response = await ONE.getAccount()
-
+        
         if (response.status === 'OK') {
             this.setState({ aCoinLender: response.payload.address, aCoinLenderIsInvalid: false })
             return
@@ -175,6 +176,7 @@ class NewLoan extends Component {
 
     handleContinueBtn = async (e) => {
         e.preventDefault()
+        
         const { amount, aCoinLender, duration,  } = this.state
         const { dispatch, history, lendRequest, loanAssets, providers, protocolContracts } = this.props
         const asset = loanAssets[lendRequest.contractAddress]

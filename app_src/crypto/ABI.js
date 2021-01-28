@@ -362,8 +362,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -435,8 +434,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -455,8 +453,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [],
@@ -469,8 +466,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [],
@@ -497,8 +493,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [],
@@ -511,8 +506,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -538,8 +532,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -563,8 +556,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -583,8 +575,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -608,8 +599,7 @@ const ABI = {
           }
         ],
         "stateMutability": "pure",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -628,8 +618,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -835,8 +824,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -890,8 +878,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -910,8 +897,7 @@ const ABI = {
           }
         ],
         "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "type": "function"
       },
       {
         "inputs": [
@@ -1079,6 +1065,18 @@ const ABI = {
             "internalType": "uint256",
             "name": "collateralValue",
             "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "bCoinLoanId",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "loansContractAddress",
+            "type": "address"
           }
         ],
         "name": "LockCollateral",
@@ -1240,6 +1238,20 @@ const ABI = {
       },
       {
         "inputs": [],
+        "name": "contractEnabled",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
         "name": "disableContract",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -1294,8 +1306,39 @@ const ABI = {
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "seizureExpirationPeriod",
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "userLoans",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "userLoansCount",
         "outputs": [
           {
             "internalType": "uint256",
@@ -1325,9 +1368,19 @@ const ABI = {
             "type": "bytes32"
           },
           {
-            "internalType": "bytes",
+            "internalType": "address",
             "name": "_bCoinBorrowerAddress",
-            "type": "bytes"
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_bCoinLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "_loansContractAddress",
+            "type": "address"
           }
         ],
         "name": "lockCollateral",
@@ -1380,25 +1433,12 @@ const ABI = {
             "type": "uint256"
           }
         ],
-        "name": "unlockRefundableCollateral",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "_loanId",
-            "type": "uint256"
-          }
-        ],
         "name": "fetchLoan",
         "outputs": [
           {
-            "internalType": "address[2]",
+            "internalType": "address[3]",
             "name": "actors",
-            "type": "address[2]"
+            "type": "address[3]"
           },
           {
             "internalType": "bytes32[2]",
@@ -1411,9 +1451,9 @@ const ABI = {
             "type": "bytes32[2]"
           },
           {
-            "internalType": "uint256[3]",
+            "internalType": "uint256[2]",
             "name": "expirations",
-            "type": "uint256[3]"
+            "type": "uint256[2]"
           },
           {
             "internalType": "uint256[4]",
@@ -1421,12 +1461,17 @@ const ABI = {
             "type": "uint256[4]"
           },
           {
-            "internalType": "bytes",
-            "name": "bCoinBorrowerAddress",
-            "type": "bytes"
+            "internalType": "uint256",
+            "name": "bCoinLoanId",
+            "type": "uint256"
           },
           {
-            "internalType": "enum CollateralLock.State",
+            "internalType": "address",
+            "name": "loansContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum CollateralLockV2.State",
             "name": "state",
             "type": "uint8"
           }

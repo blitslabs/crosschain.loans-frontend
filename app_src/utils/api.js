@@ -1,4 +1,5 @@
 const API_HOST = process.env.API_HOST
+const API_WALLET = process.env.API_WALLET
 
 // CROSS-CHAIN LOANS
 
@@ -39,6 +40,15 @@ export function confirmLoanOperation(params) {
     })
 }
 
+export function confirmCollateralLockOperation(params) {
+    return fetch(API_HOST + `collateralLock/${params.blockchain}/operation/confirm`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+}
 
 export function getAvailableLoans() {
     return fetch(API_HOST + 'loans/available', {
@@ -60,7 +70,7 @@ export function getLoansSettings(params) {
 }
 
 export function getPrices() {
-    return fetch(API_HOST + 'prices', {
+    return fetch(API_WALLET + 'assetPrices', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

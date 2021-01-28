@@ -18,7 +18,9 @@ const ONE = {
 
         try {
             const harmony = await new HarmonyExtension(window.onewallet)
+            
             const account = await harmony.login()            
+            
             return { status: 'OK', payload: account }
         } catch (e) {
             console.log(e)

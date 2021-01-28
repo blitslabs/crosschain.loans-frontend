@@ -60,6 +60,7 @@
     "cors": "2.8.5",
     "country-state-city": "1.0.4",
     "cp-cli": "2.0.0",
+    "cron": "^1.8.2",
     "crypto-js": "^4.0.0",
     "css-mediaquery": "0.1.2",
     "csurf": "1.9.0",

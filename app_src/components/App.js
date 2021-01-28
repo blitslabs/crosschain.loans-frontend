@@ -21,12 +21,13 @@ import LoanDetails from './app/Loans/LoanDetails'
 import './styles.css'
 
 // API
-import { getLoanAssets, getProtocolContracts } from '../utils/api'
+import { getLoanAssets, getProtocolContracts, getPrices } from '../utils/api'
 
 // Actions
 import { saveLoanAssets } from '../actions/loanAssets'
 import { saveProtocolContracts } from '../actions/protocolContracts'
 import { saveProvider } from '../actions/providers'
+import { savePrices } from '../actions/prices'
 
 // Web3
 import Web3 from 'web3'
@@ -50,7 +51,7 @@ class App extends Component {
 
     // Check network
     const networkId = await web3.eth.net.getId()
-    const network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'ropsten' : networkId == 4 ? 'rinkeby' : ''
+    const network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
 
     dispatch(saveProvider({ blockchain: 'ethereum', network }))
 
@@ -67,6 +68,14 @@ class App extends Component {
         console.log(res)
         dispatch(saveProtocolContracts(res.payload))
       })
+
+    setInterval(() => {
+      getPrices()
+        .then(data => data.json())
+        .then((res) => {
+          dispatch(savePrices(res.payload))
+        })
+    }, 60000)
   }
 
   render() {
@@ -88,7 +97,7 @@ class App extends Component {
                 <Route path='/app/lend/confirm' component={ConfirmLoan} />
                 <Route path='/app/lend/done' component={LoanCreated} />
                 <Route path='/app/loan/:loanId' component={LoanDetails} />
-                
+
               </Fragment>
           }
         </Fragment>

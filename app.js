@@ -34,6 +34,15 @@ app.use('/', routesAdmin)
 // global variable
 global.APP_ROOT = path.resolve(__dirname)
 
+// Cronjobs
+const { CronJob } = require('cron')
+const rp = require('request-promise')
+
+const matching_engine = new CronJob('*/30 * * * * *', async function () {
+    await rp(process.env.API_LOCALHOST + 'engine/match/pending')
+    console.log('Matching Engine Activated...')
+})
+
 app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401)
@@ -48,16 +57,10 @@ app.use((err, req, res, next) => {
     }
 })
 
-if (process.env.NODE_ENV === 'production') {
-    app.set('port', process.env.PORT || 3000)
-    app.listen(app.get('port'), function () {
-        console.log('Listening on port ' + app.get('port'))
-    })
-} else if (process.env.NODE_ENV === 'dev') {
-    app.set('port', process.env.PORT || 3000)
-    app.listen(app.get('port'), function () {
-        console.log('Listening on port ' + app.get('port'))
-    })
-}
+app.set('port', process.env.PORT || 3000)
+app.listen(app.get('port'), function() {
+    console.log('Listening on port ' + app.get('port'))
+    matching_engine.start()
+})
 
 module.exports = app
