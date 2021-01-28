@@ -483,9 +483,9 @@ class LoanDetails extends Component {
         const { loanDetails, protocolContracts, providers } = this.props
         const { contractLoanId } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
-        
+
         this.setState({ loadingBtn: true })
-        
+
         const response = await BlitsLoans.ETH.refundPayback(contractLoanId, loansContract)
 
         if (response.status !== 'OK') {
@@ -554,7 +554,7 @@ class LoanDetails extends Component {
         }
 
         const {
-            tokenSymbol, tokenName, tokenContractAddress, principal, interest, loanExpiration,
+            tokenSymbol, principal, interest, loanExpiration, acceptExpiration,
             status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress
         } = loanDetails
 
@@ -662,7 +662,7 @@ class LoanDetails extends Component {
                                                         status == 4 &&
                                                         !loadingBtn &&
                                                         eth_account.toUpperCase() == lender.toUpperCase() &&
-                                                        parseInt(loanExpiration) > Math.floor(Date.now() / 1000)
+                                                        parseInt(acceptExpiration) > Math.floor(Date.now() / 1000)
                                                     ) && (
                                                         <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
@@ -676,7 +676,7 @@ class LoanDetails extends Component {
                                                         status == 4 &&
                                                         !loadingBtn &&
                                                         eth_account.toUpperCase() == lender.toUpperCase() &&
-                                                        parseInt(loanExpiration) < Math.floor(Date.now() / 1000)
+                                                        parseInt(acceptExpiration) < Math.floor(Date.now() / 1000)
                                                     ) && (
                                                         <button onClick={this.handleRefundRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
