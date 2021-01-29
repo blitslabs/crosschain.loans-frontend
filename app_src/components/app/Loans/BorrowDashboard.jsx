@@ -119,7 +119,7 @@ class LenderDashboard extends Component {
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <button onClick={e => { e.preventDefault(); this.handleViewDetailsBtn(l.id) }} className="btn btn-blits" style={{}}>Borrow</button>
+                                                                    <a href={'/app/loan/' + l.id} className="btn btn-blits" style={{}}>Borrow</a>
                                                                 </td>
                                                             </tr>
                                                         ))

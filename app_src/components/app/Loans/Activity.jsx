@@ -129,7 +129,7 @@ class Activity extends Component {
                                                                     </td>
                                                                     <td>{e.blockchain}</td>
                                                                     <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
-                                                                    <td><a target='_blank' href={loanUrl}>{loanId}</a></td>
+                                                                    <td>{loanId}</td>
                                                                     <td>{moment(e.createdAt).format()}</td>
                                                                     {/* <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol} ({l.blockchain})</td> */}
 

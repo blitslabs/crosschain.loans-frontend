@@ -18,6 +18,7 @@ import ConfirmLoan from './app/Loans/ConfirmLoan'
 import LoanCreated from './app/Loans/LoanCreated'
 import LoanDetails from './app/Loans/LoanDetails'
 import Activity from './app/Loans/Activity'
+import MyLoans from './app/Loans/MyLoans'
 
 import './styles.css'
 
@@ -32,6 +33,7 @@ import { savePrices } from '../actions/prices'
 
 // Web3
 import Web3 from 'web3'
+import { saveAccount } from '../actions/accounts'
 
 class App extends Component {
 
@@ -42,19 +44,20 @@ class App extends Component {
   loadInitialData = async () => {
     const { dispatch } = this.props
 
-    let web3, accounts
+    let web3, accounts, networkId, network
     try {
       web3 = new Web3(window.ethereum)
       accounts = await web3.eth.getAccounts()
+      dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] }))
+      // Check network
+      networkId = await web3.eth.net.getId()
+      network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
     } catch (e) {
       console.log(e)
     }
 
-    // Check network
-    const networkId = await web3.eth.net.getId()
-    const network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
-
     dispatch(saveProvider({ blockchain: 'ethereum', network }))
+    
 
     getLoanAssets({ blockchain: 'ETH', network: network })
       .then(data => data.json())
@@ -105,6 +108,7 @@ class App extends Component {
                 <Route path='/app/lend/done' component={LoanCreated} />
                 <Route path='/app/loan/:loanId' component={LoanDetails} />
                 <Route path='/app/activity' component={Activity} />
+                <Route path='/app/myloans' component={MyLoans} />
               </Fragment>
           }
         </Fragment>

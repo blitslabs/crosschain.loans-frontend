@@ -148,6 +148,9 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
+                                                </li>
 
                                             </ul>
                                         </nav>
@@ -188,7 +191,9 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
-
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
+                                                </li>
                                             </ul>
                                         </nav>
                                         {/* nav item end */}

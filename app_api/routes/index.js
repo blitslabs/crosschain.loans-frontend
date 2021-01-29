@@ -16,6 +16,7 @@ const loanEvent = require('../controllers/loanEvent')
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
 router.get('/loans/:status', loan.getLoansByStatus)
 router.get('/loan/:loanId', loan.getLoanDetails)
+router.get('/loans/account/:account', loan.getAccountLoans)
 
 // Collateral Lock
 router.post('/collateralLock/ONE/operation/confirm', collateralLock.confirmCollateralLockOperation_ONE)

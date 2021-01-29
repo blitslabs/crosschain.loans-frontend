@@ -12,10 +12,7 @@ export default function accountLoans(state = initialState, action) {
     switch (action.type) {
         case SAVE_ACCOUNT_LOANS:
             return {
-                ...state,
-                loans: {
-                    ...action.loans
-                },
+                ...action.loans
             }
 
         case SAVE_ACCOUNT_COLLATERAL_TXS:
