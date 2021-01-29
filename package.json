@@ -65,7 +65,7 @@
     "css-mediaquery": "0.1.2",
     "csurf": "1.9.0",
     "csvtojson": "^2.0.10",
-    "currency-formatter": "^1.5.5",
+    "currency-formatter": "^1.5.6",
     "date-fns": "2.8.1",
     "debug": "4.1.1",
     "dentist": "1.0.3",

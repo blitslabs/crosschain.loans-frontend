@@ -741,13 +741,35 @@ class LoanDetails extends Component {
                     <div className="row" style={{ marginTop: '60px' }}>
                         <div className="col-sm-6 offset-sm-3 text-center">
                             <Stepper
-                                steps={[
-                                    { title: 'Funded' },
-                                    { title: 'Lock Collateral' },
-                                    { title: 'Withdraw Principal' },
-                                    { title: 'Repay Loan' },
-                                    { title: 'Repayment Accepted' },
-                                ]}
+                                steps={
+                                    parseInt(acceptExpiration) < Math.floor(Date.now() / 1000) && status == 4
+                                        ?
+                                        [
+                                            { title: 'Funded' },
+                                            { title: 'Lock Collateral' },
+                                            { title: 'Withdraw Principal' },
+                                            { title: 'Repay Loan' },
+                                            { title: 'Redund Payback' },
+                                            { title: 'Seize Collateral' }
+                                        ]
+                                        :
+                                        parseInt(loanExpiration) < Math.floor(Date.now() / 1000) && status == 3
+                                            ?
+                                            [
+                                                { title: 'Funded' },
+                                                { title: 'Lock Collateral' },
+                                                { title: 'Withdraw Principal' },
+                                                { title: 'Seize Collateral' },
+                                            ]
+                                            :
+                                            [
+                                                { title: 'Funded' },
+                                                { title: 'Lock Collateral' },
+                                                { title: 'Withdraw Principal' },
+                                                { title: 'Repay Loan' },
+                                                { title: 'Repayment Accepted' },
+                                            ]
+                                }
                                 activeStep={parseInt(status)}
                                 completeBarColor="#32CCDD"
                                 completeColor="#32CCDD"

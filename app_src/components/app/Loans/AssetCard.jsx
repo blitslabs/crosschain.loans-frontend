@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
 import BigNumber from 'bignumber.js'
+import currencyFormatter from 'currency-formatter'
 
 // Actions
 import { saveAssetType } from '../../../actions/assetTypes'
@@ -75,7 +76,7 @@ class AssetCard extends Component {
                         </div>
                         <div>
                             <div className="card-title">Liquidity</div>
-                            <div className="card-value">${liquidity}</div>
+                            <div className="card-value">${currencyFormatter.format(liquidity, { code:'USD', symbol: ''})}</div>
                         </div>
                     </div>
                 </div>
