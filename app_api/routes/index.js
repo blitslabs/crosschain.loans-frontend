@@ -10,6 +10,7 @@ const protocolContract = require('../controllers/protocolContract')
 const engine = require('../controllers/engine')
 const loan = require('../controllers/loan')
 const matching = require('../controllers/matching')
+const loanEvent = require('../controllers/loanEvent')
 
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
@@ -31,6 +32,9 @@ router.get('/engine/secretHash/:blockchain/new', engine.generateSecretHash)
 // Matching 
 router.get('/engine/match/pending', matching.sendPendingTxs)
 // router.get('/engine/matching/confirmMatch', matching.confirmMatchTxs)
+
+// Activity
+router.get('/activity/history/:page?', loanEvent.getActivityHistory)
 
 
 module.exports = router

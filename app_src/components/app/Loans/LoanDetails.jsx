@@ -584,8 +584,8 @@ class LoanDetails extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-8 offset-md-2">
                                     <div className="mb-4 text-center">
-                                        <h2>Loan Details </h2>
-                                        <div className="app-page-subtitle mt-2">ID #{loanId}</div>
+                                        <h2>Loan Details ID #{loanId}</h2>
+                                        {/* <div className="app-page-subtitle mt-2">ID #{loanId}</div> */}
                                     </div>
                                     <div className="app-card shadow-lg">
                                         <div className="row">

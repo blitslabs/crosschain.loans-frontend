@@ -47,7 +47,7 @@ class Navbar extends Component {
 
         document.body.addEventListener('click', () => {
             const { dispatch, shared } = this.props
-            if(shared.sidebar === true) {
+            if (shared.sidebar === true) {
                 dispatch(toggleSidebar(false))
             }
         })
@@ -146,7 +146,7 @@ class Navbar extends Component {
                                                     <Link className="navigation-menu__link" to="/app/lend">Lend</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    {/* <Link className="navigation-menu__link" href="/app/activity">Activity</Link> */}
+                                                    <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
 
                                             </ul>
@@ -180,13 +180,13 @@ class Navbar extends Component {
                                             <ul className="navigation-menu" id="nav">
 
                                                 <li className="navigation-menu__item">
-                                                    <a className="navigation-menu__link" target="_blank" href="https://t.me/blits_community">Borrow</a>
+                                                    <Link className="navigation-menu__link" to="/app/borrow">Borrow</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    <a className="navigation-menu__link" href="https://blits.net/blog">Lend</a>
+                                                    <Link className="navigation-menu__link" to="/app/lend">Lend</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    <a className="navigation-menu__link" href="https://blits.net">Activity</a>
+                                                    <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
 
                                             </ul>

@@ -24,13 +24,23 @@ import ReactLoading from 'react-loading'
 import '../styles.css'
 
 // Actions
-import { saveAccountLoans, saveAccountCollateralTxs, removeAccountLoans } from '../../../actions/accountLoans'
+import { saveActivityHistory } from '../../../actions/activity'
 
 // API
-import { getLoansHistory } from '../../../utils/api'
+import { getActivityHistory } from '../../../utils/api'
 
-const ETHERSCAN = 'https://etherscan.io/address/'
+const ETHERSCAN = 'https://etherscan.io/'
 
+const EXPLORER = {
+    mainnet: {
+        ETH: 'https://etherscan.io/',
+        ONE: 'https://explorer.harmony.one/#/'
+    },
+    testnet: {
+        ETH: 'https://ropsten.etherscan.io/',
+        ONE: 'https://explorer.testnet.harmony.one/#/'
+    }
+}
 
 class Activity extends Component {
     state = {
@@ -39,22 +49,22 @@ class Activity extends Component {
     }
 
     componentDidMount() {
-        document.title = '📜 Activity | Cross-chain Loans'
+        document.title = 'Activity | Cross-chain Loans'
         this.loadInitialData()
     }
 
     loadInitialData = async () => {
         const { accounts, dispatch } = this.props
 
-        getLoansHistory()
+        getActivityHistory({ page: 1 })
             .then(data => data.json())
             .then((res) => {
                 console.log(res)
                 if (res.status === 'OK') {
                     this.setState({
-                        activity: res.payload,
                         loading: false
                     })
+                    dispatch(saveActivityHistory(res.payload))
                 }
             })
     }
@@ -65,12 +75,12 @@ class Activity extends Component {
     }
 
     render() {
-        const { activity, loading } = this.state
-
+        const { loading } = this.state
+        const { activity } = this.props
 
         return (
             <Fragment>
-                <MyParticles />
+                {/* <MyParticles /> */}
                 <div className="main">
                     <Navbar />
                     <section className="section " style={{ paddingTop: '10rem' }}>
@@ -79,54 +89,54 @@ class Activity extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>📜 Activity Explorer</div>
-                                        <div style={{ fontSize: '18px', marginTop: '10px' }}>Check the protocol's activity</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Activity Explorer</div>
+                                        <div style={{ fontSize: '18px', marginTop: '10px' }}>Explore the protocol's recent activity</div>
                                     </div>
 
                                     {
 
                                         (activity && Object.values(activity).length > 0)
                                             ?
-                                            <table className="table table-hover loans-table" style={{ background: '#f8f9fa', borderRadius: '25px' }}>
+                                            <table className="table loanBook table-striped " >
                                                 <thead>
                                                     <tr>
-                                                        {/* <th>ID</th> */}
-                                                        <th><Emoji text="💵" /> Amount</th>                                                        
-                                                        <th><Emoji text="💸" /> Repayment</th>
-                                                        <th><Emoji text="🧃" /> Interest</th>
-                                                        <th><Emoji text="🌈" /> APR</th>
-                                                        <th><Emoji text="⌛" /> Duration</th>
-                                                        <th><Emoji text="🧿" /> Borrower</th>
-                                                        <th><Emoji text="🎱" /> Lender</th>
-                                                        <th></th>
+                                                        <th>TxHash</th>
+                                                        <th>Event</th>
+                                                        <th>Blockchain</th>
+                                                        <th>Contract</th>
+                                                        <th>Loan ID</th>
+                                                        {/* <th>Account</th> */}
+                                                        <th>Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {
-                                                        Object.values(activity).map((l, i) => (
-                                                            <tr key={i}>
-                                                                {/* <td>#{l.blockchainLoanId}</td> */}
-                                                                <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol} ({l.blockchain})</td>                                                                
-                                                                <td>
-                                                                    {/* <Emoji text="💸" /> */}
-                                                                    {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                </td>
-                                                                <td>
-                                                                    {/* <Emoji text="🧃" /> */}
-                                                                    {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                </td>
-                                                                <td>
-                                                                    {/* <Emoji text="🌈" /> */}
-                                                                    {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
+                                                        Object.values(activity).map((e, i) => {
+
+                                                            const explorer = EXPLORER[e.network][e.blockchain]
+                                                            const txHashUrl = `${explorer}tx/${e.txHash}`
+                                                            const contractUrl = `${explorer}address/${e.contractAddress}`
+                                                            const loanId = 'bCoinContractLoanId' in e.details ? e.details.bCoinContractLoanId : e.details.contractLoanId
+                                                            const loanUrl = `${process.env.SERVER_HOST}/app/loan/${loanId}`
+
+                                                            return (
+                                                                <tr key={i}>
+                                                                    <td><a target='_blank' href={txHashUrl}>{e.txHash.substring(0, 4)}...{e.txHash.substr(e.txHash.length - 4)}</a></td>
+                                                                    <td style={{ textAlign: 'left' }}>
+                                                                        <div className="loanBook__apr">
+                                                                            {e.event}
+                                                                        </div>
                                                                     </td>
-                                                                <td>30 days</td>
-                                                                <td><a target='_blank' href={ETHERSCAN + l.borrower}>{l.borrower.substring(0, 4)}...{l.borrower.substr(l.lender.length - 4)}</a></td>
-                                                                <td><a target='_blank' href={ETHERSCAN + l.lender}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
-                                                                <td>
-                                                                    <button onClick={e => { e.preventDefault(); this.handleViewDetailsBtn(l.id) }} className="btn btn-light" style={{}}>Details</button>
-                                                                </td>
-                                                            </tr>
-                                                        ))
+                                                                    <td>{e.blockchain}</td>
+                                                                    <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
+                                                                    <td><a target='_blank' href={loanUrl}>{loanId}</a></td>
+                                                                    <td>{moment(e.createdAt).format()}</td>
+                                                                    {/* <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol} ({l.blockchain})</td> */}
+
+
+                                                                </tr>
+                                                            )
+                                                        })
                                                     }
                                                 </tbody>
                                             </table>
@@ -151,10 +161,9 @@ class Activity extends Component {
 }
 
 
-function mapStateToProps({ accounts, accountLoans }) {
+function mapStateToProps({ activity }) {
     return {
-        accounts,
-        accountLoans
+        activity
     }
 }
 

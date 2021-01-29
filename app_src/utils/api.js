@@ -87,6 +87,15 @@ export function getLoanDetails(params) {
     })
 }
 
+export function getActivityHistory(params) {
+    return fetch(API_HOST + 'activity/history/' + params.page, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 export function getAccountLoans(params) {
     return fetch(API_HOST + 'loans/account/' + params.account, {
         method: 'GET',

@@ -17,6 +17,7 @@ import NewLoan from './app/Loans/NewLoan'
 import ConfirmLoan from './app/Loans/ConfirmLoan'
 import LoanCreated from './app/Loans/LoanCreated'
 import LoanDetails from './app/Loans/LoanDetails'
+import Activity from './app/Loans/Activity'
 
 import './styles.css'
 
@@ -103,7 +104,7 @@ class App extends Component {
                 <Route path='/app/lend/confirm' component={ConfirmLoan} />
                 <Route path='/app/lend/done' component={LoanCreated} />
                 <Route path='/app/loan/:loanId' component={LoanDetails} />
-
+                <Route path='/app/activity' component={Activity} />
               </Fragment>
           }
         </Fragment>
