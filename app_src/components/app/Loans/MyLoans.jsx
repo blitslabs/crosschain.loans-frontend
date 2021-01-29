@@ -125,7 +125,7 @@ class MyLoans extends Component {
                                                     <table className="table loanBook table-striped" >
                                                         <thead>
                                                             <tr>
-                                                                {/* <th>ID</th> */}
+                                                                <th>ID</th>
                                                                 <th>Amount</th>
                                                                 <th>Blockchain</th>
                                                                 <th>Repayment</th>
@@ -133,6 +133,7 @@ class MyLoans extends Component {
                                                                 <th>APR</th>
                                                                 <th>Duration</th>
                                                                 <th>Lender</th>
+                                                                <th>Status</th>
                                                                 <th></th>
                                                             </tr>
                                                         </thead>
@@ -140,7 +141,7 @@ class MyLoans extends Component {
                                                             {
                                                                 Object.values(borrowed).map((l, i) => (
                                                                     <tr key={i}>
-                                                                        {/* <td>#{l.blockchainLoanId}</td> */}
+                                                                        <td>#{l.id}</td>
                                                                         <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                         <td>{l.blockchain}</td>
                                                                         <td>
@@ -157,6 +158,19 @@ class MyLoans extends Component {
                                                                         </td>
                                                                         <td>30 days</td>
                                                                         <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
+                                                                        <td>
+                                                                                <div className="loanBook__apr">
+                                                                                    {
+                                                                                        l.status == 1 ? 'Funded' :
+                                                                                        l.status == 2 ? 'Approved' :
+                                                                                        l.status == 3 ? 'Withdrawn' : 
+                                                                                        l.status == 4 ? 'Repaid' :
+                                                                                        l.status == 5 ? 'PaybackRefunded' :
+                                                                                        l.status == 6 ? 'Closed' : 
+                                                                                        l.status == 7 ? 'Canceled' : ''
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
                                                                         <td>
                                                                             <a href={'/app/loan/' + l.id}>Details</a>
                                                                         </td>
@@ -188,7 +202,7 @@ class MyLoans extends Component {
                                                         <table className="table loanBook table-striped" >
                                                             <thead>
                                                                 <tr>
-                                                                    {/* <th>ID</th> */}
+                                                                    <th>ID</th>
                                                                     <th>Amount</th>
                                                                     <th>Blockchain</th>
                                                                     <th>Repayment</th>
@@ -196,6 +210,7 @@ class MyLoans extends Component {
                                                                     <th>APR</th>
                                                                     <th>Duration</th>
                                                                     <th>Lender</th>
+                                                                    <th>Status</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </thead>
@@ -203,7 +218,7 @@ class MyLoans extends Component {
                                                                 {
                                                                     Object.values(lent).map((l, i) => (
                                                                         <tr key={i}>
-                                                                            {/* <td>#{l.blockchainLoanId}</td> */}
+                                                                            <td>#{l.id}</td>
                                                                             <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                             <td>{l.blockchain}</td>
                                                                             <td>
@@ -221,6 +236,19 @@ class MyLoans extends Component {
                                                                             </td>
                                                                             <td>30 days</td>
                                                                             <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
+                                                                            <td>
+                                                                                <div className="loanBook__apr">
+                                                                                    {
+                                                                                        l.status == 1 ? 'Funded' :
+                                                                                        l.status == 2 ? 'Approved' :
+                                                                                        l.status == 3 ? 'Withdrawn' : 
+                                                                                        l.status == 4 ? 'Repaid' :
+                                                                                        l.status == 5 ? 'PaybackRefunded' :
+                                                                                        l.status == 6 ? 'Closed' : 
+                                                                                        l.status == 7 ? 'Canceled' : ''
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
                                                                             <td>
                                                                                 <a href={'/app/loan/' + l.id}>Details</a>
                                                                             </td>

@@ -356,7 +356,7 @@ a {
     text-align: center; 
     padding: 1em; 
     border: 1px solid #e6e6e6;
-    box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important;
+    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
     /* box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.175) !important; */
 }
 

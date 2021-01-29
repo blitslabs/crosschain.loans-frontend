@@ -27,6 +27,7 @@ import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
 import ABI from '../../../crypto/ABI'
 import { fromBech32 } from '@harmony-js/crypto'
+import { Prompt } from 'react-router'
 
 // API
 import {
@@ -51,7 +52,7 @@ class LoanDetails extends Component {
         loanId: '',
         loadingMsg: 'Awaiting Confirmation',
         eth_account: '',
-        one_account:''
+        one_account: ''
     }
 
     componentDidMount() {
@@ -554,6 +555,15 @@ class LoanDetails extends Component {
         this.props.history.push('/lend/new')
     }
 
+    componentDidUpdate = () => {
+        const { loadingBtn } = this.state
+        if (loadingBtn) {
+            window.onbeforeunload = () => true
+        } else {
+            window.onbeforeunload = undefined
+        }
+    }
+
     render() {
 
         const { loanDetails, prices } = this.props
@@ -788,6 +798,10 @@ class LoanDetails extends Component {
                         </div>
                     </div>
                 </div>
+                <Prompt
+                    when={loadingBtn}
+                    message='You have a pending transaction, are you sure you want to leave?'
+                />
             </Fragment>
         )
     }
@@ -795,14 +809,14 @@ class LoanDetails extends Component {
 
 
 function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts }, ownProps) {
-    
+
     const loanId = ownProps.match.params.loanId
-    
+
     return {
-        loanDetails: loanDetails[loanId], 
-        prices, 
-        loanSettings, 
-        providers, 
+        loanDetails: loanDetails[loanId],
+        prices,
+        loanSettings,
+        providers,
         protocolContracts,
     }
 }

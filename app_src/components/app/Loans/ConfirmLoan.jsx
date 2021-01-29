@@ -17,6 +17,7 @@ import { toast } from 'react-toastify'
 import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
 import MyParticles from './MyParticles'
+import { Prompt } from 'react-router'
 
 // API
 import { getNewEngineSecretHash, confirmLoanOperation } from '../../../utils/api'
@@ -147,7 +148,14 @@ class LoanTerms extends Component {
         }, 5000)
     }
 
-
+    componentDidUpdate = () => {
+        const { btnLoading } = this.state
+        if (btnLoading) {
+            window.onbeforeunload = () => true
+        } else {
+            window.onbeforeunload = undefined
+        }
+    }
 
 
     handleBackBtn = (e) => {
@@ -239,8 +247,12 @@ class LoanTerms extends Component {
                             </div>
                         </div>
                     </section>
-
                 </div>
+
+                <Prompt
+                    when={this.state.loadingBtn}
+                    message='You have a pending transaction, are you sure you want to leave?'
+                />
             </Fragment >
         )
     }
