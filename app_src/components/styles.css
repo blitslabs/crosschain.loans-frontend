@@ -442,3 +442,8 @@ a {
 .navigation-menu__item:hover {
     color: #a93aff;
 }
+
+.gravatar {
+    border-radius: 25px;
+    margin-right: 10px;
+}

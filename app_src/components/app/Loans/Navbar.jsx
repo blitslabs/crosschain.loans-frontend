@@ -19,6 +19,7 @@ import ONE from '../../../crypto/ONE'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MediaQuery from 'react-responsive'
+import Gravatar from 'react-gravatar'
 
 // Components
 import ConnectModal from './ConnectModal'
@@ -168,6 +169,11 @@ class Navbar extends Component {
                                                 </div>
                                                 :
                                                 <div className="navigation-menu__item">
+                                                    <Gravatar
+                                                        email={accounts?.ETH}
+                                                        size={30}
+                                                        rating="pg" default="retro" className="gravatar"
+                                                    />
                                                     <a href="#" className='navigation-menu__link'>ETH: {accounts?.ETH?.substring(0, 4)}...{accounts?.ETH?.substring(accounts?.ETH?.length - 4)}</a>
                                                 </div>
                                         }
