@@ -253,9 +253,10 @@ class NewLoan extends Component {
 
     render() {
 
-        const { loanAssets, lendRequest } = this.props
+        const { loanAssets, lendRequest, assetTypes } = this.props
         const { loading } = this.state
-
+        const asset = assetTypes[lendRequest.contractAddress]
+        
         if (loading) {
             return <Loading />
         }
@@ -381,7 +382,7 @@ class NewLoan extends Component {
                                                 <tbody>
                                                     <tr>
                                                         <td className="details-title">Interest:</td>
-                                                        <td className="details-label">{(lendRequest.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(lendRequest.interestRate)) : 0).toFixed(2)} {this.state.assetSymbol} <Emoji text=":moneybag:" /></td>
+                                                        <td className="details-label">{(asset.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(asset.interestRate)) : 0).toFixed(2)} {this.state.assetSymbol} <Emoji text=":moneybag:" /></td>
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">Duration:</td>
@@ -389,7 +390,7 @@ class NewLoan extends Component {
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">APR:</td>
-                                                        <td className="details-label">{(parseFloat(BigNumber(lendRequest.interestRate).multipliedBy(12).multipliedBy(100))).toFixed(2)}% <Emoji text="💸" /></td>
+                                                        <td className="details-label">{(parseFloat(BigNumber(asset.interestRate).multipliedBy(12).multipliedBy(100))).toFixed(2)}% <Emoji text="💸" /></td>
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">Allowed collateral:</td>
@@ -433,11 +434,12 @@ class NewLoan extends Component {
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, loanSettings }) {
+function mapStateToProps({ lendRequest, loanAssets, loanSettings, assetTypes }) {
     return {
         lendRequest,
         loanAssets,
-        loanSettings
+        loanSettings,
+        assetTypes
     }
 }
 

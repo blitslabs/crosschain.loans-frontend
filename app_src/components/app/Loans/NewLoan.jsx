@@ -356,7 +356,7 @@ class NewLoan extends Component {
                                                 <tbody>
                                                     <tr>
                                                         <td className="details-title">Interest:</td>
-                                                        <td className="details-label">{(lendRequest.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(lendRequest.interestRate)) : 0).toFixed(2)} {this.state.assetSymbol} <Emoji text=":moneybag:" /></td>
+                                                        <td className="details-label">{(assetType.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(assetType.interestRate)) : 0).toFixed(2)} {this.state.assetSymbol} <Emoji text=":moneybag:" /></td>
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">Duration:</td>

@@ -49,6 +49,7 @@ class LoanDetails extends Component {
         loading: true,
         loadingBtn: false,
         loanId: '',
+        loadingMsg: 'Awaiting Confirmation'
     }
 
     componentDidMount() {
@@ -118,7 +119,7 @@ class LoanDetails extends Component {
         const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
         const requiredCollateral = parseFloat(BigNumber(principal).div(prices.ONE.usd).times(1.5)).toFixed(2)
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const bCoinBorrowerAddress = (await ETH.getAccount()).payload
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
@@ -184,7 +185,7 @@ class LoanDetails extends Component {
         const { contractLoanId } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const account = (await ETH.getAccount()).payload
         const accountLoans = (await BlitsLoans.ETH.getAccountLoans(account, loansContract))
@@ -244,7 +245,7 @@ class LoanDetails extends Component {
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
         const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         // Generate secretHash
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`
@@ -297,7 +298,7 @@ class LoanDetails extends Component {
         const { contractLoanId } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const response = await BlitsLoans.ETH.repayLoan(contractLoanId, loansContract)
 
@@ -333,7 +334,7 @@ class LoanDetails extends Component {
         const { contractLoanId } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const account = (await ETH.getAccount()).payload
         const accountLoans = (await BlitsLoans.ETH.getAccountLoans(account, loansContract))
@@ -395,7 +396,7 @@ class LoanDetails extends Component {
         const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
         const { contractLoanId } = collateralLock
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const response = await BlitsLoans.ONE.unlockCollateral(
             contractLoanId,
@@ -440,7 +441,7 @@ class LoanDetails extends Component {
         const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
         const { contractLoanId } = collateralLock
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const response = await BlitsLoans.ONE.seizeCollateral(
             contractLoanId,
@@ -484,7 +485,7 @@ class LoanDetails extends Component {
         const { contractLoanId } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
 
-        this.setState({ loadingBtn: true })
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const response = await BlitsLoans.ETH.refundPayback(contractLoanId, loansContract)
 
@@ -531,6 +532,13 @@ class LoanDetails extends Component {
                             collateralLock.status != res.payload.collateralLock.status
                         ) {
                             console.log(res)
+
+                            if(res.payload.collateralLock.status == 0 && res.payload.status == 1) {
+                                this.setState({ loadingMsg: 'Awaiting Loan Approval'})
+                                dispatch(saveLoanDetails(res.payload))
+                                return
+                            }
+                            
                             this.setState({ loadingBtn: false })
                             dispatch(saveLoanDetails(res.payload))
                         }
@@ -547,7 +555,7 @@ class LoanDetails extends Component {
     render() {
 
         const { loanDetails, prices } = this.props
-        const { loanId, loading, loadingBtn, eth_account, one_account } = this.state
+        const { loanId, loading, loadingBtn, eth_account, one_account, loadingMsg } = this.state
 
         if (loading) {
             return <Loading />
@@ -589,7 +597,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title mt-4">Repay</div>
                                                 <div className="label-value">{parseFloat(repaymentAmount).toFixed(2)} {tokenSymbol}</div>
                                                 <div className="label-title mt-4">Loan Expiration</div>
-                                                <div className="label-value">{loanExpiration ? moment.unix(loanExpiration).format('DD/MM/YY:hh:ss') : '30 days'}</div>
+                                                <div className="label-value">{loanExpiration && loanExpiration != 0 ? moment.unix(loanExpiration).format('DD/MM/YY:hh:ss') : '30 days'}</div>
                                             </div>
                                             <div className="col-sm-12 col-md-4">
                                                 <div className="label-title">APR</div>
@@ -624,7 +632,7 @@ class LoanDetails extends Component {
                                                 {
                                                     loadingBtn && (
                                                         <div style={{ marginTop: '15px', textAlign: 'center' }}>
-                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm</div>
+                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'center' }}>{loadingMsg}</div>
                                                             <ReactLoading className="loading-icon" type={'cubes'} color="#32CCDD" height={40} width={60} />
                                                         </div>
                                                     )
@@ -688,7 +696,7 @@ class LoanDetails extends Component {
                                                 {
                                                     (status == 4 && !loadingBtn && eth_account.toUpperCase() != lender.toUpperCase()) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
-                                                            Waiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral.
+                                                            Awaiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral.
                                                             If the repayment is not accepted before the expiration, then you'll be able to refund your repayment and unlock your refundable collateral.
                                                         </div>
                                                     )

@@ -69,6 +69,12 @@ class App extends Component {
         dispatch(saveProtocolContracts(res.payload))
       })
 
+    getPrices()
+      .then(data => data.json())
+      .then((res) => {
+        dispatch(savePrices(res.payload))
+      })
+
     setInterval(() => {
       getPrices()
         .then(data => data.json())
