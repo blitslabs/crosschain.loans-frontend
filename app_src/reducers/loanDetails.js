@@ -3,12 +3,15 @@ import {
 } from '../actions/loanDetails'
 
 export default function loanDetails(state = {}, action) {
-    switch(action.type) {
+    switch (action.type) {
         case SAVE_LOAN_DETAILS:
             return {
-                ...action.loanDetails,
+                ...state,
+                [action.loanDetails.id]: {
+                    ...action.loanDetails,
+                }
             }
-        default: 
+        default:
             return state
     }
 }

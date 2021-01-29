@@ -227,7 +227,7 @@ class LoanTerms extends Component {
 
                                                         :
                                                         <div style={{ marginTop: '15px', }}>
-                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Waiting for TX to confirm</div>
+                                                            <div style={{ color: '#32CCDD', fontWeight: 'bold', textAlign: 'justify' }}>Awaiting Confirmation</div>
                                                             <ReactLoading type={'cubes'} color="#32CCDD" height={40} width={60} />
                                                         </div>
                                                 }

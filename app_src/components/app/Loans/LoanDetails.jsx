@@ -533,12 +533,12 @@ class LoanDetails extends Component {
                         ) {
                             console.log(res)
 
-                            if(res.payload.collateralLock.status == 0 && res.payload.status == 1) {
-                                this.setState({ loadingMsg: 'Awaiting Loan Approval'})
+                            if (res.payload.collateralLock.status == 0 && res.payload.status == 1) {
+                                this.setState({ loadingMsg: 'Awaiting Loan Approval' })
                                 dispatch(saveLoanDetails(res.payload))
                                 return
                             }
-                            
+
                             this.setState({ loadingBtn: false })
                             dispatch(saveLoanDetails(res.payload))
                         }
@@ -597,7 +597,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title mt-4">Repay</div>
                                                 <div className="label-value">{parseFloat(repaymentAmount).toFixed(2)} {tokenSymbol}</div>
                                                 <div className="label-title mt-4">Loan Expiration</div>
-                                                <div className="label-value">{loanExpiration && loanExpiration != 0 ? moment.unix(loanExpiration).format('DD/MM/YY:hh:ss') : '30 days'}</div>
+                                                <div style={loanExpiration && loanExpiration != 0 ? { fontSize: 14 } : {}} className="label-value">{loanExpiration && loanExpiration != 0 ? `${moment.unix(loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC` : '30 days'}</div>
                                             </div>
                                             <div className="col-sm-12 col-md-4">
                                                 <div className="label-title">APR</div>
@@ -792,9 +792,16 @@ class LoanDetails extends Component {
 }
 
 
-function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts }) {
+function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts }, ownProps) {
+    
+    const loanId = ownProps.match.params.loanId
+    
     return {
-        loanDetails, prices, loanSettings, providers, protocolContracts,
+        loanDetails: loanDetails[loanId], 
+        prices, 
+        loanSettings, 
+        providers, 
+        protocolContracts,
     }
 }
 
