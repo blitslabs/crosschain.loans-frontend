@@ -50,8 +50,8 @@ export function confirmCollateralLockOperation(params) {
     })
 }
 
-export function getAvailableLoans() {
-    return fetch(API_HOST + 'loans/available', {
+export function getAvailableLoans(params) {
+    return fetch(API_HOST + 'loans/available/' + params.network, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export function getActivityHistory(params) {
 }
 
 export function getAccountLoans(params) {
-    return fetch(API_HOST + 'loans/account/' + params.account, {
+    return fetch(API_HOST + 'loans/account/' + params.account + '/' + params.network, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

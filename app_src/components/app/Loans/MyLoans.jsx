@@ -41,10 +41,10 @@ class MyLoans extends Component {
     }
 
     loadInitialData = async () => {
-        const { accounts, dispatch } = this.props
-
+        const { accounts, dispatch, providers } = this.props
+        console.log(providers.ethereum)
         Promise.all([
-            getAccountLoans({ account: accounts?.ETH }),
+            getAccountLoans({ account: accounts?.ETH, network: providers.ethereum }),
             // getAccountLoans({ account: fromBech32(accounts.ONE) })
         ])
             .then((responses) => {
@@ -251,10 +251,11 @@ class MyLoans extends Component {
 }
 
 
-function mapStateToProps({ accounts, accountLoans }) {
+function mapStateToProps({ accounts, accountLoans, providers }) {
     return {
         accounts,
-        accountLoans
+        accountLoans,
+        providers
     }
 }
 

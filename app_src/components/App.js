@@ -48,16 +48,28 @@ class App extends Component {
     try {
       web3 = new Web3(window.ethereum)
       accounts = await web3.eth.getAccounts()
-      dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] }))
+      console.log(accounts)
+      dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] != undefined ? accounts[0] : '' }))
       // Check network
       networkId = await web3.eth.net.getId()
       network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
+      dispatch(saveProvider({ blockchain: 'ethereum', network }))
+
+      setInterval(async () => {
+        const { providers } = this.props
+        networkId = await web3.eth.net.getId()
+        network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
+        if (providers.ethereum != network) {
+          window.location.href = process.env.SERVER_HOST + '/app/borrow';
+        }
+      }, 2000)
+
     } catch (e) {
       console.log(e)
     }
 
-    dispatch(saveProvider({ blockchain: 'ethereum', network }))
-    
+
+
 
     getLoanAssets({ blockchain: 'ETH', network: network })
       .then(data => data.json())
@@ -118,9 +130,10 @@ class App extends Component {
 }
 
 
-function mapStateToProps({ loading }) {
+function mapStateToProps({ loading, providers }) {
   return {
-    loading
+    loading,
+    providers
   }
 }
 

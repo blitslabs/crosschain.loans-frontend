@@ -24,7 +24,7 @@ import Emoji from "react-emoji-render"
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
 
-class LenderDashboard extends Component {
+class BorrowDashboard extends Component {
     state = {
         loans: '',
         myLoans: '',
@@ -33,9 +33,9 @@ class LenderDashboard extends Component {
 
     componentDidMount() {
         document.title = "Borrow | Cross-chain Loans"
-        const { dispatch } = this.props
+        const { dispatch, providers } = this.props
 
-        getAvailableLoans()
+        getAvailableLoans({ network: providers.ethereum })
             .then(data => data.json())
             .then((res) => {
                 console.log(res)
@@ -144,10 +144,11 @@ class LenderDashboard extends Component {
 }
 
 
-function mapStateToProps({ availableLoans }) {
+function mapStateToProps({ availableLoans, providers }) {
     return {
         availableLoans,
+        providers
     }
 }
 
-export default connect(mapStateToProps)(LenderDashboard)
+export default connect(mapStateToProps)(BorrowDashboard)

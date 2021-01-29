@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 // Actions
-import { setProviderStatus } from '../../../actions/shared'
+import { saveProvider } from '../../../actions/providers'
 import { saveAccount } from '../../../actions/accounts'
 
 Modal.setAppElement('#root')
@@ -37,8 +37,18 @@ class ConnectModal extends Component {
             return
         }
 
-        dispatch(setProviderStatus({ name: 'ethereum', status: true, provider: 'metamask' }))
-        dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] }))
+        let networkId, network
+        try {
+            // Check network
+            networkId = await web3.eth.net.getId()
+            network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
+        } catch (e) {
+            console.log(e)
+            return
+        }
+
+        dispatch(saveProvider({ blockchain: 'ethereum', network }))
+        dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] != undefined ? accounts[0] : '' }))
         toggleModal(false)
     }
 

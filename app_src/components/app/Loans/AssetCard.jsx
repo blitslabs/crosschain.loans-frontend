@@ -72,11 +72,11 @@ class AssetCard extends Component {
                     <div className="col-6 text-right">
                         <div>
                             <div className="card-title">APY</div>
-                            <div className="card-value">{apy}%</div>
+                            <div className="card-value">{currencyFormatter.format(apy, { code: 'USD', symbol: '' })}%</div>
                         </div>
                         <div>
                             <div className="card-title">Liquidity</div>
-                            <div className="card-value">${currencyFormatter.format(liquidity, { code:'USD', symbol: ''})}</div>
+                            <div className="card-value">${currencyFormatter.format(liquidity, { code: 'USD', symbol: '' })}</div>
                         </div>
                     </div>
                 </div>

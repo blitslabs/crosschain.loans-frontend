@@ -148,16 +148,30 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
-                                                <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
-                                                </li>
+                                                {
+                                                    accounts?.ETH
+                                                        ?
+                                                        <li className="navigation-menu__item">
+                                                            <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
+                                                        </li>
+                                                        : null
+                                                }
 
                                             </ul>
                                         </nav>
                                         {/* nav item end */}
-                                        <div className="navigation-button navigation-button-couple">
-                                            <a href="#download" style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</a>
-                                        </div>
+                                        {
+                                            !accounts?.ETH
+                                                ?
+                                                <div className="navigation-button navigation-button-couple">
+                                                    <button onClick={() => this.handleToggleConnectModal(true)} style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</button>
+                                                </div>
+                                                :
+                                                <div className="navigation-menu__item">
+                                                    <a href="#" className='navigation-menu__link'>ETH: {accounts?.ETH?.substring(0, 4)}...{accounts?.ETH?.substring(accounts?.ETH?.length - 4)}</a>
+                                                </div>
+                                        }
+
                                     </div>
                                 </div>
                             </div>
@@ -191,15 +205,25 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
-                                                <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
-                                                </li>
+                                                {
+                                                    accounts?.ETH
+                                                        ?
+                                                        <li className="navigation-menu__item">
+                                                            <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
+                                                        </li>
+                                                        : null
+                                                }
                                             </ul>
                                         </nav>
                                         {/* nav item end */}
-                                        <div className="navigation-button navigation-button-couple">
-                                            <a href="#download" style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</a>
-                                        </div>
+                                        {
+                                            !accounts?.ETH
+                                                ?
+                                                <div className="navigation-button navigation-button-couple">
+                                                    <button onClick={() => this.handleToggleConnectModal(true)} style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</button>
+                                                </div>
+                                                : null
+                                        }
                                     </div>
                                 </div>
                             </div>

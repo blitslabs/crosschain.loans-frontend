@@ -4,10 +4,26 @@ import { connect } from 'react-redux'
 // Components
 import Navbar from './Navbar'
 import AssetCard from './AssetCard'
+import Loading from '../../Loading'
 
 class Lend extends Component {
+
+    state = {
+        loading: true
+    }
+
+    componentDidMount() {
+        document.title = "Lend | Cross-chain Loans"
+        this.setState({ loading: false})
+    }
+
     render() {
         const { loanAssets, navigation } = this.props
+        const { loading } = this.state
+
+        if(loading) {
+            return <Loading />
+        }
 
         return (
             <Fragment>

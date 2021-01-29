@@ -438,3 +438,7 @@ a {
 .Toastify__toast-container {
     z-index: 99999 !important;
 }
+
+.navigation-menu__item:hover {
+    color: #a93aff;
+}

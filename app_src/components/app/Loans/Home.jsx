@@ -126,7 +126,7 @@ class Home extends Component {
 
             <Fragment>
                 <Navbar/>
-                <div>hello</div>
+                
             </Fragment>
         );
 
