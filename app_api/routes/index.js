@@ -11,6 +11,7 @@ const engine = require('../controllers/engine')
 const loan = require('../controllers/loan')
 const matching = require('../controllers/matching')
 const loanEvent = require('../controllers/loanEvent')
+const emailNotification = require('../controllers/emailNotification')
 
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
@@ -37,5 +38,8 @@ router.get('/engine/match/pending', matching.sendPendingTxs)
 // Activity
 router.get('/activity/history/:page?', loanEvent.getActivityHistory)
 
+// Email Notification
+router.get('/notification/email/:account', emailNotification.getEmailNotificationAccount)
+router.post('/notification/email', emailNotification.saveEmailNotificationAccount)
 
 module.exports = router

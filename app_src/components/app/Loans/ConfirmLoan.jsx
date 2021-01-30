@@ -149,8 +149,8 @@ class LoanTerms extends Component {
     }
 
     componentDidUpdate = () => {
-        const { btnLoading } = this.state
-        if (btnLoading) {
+        const { loading } = this.state
+        if (loading) {
             window.onbeforeunload = () => true
         } else {
             window.onbeforeunload = undefined
@@ -250,7 +250,7 @@ class LoanTerms extends Component {
                 </div>
 
                 <Prompt
-                    when={this.state.loadingBtn}
+                    when={this.state.loading}
                     message='You have a pending transaction, are you sure you want to leave?'
                 />
             </Fragment >

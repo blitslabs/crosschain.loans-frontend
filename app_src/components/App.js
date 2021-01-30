@@ -23,13 +23,17 @@ import MyLoans from './app/Loans/MyLoans'
 import './styles.css'
 
 // API
-import { getLoanAssets, getProtocolContracts, getPrices } from '../utils/api'
+import {
+  getLoanAssets, getProtocolContracts, getPrices,
+  getNotificationEmail
+} from '../utils/api'
 
 // Actions
 import { saveLoanAssets } from '../actions/loanAssets'
 import { saveProtocolContracts } from '../actions/protocolContracts'
 import { saveProvider } from '../actions/providers'
 import { savePrices } from '../actions/prices'
+import { saveNotificationEmail } from '../actions/shared'
 
 // Web3
 import Web3 from 'web3'
@@ -68,7 +72,15 @@ class App extends Component {
       console.log(e)
     }
 
-
+    dispatch(saveNotificationEmail(''))
+    getNotificationEmail({ account: accounts[0] })
+      .then(data => data.json())
+      .then((res) => {
+        console.log(res)
+        if(res.status === 'OK') {
+          dispatch(saveNotificationEmail(res.payload.email))
+        }
+      })
 
 
     getLoanAssets({ blockchain: 'ETH', network: network })

@@ -25,6 +25,14 @@
     background: black;
 }
 
+.btn-primary {
+    background: #32ccdd;
+}
+
+/* .btn-primary:hover {
+    background: black;
+} */
+
 .btn-blits-black {
     background: black;
 }

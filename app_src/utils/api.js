@@ -105,6 +105,27 @@ export function getAccountLoans(params) {
     })
 }
 
+export function saveEmailNotification(params) {
+    return fetch(API_HOST + 'notification/email', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function getNotificationEmail(params) {
+    return fetch(API_HOST + `notification/email/${params.account}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+//
+
 export function getLockedCollateral(params) {
     return fetch(API_HOST + 'lockedCollateral/' + params.account, {
         method: 'GET',

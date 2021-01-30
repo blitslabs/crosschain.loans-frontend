@@ -6,6 +6,7 @@ import Navbar from './Navbar'
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Loading from '../../Loading'
+import EmailModal from './EmailModal'
 
 // Styles
 import '../styles.css'
@@ -52,7 +53,8 @@ class LoanDetails extends Component {
         loanId: '',
         loadingMsg: 'Awaiting Confirmation',
         eth_account: '',
-        one_account: ''
+        one_account: '',
+        showEmailModal: false
     }
 
     componentDidMount() {
@@ -564,10 +566,12 @@ class LoanDetails extends Component {
         }
     }
 
+    toggleEmailModal = (value) => this.setState({ showEmailModal: value })
+
     render() {
 
-        const { loanDetails, prices } = this.props
-        const { loanId, loading, loadingBtn, eth_account, one_account, loadingMsg } = this.state
+        const { loanDetails, prices, shared } = this.props
+        const { loanId, loading, loadingBtn, eth_account, one_account, loadingMsg, showEmailModal } = this.state
 
         if (loading) {
             return <Loading />
@@ -751,6 +755,16 @@ class LoanDetails extends Component {
                                                         </button>
                                                     )
                                                 }
+
+                                                {
+                                                    !('email' in shared) || shared.email === undefined || shared.email === '' && (
+                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-primary mt-4" style={{ width: '100%' }}>
+                                                            Receive Email Notifications
+                                                        </button>
+                                                    )
+                                                }
+
+
                                             </div>
                                         </div>
                                     </div>
@@ -798,6 +812,9 @@ class LoanDetails extends Component {
                         </div>
                     </div>
                 </div>
+                {
+                    showEmailModal && <EmailModal isOpen={showEmailModal} toggleModal={this.toggleEmailModal} />
+                }
                 <Prompt
                     when={loadingBtn}
                     message='You have a pending transaction, are you sure you want to leave?'
@@ -808,7 +825,7 @@ class LoanDetails extends Component {
 }
 
 
-function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts }, ownProps) {
+function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts, shared }, ownProps) {
 
     const loanId = ownProps.match.params.loanId
 
@@ -818,6 +835,7 @@ function mapStateToProps({ loanDetails, prices, loanSettings, providers, protoco
         loanSettings,
         providers,
         protocolContracts,
+        shared
     }
 }
 

@@ -6,6 +6,14 @@ export const RESET_SIDEBAR = 'RESET_SIDEBAR'
 export const SET_PROVIDER_STATUS = 'SET_PROVIDER_STATUS'
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SET_BLOCKCHAIN_NETWORK = 'SET_BLOCKCHAIN_NETWORK'
+export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
+
+export function saveNotificationEmail(email) {
+    return {
+        type: SAVE_NOTIFICATION_EMAIL,
+        email
+    }
+}
 
 export function setBlockchainNetwork(details) {
     return {
