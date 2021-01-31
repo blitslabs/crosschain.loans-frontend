@@ -72,7 +72,7 @@ class App extends Component {
       console.log(e)
     }
 
-    dispatch(saveNotificationEmail(''))
+    // dispatch(saveNotificationEmail(''))
     getNotificationEmail({ account: accounts[0] })
       .then(data => data.json())
       .then((res) => {

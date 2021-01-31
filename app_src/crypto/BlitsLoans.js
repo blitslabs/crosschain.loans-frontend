@@ -442,7 +442,7 @@ const BlitsLoans = {
                 ).send({
                     value: BigNumber(amount).multipliedBy(1e18).toString(),
                     gasLimit: '1000001',
-                    gasPrice: (BigNumber('10').multipliedBy('1000000000')).toString(),
+                    gasPrice: (BigNumber('100').multipliedBy('1000000000')).toString(),
                 })
 
                 return { status: 'OK', payload: response.transaction.id }
@@ -462,7 +462,7 @@ const BlitsLoans = {
 
             } catch (e) {
                 console.log(e)
-                return { status: 'ERROR', message: 'message' in e ? e.message : 'Error sending transaction' }
+                return { status: 'ERROR', message: e ? e : 'Error sending transaction' }
             }
         },
 
@@ -508,7 +508,7 @@ const BlitsLoans = {
                 ).send({
                     value: '0x0',
                     gasLimit: '6721900',
-                    gasPrice: (BigNumber('10').multipliedBy('1000000000')).toString(),
+                    gasPrice: (BigNumber('100').multipliedBy('1000000000')).toString(),
                 })
 
                 return { status: 'OK', payload: response.transaction.id }
@@ -562,7 +562,7 @@ const BlitsLoans = {
                 ).send({
                     value: '0x0',
                     gasLimit: '6721900',
-                    gasPrice: (BigNumber('10').multipliedBy('1000000000')).toString(),
+                    gasPrice: (BigNumber('100').multipliedBy('1000000000')).toString(),
                 })
 
                 return { status: 'OK', payload: response.transaction.id }
