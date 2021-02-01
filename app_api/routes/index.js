@@ -12,7 +12,9 @@ const loan = require('../controllers/loan')
 const matching = require('../controllers/matching')
 const loanEvent = require('../controllers/loanEvent')
 const emailNotification = require('../controllers/emailNotification')
+const oracle = require('../controllers/oracle')
 const test = require('../controllers/test')
+
 
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
@@ -42,6 +44,9 @@ router.get('/activity/history/:page?', loanEvent.getActivityHistory)
 // Email Notification
 router.get('/notification/email/:account', emailNotification.getEmailNotificationAccount)
 router.post('/notification/email', emailNotification.saveEmailNotificationAccount)
+
+// Price Oracles
+router.get('/oracle/ONE/:network', oracle.updateAggregatorPrice_ONE)
 
 // Test
 router.get('/test/email', test.emailTest)

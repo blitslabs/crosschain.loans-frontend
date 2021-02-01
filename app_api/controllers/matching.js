@@ -133,8 +133,9 @@ module.exports.sendPendingTxs = async (req, res) => {
                 ).encodeABI()
 
                 // Encode Gas
-                let gasPrice = web3.utils.toHex(parseInt(parseInt(await web3.eth.getGasPrice()) * 1.25))
-                let gasLimit = web3.utils.toHex('6721900')
+                let gasPrice = parseInt(await web3.eth.getGasPrice()) > 80000000000 ? parseInt(await web3.eth.getGasPrice()) : 80000000000
+                gasPrice = web3.utils.toHex(parseInt(gasPrice * 1.25))
+                let gasLimit = web3.utils.toHex('250000')
 
                 // Prepare Tx
                 const rawTx = {

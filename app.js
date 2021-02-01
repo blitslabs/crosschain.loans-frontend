@@ -43,6 +43,11 @@ const matching_engine = new CronJob('*/30 * * * * *', async function () {
     console.log('Matching Engine Activated...')
 })
 
+const oracle_testnet = new CronJob('0 * * * *', async function () {
+    await rp(process.env.API_LOCALHOST + 'oracle/ONE/testnet')
+    console.log('Testnet Oracle prices updated...')
+})
+
 app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401)
@@ -61,6 +66,7 @@ app.set('port', process.env.PORT || 3000)
 app.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'))
     matching_engine.start()
+    oracle_testnet.start()
 })
 
 module.exports = app
