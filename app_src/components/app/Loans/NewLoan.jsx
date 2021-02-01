@@ -7,6 +7,7 @@ import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Loading from '../../Loading'
 import DownloadModal from './DownloadModal'
+import EmailModal from './EmailModal'
 
 // Styles
 import '../styles.css'
@@ -52,6 +53,7 @@ class NewLoan extends Component {
         loading: false,
         duration: '30',
         showDownloadModal: false,
+        showEmailModal: false,
         missingWallet: '',
         loansCount: ''
     }
@@ -159,9 +161,9 @@ class NewLoan extends Component {
 
     handleCollateralAddressBtn = async (e) => {
         e.preventDefault()
-        
+
         const response = await ONE.getAccount()
-        
+
         if (response.status === 'OK') {
             this.setState({ aCoinLender: response.payload.address, aCoinLenderIsInvalid: false })
             return
@@ -176,8 +178,8 @@ class NewLoan extends Component {
 
     handleContinueBtn = async (e) => {
         e.preventDefault()
-        
-        const { amount, aCoinLender, duration,  } = this.state
+
+        const { amount, aCoinLender, duration, } = this.state
         const { dispatch, history, lendRequest, loanAssets, providers, protocolContracts } = this.props
         const asset = loanAssets[lendRequest.contractAddress]
         this.setState({ btnLoading: true })
@@ -201,7 +203,7 @@ class NewLoan extends Component {
         const account = (await ETH.getAccount()).payload
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
         const userLoansCount = (await BlitsLoans.ETH.getUserLoansCount(account, loansContract)).payload
-        
+
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${parseInt(userLoansCount) + 1}. Loans Contract: ${loansContract}`
         const response = await ETH.generateSecret(message)
 
@@ -222,6 +224,8 @@ class NewLoan extends Component {
         history.push('/app/lend/confirm')
     }
 
+    toggleEmailModal = (value) => this.setState({ showEmailModal: value })
+
     handleBackBtn = (e) => {
         e.preventDefault()
         this.props.history.push('/loans/select-asset')
@@ -229,11 +233,11 @@ class NewLoan extends Component {
 
     render() {
 
-        const { loanAssets, lendRequest, assetTypes } = this.props
-        const { loading } = this.state
+        const { loanAssets, lendRequest, assetTypes, shared } = this.props
+        const { loading, showEmailModal } = this.state
         const assetType = assetTypes[lendRequest.contractAddress]
         const asset = loanAssets[lendRequest.contractAddress]
-        
+
         if (loading) {
             return <Loading />
         }
@@ -347,6 +351,21 @@ class NewLoan extends Component {
                                         }
                                         <div style={{ color: this.state.aCoinLenderIsInvalid ? 'red' : 'black' }} className="text-left mt-2 mb-4">You will receive the borrower's seizable collateral to this address if he fails to repay the loan. </div>
 
+
+                                        {
+                                            !('email' in shared) || shared.email === undefined || shared.email === '' && (
+                                                <Fragment>
+                                                    <div className="app-form-label text-black mt-2">4. Receive Email Notifications (Optional)</div>
+                                                    <div className="">
+                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-primary mt-3" >
+                                                            <Emoji text="✉️" onlyEmojiClassName="sm-emoji" />
+                                                            <span style={{ marginLeft: 10 }}> Receive Email Notifications</span>
+                                                        </button>
+                                                    </div>
+                                                </Fragment>
+                                            )
+                                        }
+
                                         {/* <hr className="" /> */}
 
                                         <div className="form-group mt-4">
@@ -402,20 +421,24 @@ class NewLoan extends Component {
                     missingWallet={this.state.missingWallet}
                     toggleModal={this.handleToggleDownloadModal}
                 />
+                {
+                    showEmailModal && <EmailModal isOpen={showEmailModal} toggleModal={this.toggleEmailModal} />
+                }
             </Fragment>
         )
     }
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, loanSettings, assetTypes, protocolContracts, providers }) {
+function mapStateToProps({ lendRequest, loanAssets, loanSettings, assetTypes, protocolContracts, providers, shared }) {
     return {
         lendRequest,
         loanAssets,
         loanSettings,
         assetTypes,
         protocolContracts,
-        providers
+        providers,
+        shared
     }
 }
 

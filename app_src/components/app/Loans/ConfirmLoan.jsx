@@ -22,7 +22,7 @@ import { Prompt } from 'react-router'
 // API
 import { getNewEngineSecretHash, confirmLoanOperation } from '../../../utils/api'
 
-class LoanTerms extends Component {
+class ConfirmLoan extends Component {
     state = {
         interestAmount: 0,
         repaymentAmount: 0,
@@ -120,7 +120,7 @@ class LoanTerms extends Component {
         console.log(response)
 
         if (response.status !== 'OK') {
-            toast.error('Missing required fields', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            toast.error('message' in response ? response.message : 'Missing required fields', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             this.setState({ loading: false, btnLoading: false })
             return
         }
@@ -269,4 +269,4 @@ function mapStateToProps({ lendRequest, loanAssets, protocolContracts, providers
     }
 }
 
-export default connect(mapStateToProps)(LoanTerms)
+export default connect(mapStateToProps)(ConfirmLoan)
