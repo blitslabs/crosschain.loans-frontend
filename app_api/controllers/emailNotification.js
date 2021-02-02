@@ -9,13 +9,15 @@ const currencyFormatter = require('currency-formatter')
 const BigNumber = require('bignumber.js')
 
 module.exports.test = async (req, res) => {
-    const templatePath = APP_ROOT + '/app_api/email_templates/loan_canceled.ejs'
+    const templatePath = APP_ROOT + '/app_api/email_templates/collateral_locked.ejs'
 
     const data = {
         host: process.env.SERVER_HOST,
         currentDate: moment().format("DD/MM/YYYY"),
         contractLoanId: 'contractLoanId',
         lender: 'lender',
+        borrower: 'borrower ETH',
+        secretHashA1: 'secretHashA1',
         secretHashB1: 'secretHashB1',
         duration: 'duration',
         principal: 'principal',
@@ -23,10 +25,20 @@ module.exports.test = async (req, res) => {
         tokenSymbol: 'tokenSymbol',
         apy: 'apy',
         loansContract: 'loansContract',
-        blockchain: 'blockchain',
+        blockchain: 'ETH',
         network: 'network',
         allowedCollateral: 'allowedCollateral',
-        loanId: 'loanId'
+        loanId: 'loanId',
+        collateral: {
+            blockchain: 'ONE',
+            contractLoanId: '1',
+            lender: 'lender one',
+            borrower: 'borrower one',
+            lockExpiration: 'lockExpiration',
+            collateral: '100',
+            collateralValue: '$150',
+            collateralizationRate: '150%'
+        }
     }
 
 
@@ -216,7 +228,7 @@ module.exports.sendLoanCanceled = async (loanId) => {
     }
 }
 
-module.exports.sendCollateralLocked = async (collateralLockId) => {
+module.exports.sendCollateralLocked = async (collateralLockId, res) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
@@ -259,20 +271,59 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
         }
     })
 
+
+
+    const data = {
+        host: process.env.SERVER_HOST,
+        currentDate: moment().format("DD/MM/YYYY"),
+        contractLoanId: loan.contractLoanId,
+        lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
+        duration: '30d',
+        principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
+        interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
+        tokenSymbol: loan.tokenSymbol,
+        apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
+        loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
+        blockchain: loan.blockchain,
+        network: loan.network,
+        allowedCollateral: 'ONE',
+        loanId: loan.id,
+        collateral: {
+            secretHashA1: collateralLock.secretHashA1,
+            secretHashB1: collateralLock.secretHashB1,
+            blockchain: collateralLock.blockchain,
+            contractLoanId: collateralLock.contractLoanId,
+            lender: collateralLock.lender,
+            borrower: collateralLock.borrower,
+            bCoinBorrowerAddress: collateralLock.bCoinBorrowerAddress,
+            lockExpiration: `${moment.unix(collateralLock.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
+            collateral: collateralLock.collateral,
+            collateralValue: currencyFormatter.format(collateralLock.collateralValue, { code: 'USD', symbol: '$' }),
+            collateralizationRate: '150%',
+            network: collateralLock.network,
+            collateralLockContractAddress: `${collateralLock.collateralLockContractAddress.substring(0, 4)}...${collateralLock.collateralLockContractAddress.substring(collateralLock.collateralLockContractAddress.length - 4)}`,
+        }
+    }
+
     if (borrowerNotificationEmail) {
 
+        const templatePath = APP_ROOT + '/app_api/email_templates/collateral_locked.ejs'
         const subject = 'Collateral Locked | Cross-chain Loans'
-        const msg = `You locked the required collateral for a loan offer: \n\n Collateral Details \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n\n Loan Details \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
+        // const msg = `You locked the required collateral for a loan offer: \n\n Collateral Details \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n\n Loan Details \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
 
         try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: borrowerNotificationEmail.email,
-                subject,
-                text: msg
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: borrowerNotificationEmail.email,
+                    subject,
+                    html: result
+                })
+                
+                console.log({ status: 'OK', message: 'Email notification sent' })
             })
-            console.log({ status: 'OK', message: 'Email notification sent' })
         } catch (e) {
             console.error(e)
             // return { status: 'ERROR', message: 'Error sending email' }
@@ -282,19 +333,21 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
     await sleep(2000)
 
     if (lenderNotificationEmail) {
-
-        const subject = 'Required Collateral Locked by Borrower | Cross-chain Loans'
-        const msg = `The collateral required for your loan offer was locked by a borrower: \n \n Collateral Details \n Account (Borrower): ${collateralLock.bCoinBorrowerAddress} \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n SecretHashA1: ${collateralLock.secretHashA1} \n\n Loan Details \n Account (Lender): ${loan.lender} \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
+        const templatePath = APP_ROOT + '/app_api/email_templates/lender_approve_loan.ejs'
+        const subject = 'Action Required: Approve Loan | Cross-chain Loans'
+        // const msg = `The collateral required for your loan offer was locked by a borrower: \n \n Collateral Details \n Account (Borrower): ${collateralLock.bCoinBorrowerAddress} \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n SecretHashA1: ${collateralLock.secretHashA1} \n\n Loan Details \n Account (Lender): ${loan.lender} \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
 
         try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: lenderNotificationEmail.email,
-                subject,
-                text: msg
-            })
-            console.log({ status: 'OK', message: 'Email notification sent' })
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: lenderNotificationEmail.email,
+                    subject,
+                    html: result
+                })                
+                console.log({ status: 'OK', message: 'Email notification sent' })
+            })            
 
         } catch (e) {
             console.error(e)

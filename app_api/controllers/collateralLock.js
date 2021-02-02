@@ -149,40 +149,44 @@ module.exports.confirmCollateralLockOperation_ONE = async (req, res) => {
                 loansContractAddress: lock.loansContractAddress,
                 status: 1
             },
-
         })
 
         if (!dbLoan) {
             console.log('Matching loan not found for lock: ', logs.loanId)
         }
 
-        // Assign borrower to loan
-        console.log('MATCHING COLLATERAL & LOAN:')
+        // Hide Loan From Available Loans List
+        dbLoan.status = 1.5
+        await dbLoan.save()
 
-        await Matching.findOrCreate({
-            where: {
-                collateralLockTxHash: txHash,
-            },
-            defaults: {
-                collateralLockTxHash: txHash,
-                collateralLockBlockchain: blockchain,
-                collateralLockContract: protocolContract.address,
-                loansBlockchain: dbLoan.blockchain,
-                loansContract: lock.loansContractAddress,
-                network: network,
-                aCoinLoanId: logs.loanId,
-                bCoinLoanId: lock.bCoinLoanId,
-                bCoinBorrowerAddress: lock.actors[2],
-                secretHashA1: lock.secretHashes[0],
-                transactionSent: 0,
-                matchingCompleted: 0
-            },
+        if (network === 'testnet') {
+            // Assign borrower to loan
+            console.log('MATCHING COLLATERAL & LOAN:')
 
-        })
+            await Matching.findOrCreate({
+                where: {
+                    collateralLockTxHash: txHash,
+                },
+                defaults: {
+                    collateralLockTxHash: txHash,
+                    collateralLockBlockchain: blockchain,
+                    collateralLockContract: protocolContract.address,
+                    loansBlockchain: dbLoan.blockchain,
+                    loansContract: lock.loansContractAddress,
+                    network: network,
+                    aCoinLoanId: logs.loanId,
+                    bCoinLoanId: lock.bCoinLoanId,
+                    bCoinBorrowerAddress: lock.actors[2],
+                    secretHashA1: lock.secretHashes[0],
+                    transactionSent: 0,
+                    matchingCompleted: 0
+                },
+            })
+        }
 
         // Send Email Notification (Borrower & Lender)
         try {
-            emailNotification.sendCollateralLocked(dbCollateralLock.id)
+            emailNotification.collateralLocked(dbCollateralLock.id)
                 .then(res => console.log(res))
         } catch (e) {
             console.error(e)
