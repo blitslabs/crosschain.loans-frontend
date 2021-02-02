@@ -67,6 +67,8 @@ class LoanDetails extends Component {
             history.push('/borrow')
         }
 
+        this.loadInitialData()
+        
         getLoanDetails({ loanId })
             .then(res => res.json())
             .then(async (data) => {
@@ -76,35 +78,40 @@ class LoanDetails extends Component {
                     dispatch(saveLoanDetails(data.payload))
                 }
 
-                // Get ETH Account
-                let eth_account
-                try {
-                    eth_account = await ETH.getAccount()
-                    eth_account = eth_account.payload
-                } catch (e) {
-                    console.log(e)
-                }
-
-                // Get ONE Account
-                let one_account
-                try {
-                    one_account = await ONE.getAccount()
-                    one_account = fromBech32(one_account.payload.address)
-
-                } catch (e) {
-                    console.log(e)
-                    one_account = ''
-                }
-
                 this.setState({
                     loanId,
                     loading: false,
-                    eth_account,
-                    one_account,
                 })
 
                 this.checkLoanStatus(loanId)
             })
+    }
+
+    loadInitialData = async () => {
+        // Get ETH Account
+        let eth_account
+        try {
+            eth_account = await ETH.getAccount()
+            eth_account = eth_account.payload
+        } catch (e) {
+            console.log(e)
+        }
+
+        // Get ONE Account
+        let one_account
+        try {
+            one_account = await ONE.getAccount()
+            one_account = fromBech32(one_account.payload.address)
+
+        } catch (e) {
+            console.log(e)
+            one_account = ''
+        }
+
+        this.setState({
+            eth_account,
+            one_account,
+        })
     }
 
     componentWillUnmount() {
@@ -717,7 +724,7 @@ class LoanDetails extends Component {
                                                         </div>
                                                     )
                                                 }
-                
+
                                                 {
                                                     (status == 6 && !loadingBtn && collateralStatus === 'Locked' && one_account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
                                                         <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
