@@ -44,6 +44,7 @@ router.get('/activity/history/:page?', loanEvent.getActivityHistory)
 // Email Notification
 router.get('/notification/email/:account', emailNotification.getEmailNotificationAccount)
 router.post('/notification/email', emailNotification.saveEmailNotificationAccount)
+router.get('/emailNotification/test', emailNotification.test)
 
 // Price Oracles
 router.get('/oracle/ONE/:network', oracle.updateAggregatorPrice_ONE)

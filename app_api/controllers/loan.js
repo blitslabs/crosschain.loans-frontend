@@ -200,7 +200,6 @@ module.exports.confirmLoanOperation_ETH = async (req, res) => {
                 // Send Email Notification
                 try {
                     emailNotification.sendLoanCreatedEmailNotification(dbLoan.id)
-                        .then(res => console.log(res))
                 } catch (e) {
                     console.error(e)
                 }
