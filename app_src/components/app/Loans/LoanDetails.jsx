@@ -68,7 +68,7 @@ class LoanDetails extends Component {
         }
 
         this.loadInitialData()
-        
+
         getLoanDetails({ loanId })
             .then(res => res.json())
             .then(async (data) => {
@@ -243,6 +243,48 @@ class LoanDetails extends Component {
                     console.log(res)
                     if (res.status === 'OK') {
                         toast.success('Loan Canceled', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                        clearInterval(intervalId)
+                        return
+                    }
+                }).catch((e) => console.log(e))
+        }, 5000)
+    }
+
+    handleApproveBtn = async (e) => {
+        e.preventDefault()
+        const { loanDetails, protocolContracts, providers } = this.props
+        const { contractLoanId, collateralLock } = loanDetails
+        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+
+        this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
+
+        const txResponse = await BlitsLoans.ETH.approveLoan(
+            contractLoanId,
+            collateralLock?.bCoinBorrowerAddress,
+            collateralLock?.secretHashA1,
+            loansContract
+        )
+
+        if (txResponse.status !== 'OK') {
+            toast.error(txResponse.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ loadingBtn: false })
+            return
+        }
+
+        const params = {
+            network: providers.ethereum,
+            blockchain: 'ETH',
+            txHash: txResponse.payload.transactionHash
+        }
+
+        const intervalId = setInterval(() => {
+            confirmLoanOperation(params)
+                .then(data => data.json())
+                .then((res) => {
+                    console.log(res)
+                    if (res.status === 'OK') {
+                        toast.success('Loan Approved', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
                         clearInterval(intervalId)
                         return
                     }
@@ -748,6 +790,17 @@ class LoanDetails extends Component {
                                                         <button onClick={this.handleSeizeCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Seize Collateral
+                                                        </button>
+                                                    )
+                                                }
+
+                                                {
+                                                    (
+                                                        status == 1 && collateralStatus === 'Locked' && !loadingBtn && eth_account?.toUpperCase() == lender?.toUpperCase()
+                                                    ) && (
+                                                        <button onClick={this.handleApproveBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
+                                                            Approve Loan
                                                         </button>
                                                     )
                                                 }
