@@ -205,6 +205,7 @@ module.exports.confirmLoanOperation_ETH = async (req, res) => {
                 }
 
             } else if (
+                e.event === 'LoanAssignedAndApproved' ||
                 e.event === 'LoanPrincipalWithdrawn' ||
                 e.event === 'LoanRepaymentAccepted' ||
                 e.event === 'Payback' ||
@@ -225,13 +226,23 @@ module.exports.confirmLoanOperation_ETH = async (req, res) => {
                     return
                 }
 
+                if (e.event === 'LoanAssignedAndApproved') {
+                    dbLoan.secretHashA1 = loan.secretHashes[0]
+                    dbLoan.borrower = loan.actors[0]
+                }
+
                 dbLoan.secretA1 = loan.secrets[0]
                 dbLoan.secretB1 = loan.secrets[1]
                 dbLoan.status = loan.state
                 await dbLoan.save()
 
-
-                if (e.event === 'CancelLoan') {
+                if (e.event === 'LoanAssignedAndApproved') {
+                    try {   
+                        emailNotification.sendLoanApproved(dbLoan.id)
+                    } catch(e) {
+                        console.error(e)
+                    }
+                } else if (e.event === 'CancelLoan') {
                     // Send Email Notification
                     try {
                         emailNotification.sendLoanCanceled(dbLoan.id)

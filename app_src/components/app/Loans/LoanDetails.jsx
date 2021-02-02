@@ -255,7 +255,6 @@ class LoanDetails extends Component {
         const { loanDetails, protocolContracts, providers } = this.props
         const { contractLoanId, collateralLock } = loanDetails
         const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
-        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
