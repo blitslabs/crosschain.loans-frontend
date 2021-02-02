@@ -9,7 +9,7 @@ const currencyFormatter = require('currency-formatter')
 const BigNumber = require('bignumber.js')
 
 module.exports.test = async (req, res) => {
-    const templatePath = APP_ROOT + '/app_api/email_templates/loan_created.ejs'
+    const templatePath = APP_ROOT + '/app_api/email_templates/loan_canceled.ejs'
 
     const data = {
         host: process.env.SERVER_HOST,
@@ -176,17 +176,39 @@ module.exports.sendLoanCanceled = async (loanId) => {
     })
 
     const subject = 'Loan Canceled | Cross-chain Loans'
-    const msg = `You canceled a loan offer: \n \n Account: ${loan.lender} \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
+    // const msg = `You canceled a loan offer: \n \n Account: ${loan.lender} \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
+
+    const templatePath = APP_ROOT + '/app_api/email_templates/loan_canceled.ejs'
+
+    const data = {
+        host: process.env.SERVER_HOST,
+        currentDate: moment().format("DD/MM/YYYY"),
+        contractLoanId: loan.contractLoanId,
+        lender: `${loan.lender.substring(0, 4)}...${loan.lender.substring(loan.lender.length - 4)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 4)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 4)}`,
+        duration: '30d',
+        principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
+        interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
+        tokenSymbol: loan.tokenSymbol,
+        apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
+        loansContract: `${loan.loansContractAddress.substring(0, 4)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 4)}`,
+        blockchain: loan.blockchain,
+        network: loan.network,
+        allowedCollateral: 'ONE',
+        loanId: loan.id
+    }
 
     try {
-        await transporter.verify()
-        await transporter.sendMail({
-            from: settings.SMTP_USER,
-            to: notificationEmail.email,
-            subject,
-            text: msg
+        ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+            await transporter.verify()
+            await transporter.sendMail({
+                from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                to: notificationEmail.email,
+                subject,
+                html: result
+            })
+            return { status: 'OK', message: 'Email notification sent' }
         })
-        return { status: 'OK', message: 'Email notification sent' }
 
     } catch (e) {
         console.error(e)
@@ -194,7 +216,7 @@ module.exports.sendLoanCanceled = async (loanId) => {
     }
 }
 
-module.exports.collateralLocked = async (collateralLockId) => {
+module.exports.sendCollateralLocked = async (collateralLockId) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
