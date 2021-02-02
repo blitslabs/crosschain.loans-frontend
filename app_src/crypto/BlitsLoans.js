@@ -195,6 +195,46 @@ const BlitsLoans = {
 
         },
 
+        approveLoan: async (loanId, borrower, secretHashA1, loansContractAddress) => {
+
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
+            }
+
+            if (!loanId) return { status: 'ERROR', message: 'Missing Loan ID' }
+            if(!borrower) return { status: 'ERROR', message: 'Missing Borrower'}
+            if (!secretHashA1) return { status: 'ERROR', message: 'Missing secretHashA1' }
+            if (!loansContractAddress) return { status: 'ERROR', message: 'Missing Loans Contract Address' }
+
+            await window.ethereum.enable()
+
+            // Connect to HTTP Provider
+            const web3 = new Web3(window.ethereum)
+
+            // Get Lender account
+            const accounts = await web3.eth.getAccounts()
+            const lender = accounts[0]
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract = new web3.eth.Contract(ABI.LOANS.abi, loansContractAddress)
+            } catch (e) {
+                return { status: 'ERROR', message: 'Error instantiating contract' }
+            }
+
+            try {
+                const tx = await contract.methods.setBorrowerAndApprove(
+                    loanId, borrower, secretHashA1
+                ).send({ from: lender })
+
+                return { status: 'OK', payload: tx }
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: e ? e : 'Error approving loan' }
+            }
+        },
+
         withdrawPrincipal: async (loanId, secretA1, loansContractAddress) => {
 
             if (!window.ethereum) {

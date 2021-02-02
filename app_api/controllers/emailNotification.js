@@ -228,7 +228,7 @@ module.exports.sendLoanCanceled = async (loanId) => {
     }
 }
 
-module.exports.sendCollateralLocked = async (collateralLockId, res) => {
+module.exports.sendCollateralLocked = async (collateralLockId) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
@@ -270,8 +270,6 @@ module.exports.sendCollateralLocked = async (collateralLockId, res) => {
             pass: settings.SMTP_PASSWORD
         }
     })
-
-
 
     const data = {
         host: process.env.SERVER_HOST,
@@ -348,93 +346,6 @@ module.exports.sendCollateralLocked = async (collateralLockId, res) => {
                 })                
                 console.log({ status: 'OK', message: 'Email notification sent' })
             })            
-
-        } catch (e) {
-            console.error(e)
-            // return { status: 'ERROR', message: 'Error sending email' }
-        }
-    }
-}
-
-module.exports.sendCollateralLockedWithAutoMatching = async (collateralLockId) => {
-
-    const settings = await SystemSettings.findOne({ where: { id: 1 } })
-
-    if (!settings) return { status: 'ERROR', message: 'Error sending email' }
-
-    const collateralLock = await CollateralLock.findOne({ where: { id: collateralLockId } })
-
-    if (!collateralLock) return { status: 'ERROR', message: 'Collareal Lock not found' }
-
-    const borrowerNotificationEmail = await EmailNotification.findOne({
-        where: {
-            account: collateralLock.bCoinBorrowerAddress
-        }
-    })
-
-    // Get Lender's bCoin account with his aCoin account
-    // 1. Get Loan
-    const loan = await Loan.findOne({
-        where: {
-            contractLoanId: collateralLock.bCoinContractLoanId,
-            loansContractAddress: collateralLock.loansContractAddress,
-            status: 1
-        }
-    })
-
-    // 2. Get Lender's email
-    const lenderNotificationEmail = await EmailNotification.findOne({
-        where: {
-            account: loan.lender
-        }
-    })
-
-    const transporter = nodemailer.createTransport({
-        host: settings.SMTP_HOST,
-        port: settings.SMTP_PORT,
-        secure: true,
-        auth: {
-            user: settings.SMTP_USER,
-            pass: settings.SMTP_PASSWORD
-        }
-    })
-
-    if (borrowerNotificationEmail) {
-
-        const subject = 'Collateral Locked | Cross-chain Loans'
-        const msg = `You locked the required collateral for a loan offer: \n\n Collateral Details \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n\n Loan Details \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
-
-        try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: borrowerNotificationEmail.email,
-                subject,
-                text: msg
-            })
-            console.log({ status: 'OK', message: 'Email notification sent' })
-        } catch (e) {
-            console.error(e)
-            // return { status: 'ERROR', message: 'Error sending email' }
-        }
-    }
-
-    await sleep(2000)
-
-    if (lenderNotificationEmail) {
-
-        const subject = 'Required Collateral Locked by Borrower | Cross-chain Loans'
-        const msg = `The collateral required for your loan offer was locked by a borrower: \n \n Collateral Details \n Account (Borrower): ${collateralLock.bCoinBorrowerAddress} \n Collateral: ${collateralLock.collateral} \n Blockchain: ${collateralLock.blockchain} \n SecretHashA1: ${collateralLock.secretHashA1} \n\n Loan Details \n Account (Lender): ${loan.lender} \n Duration: 30 days \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loan.id} \n \n - Crosschain Loans Protocol`
-
-        try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: lenderNotificationEmail.email,
-                subject,
-                text: msg
-            })
-            console.log({ status: 'OK', message: 'Email notification sent' })
 
         } catch (e) {
             console.error(e)
