@@ -250,7 +250,7 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
         where: {
             contractLoanId: collateralLock.bCoinContractLoanId,
             loansContractAddress: collateralLock.loansContractAddress,
-            status: 1
+            status: 1.5
         }
     })
 

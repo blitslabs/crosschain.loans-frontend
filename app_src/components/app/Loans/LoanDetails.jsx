@@ -767,7 +767,7 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 6 && !loadingBtn && collateralStatus === 'Locked' && one_account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
+                                                    ((status == 6 || status == 7) && !loadingBtn && collateralStatus === 'Locked' && one_account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
                                                         <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Unlock Collateral

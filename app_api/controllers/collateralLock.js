@@ -186,7 +186,7 @@ module.exports.confirmCollateralLockOperation_ONE = async (req, res) => {
 
         // Send Email Notification (Borrower & Lender)
         try {
-            emailNotification.collateralLocked(dbCollateralLock.id)
+            emailNotification.sendCollateralLocked(dbCollateralLock.id)
                 .then(res => console.log(res))
         } catch (e) {
             console.error(e)
