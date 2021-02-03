@@ -169,8 +169,7 @@ class NewLoan extends Component {
             return
         }
 
-        this.setState({ missingWallet: 'ONE' })
-        this.handleToggleDownloadModal(true)
+        this.setState({ showDownloadModal: true, missingWallet: 'ONE' })
     }
 
     handleToggleDownloadModal = async (value) => this.setState({ showDownloadModal: value })
@@ -234,7 +233,7 @@ class NewLoan extends Component {
     render() {
 
         const { loanAssets, lendRequest, assetTypes, shared } = this.props
-        const { loading, showEmailModal } = this.state
+        const { loading, showEmailModal, showDownloadModal, missingWallet } = this.state
         const assetType = assetTypes[lendRequest.contractAddress]
         const asset = loanAssets[lendRequest.contractAddress]
 
@@ -416,11 +415,13 @@ class NewLoan extends Component {
                         </div>
                     </section>
                 </div>
-                <DownloadModal
-                    isOpen={this.state.showDownloadModal}
-                    missingWallet={this.state.missingWallet}
-                    toggleModal={this.handleToggleDownloadModal}
-                />
+                {
+                    showDownloadModal && <DownloadModal
+                        isOpen={showDownloadModal}
+                        missingWallet={missingWallet}
+                        toggleModal={this.handleToggleDownloadModal}
+                    />
+                }
                 {
                     showEmailModal && <EmailModal isOpen={showEmailModal} toggleModal={this.toggleEmailModal} />
                 }

@@ -14,7 +14,7 @@ class DownloadModal extends Component {
 
     handleDownloadBtn = (e) => {
         e.preventDefault()
-        window.open('https://chrome.google.com/webstore/detail/harmony/bjaeebonnimhcakeckbnemejhdpngdmd')
+        window.open('https://chrome.google.com/webstore/detail/harmony-one-wallet/fnnegphlobjdpkhecapkijjdkgcjhkib?hl=en-US')
     }
 
     render() {
@@ -28,7 +28,7 @@ class DownloadModal extends Component {
             >
                 <div className="row" style={{ padding: '20px 50px 10px 50px' }}>
                     <div className="col-12 text-center">
-                        <div className="modal-wallet-title mb-4" style={{ color: '#a42fff' }}>Wallet Not Detected!</div>
+                        <div className="modal-wallet-title mb-4" style={{ }}>Wallet Not Detected!</div>
                         <div className="modal-wallet-title mb-4">Download & Install Wallet</div>
                         <div className="row ">
                             <div className="col-sm-12 col-md-12 text-center mt-4">
