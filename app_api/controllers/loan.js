@@ -229,6 +229,8 @@ module.exports.confirmLoanOperation_ETH = async (req, res) => {
                 if (e.event === 'LoanAssignedAndApproved') {
                     dbLoan.secretHashA1 = loan.secretHashes[0]
                     dbLoan.borrower = loan.actors[0]
+                    dbLoan.loanExpiration = loan.expirations[0]
+                    dbLoan.acceptExpiration = loan.expirations[1]
                 }
 
                 dbLoan.secretA1 = loan.secrets[0]

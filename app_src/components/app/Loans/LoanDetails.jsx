@@ -586,11 +586,11 @@ class LoanDetails extends Component {
                         ) {
                             console.log(res)
 
-                            if (res.payload.collateralLock.status == 0 && res.payload.status == 1 && providers.ethereum === 'testnet') {
-                                this.setState({ loadingMsg: 'Awaiting Loan Approval' })
-                                dispatch(saveLoanDetails(res.payload))
-                                return
-                            }
+                            // if (res.payload.collateralLock.status == 0 && res.payload.status == 1 && providers.ethereum === 'testnet') {
+                            //     this.setState({ loadingMsg: 'Awaiting Loan Approval' })
+                            //     dispatch(saveLoanDetails(res.payload))
+                            //     return
+                            // }
 
                             this.setState({ loadingBtn: false })
                             dispatch(saveLoanDetails(res.payload))
@@ -795,7 +795,7 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (
-                                                        status == 1 && collateralStatus === 'Locked' && !loadingBtn && eth_account?.toUpperCase() == lender?.toUpperCase()
+                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && eth_account?.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
                                                         <button onClick={this.handleApproveBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
@@ -806,10 +806,10 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (
-                                                        status == 1 && collateralStatus === 'Locked' && !loadingBtn && eth_account?.toUpperCase() != lender?.toUpperCase()
+                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn /*&& eth_account?.toUpperCase() != lender?.toUpperCase()*/
                                                     ) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
-                                                            Please wait while the lender approves the loan. We will notify you once it is approved. You are one step away from withdrawing the principal.
+                                                            Please wait while the lender approves the loan. We will notify you once it is approved. You are one step away from withdrawing the loan's principal.
                                                         </div>
                                                     )
                                                 }
