@@ -111,7 +111,7 @@ class Activity extends Component {
                                                 </thead>
                                                 <tbody>
                                                     {
-                                                        Object.values(activity).map((e, i) => {
+                                                        Object.values(activity).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
 
                                                             const explorer = EXPLORER[e.network][e.blockchain]
                                                             const txHashUrl = `${explorer}tx/${e.txHash}`
