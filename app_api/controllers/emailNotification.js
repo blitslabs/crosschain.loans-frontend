@@ -9,7 +9,7 @@ const currencyFormatter = require('currency-formatter')
 const BigNumber = require('bignumber.js')
 
 module.exports.test = async (req, res) => {
-    const templatePath = APP_ROOT + '/app_api/email_templates/lender_loan_approved.ejs'
+    const templatePath = APP_ROOT + '/app_api/email_templates/lender_approve_loan.ejs'
 
     const data = {
         host: process.env.SERVER_HOST,
