@@ -343,7 +343,7 @@ class NewLoan extends Component {
                                                 <div className="mt-3">
                                                     <button onClick={this.handleCollateralAddressBtn} className="btn btn-blits" style={{ fontSize: '14px', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                         <Emoji text="🔓" onlyEmojiClassName="sm-emoji" />
-                                                        Unlock ONE Wallet
+                                                        <span style={{ marginLeft: 5 }}>Unlock ONE Wallet</span>
                                                     </button>
                                                 </div>
 
