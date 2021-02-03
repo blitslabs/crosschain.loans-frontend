@@ -558,7 +558,7 @@ module.exports.sendPrincipalWithdrawn = async (loanId) => {
     }
 }
 
-module.exports.sendPayback = async (loanId) => {
+module.exports.sendPayback = async (loanId, res) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
@@ -597,6 +597,7 @@ module.exports.sendPayback = async (loanId) => {
         lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
         secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
         loanExpiration: `${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
+        acceptExpiration: `${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
         principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
         interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
         tokenSymbol: loan.tokenSymbol,
@@ -608,10 +609,10 @@ module.exports.sendPayback = async (loanId) => {
         loanId: loan.id
     }
 
-    if (lenderNotificationEmail) {
+    if (!lenderNotificationEmail) {
 
-        const templatePath = APP_ROOT + '/app_api/email_templates/lender_loan_withdrawn.ejs'
-        const subject = 'Loan Repaid | Cross-chain Loans'
+        const templatePath = APP_ROOT + '/app_api/email_templates/lender_payback.ejs'
+        const subject = 'Action Required: Accept Loan Payback | Cross-chain Loans'
         // const msg = `Your loan was repaid by the borrower. Please Accept the Borrower's Payback before ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC to complete the loan. \n \n Account (Borrower): ${loan.borrower} \n Accept Payback Expiration: ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
 
         try {
@@ -635,7 +636,7 @@ module.exports.sendPayback = async (loanId) => {
 
     if (borrowerNotificationEmail) {
 
-        const templatePath = APP_ROOT + '/app_api/email_templates/borrower_loan_withdrawn.ejs'
+        const templatePath = APP_ROOT + '/app_api/email_templates/borrower_payback.ejs'
         const subject = 'Loan Repaid | Cross-chain Loans'
         // const msg = `Your loan was repaid successfully. You will be able to unlock your collateral once the Lender accepts the Payback (before ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC). If the Lender fails to accept the payback before this date, you'll be able to unlock a part of your collateral and refund your payback. \n \n Account (Borrower): ${loan.borrower} \n Accept Payback Expiration: ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
 
@@ -648,7 +649,6 @@ module.exports.sendPayback = async (loanId) => {
                     subject,
                     html: result
                 })
-                
                 console.log({ status: 'OK', message: 'Email notification sent' })
             })
 
