@@ -162,6 +162,7 @@ class MyLoans extends Component {
                                                                                 <div className="loanBook__apr">
                                                                                     {
                                                                                         l.status == 1 ? 'Funded' :
+                                                                                        l.status == 1.5 ? 'Awaiting Approval' :
                                                                                         l.status == 2 ? 'Approved' :
                                                                                         l.status == 3 ? 'Withdrawn' : 
                                                                                         l.status == 4 ? 'Repaid' :
@@ -240,6 +241,7 @@ class MyLoans extends Component {
                                                                                 <div className="loanBook__apr">
                                                                                     {
                                                                                         l.status == 1 ? 'Funded' :
+                                                                                        l.status == 1.5 ? 'Awaiting Approval' :
                                                                                         l.status == 2 ? 'Approved' :
                                                                                         l.status == 3 ? 'Withdrawn' : 
                                                                                         l.status == 4 ? 'Repaid' :

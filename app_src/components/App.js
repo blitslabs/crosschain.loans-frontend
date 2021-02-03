@@ -48,24 +48,33 @@ class App extends Component {
   loadInitialData = async () => {
     const { dispatch } = this.props
 
-    let web3, accounts, networkId, network
+    let web3, providerAccounts, networkId, network
     try {
       web3 = new Web3(window.ethereum)
-      accounts = await web3.eth.getAccounts()
-      console.log(accounts)
-      dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] != undefined ? accounts[0] : '' }))
+      providerAccounts = await web3.eth.getAccounts()
+
+      dispatch(saveAccount({ blockchain: 'ETH', account: providerAccounts[0] != undefined ? providerAccounts[0] : '' }))
       // Check network
       networkId = await web3.eth.net.getId()
       network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
       dispatch(saveProvider({ blockchain: 'ethereum', network }))
 
       setInterval(async () => {
-        const { providers } = this.props
+        const { providers, accounts } = this.props
         networkId = await web3.eth.net.getId()
         network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
         if (providers.ethereum != network) {
           window.location.href = process.env.SERVER_HOST + '/app/borrow';
         }
+
+        providerAccounts = await web3.eth.getAccounts()
+        const account = providerAccounts[0] !== undefined ? providerAccounts[0] : ''
+        if (accounts?.ETH !== account) {
+          
+          dispatch(saveAccount({ blockchain: 'ETH', account: account }))
+          window.location.href = process.env.SERVER_HOST + '/app/borrow';
+        }
+
       }, 2000)
 
     } catch (e) {
@@ -73,11 +82,11 @@ class App extends Component {
     }
 
     // dispatch(saveNotificationEmail(''))
-    getNotificationEmail({ account: accounts[0] })
+    getNotificationEmail({ account: providerAccounts[0] })
       .then(data => data.json())
       .then((res) => {
         console.log(res)
-        if(res.status === 'OK') {
+        if (res.status === 'OK') {
           dispatch(saveNotificationEmail(res.payload.email))
         }
       })
@@ -142,10 +151,11 @@ class App extends Component {
 }
 
 
-function mapStateToProps({ loading, providers }) {
+function mapStateToProps({ loading, providers, accounts }) {
   return {
     loading,
-    providers
+    providers,
+    accounts
   }
 }
 
