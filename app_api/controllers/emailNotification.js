@@ -558,7 +558,7 @@ module.exports.sendPrincipalWithdrawn = async (loanId) => {
     }
 }
 
-module.exports.sendPayback = async (loanId, res) => {
+module.exports.sendPayback = async (loanId) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
@@ -609,7 +609,7 @@ module.exports.sendPayback = async (loanId, res) => {
         loanId: loan.id
     }
 
-    if (!lenderNotificationEmail) {
+    if (lenderNotificationEmail) {
 
         const templatePath = APP_ROOT + '/app_api/email_templates/lender_payback.ejs'
         const subject = 'Action Required: Accept Loan Payback | Cross-chain Loans'
@@ -691,19 +691,42 @@ module.exports.sendPaybackAccepted = async (loanId) => {
         }
     })
 
+    const data = {
+        host: process.env.SERVER_HOST,
+        currentDate: moment().format("DD/MM/YYYY"),
+        contractLoanId: loan.contractLoanId,
+        lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
+        loanExpiration: `${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
+        acceptExpiration: `${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
+        principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
+        interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
+        tokenSymbol: loan.tokenSymbol,
+        apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
+        loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
+        blockchain: loan.blockchain,
+        network: loan.network,
+        allowedCollateral: 'ONE',
+        loanId: loan.id
+    }
+
     if (lenderNotificationEmail) {
+
+        const templatePath = APP_ROOT + '/app_api/email_templates/lender_payback_accepted.ejs'
         const subject = 'Payback Accepted | Cross-chain Loans'
         // const msg = `You accepted the payback made by the borrower of your loan. \n\n Account (Borrower): ${loan.borrower} \n Accept Payback Expiration: ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
 
         try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: lenderNotificationEmail.email,
-                subject,
-                text: msg
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: lenderNotificationEmail.email,
+                    subject,
+                    html: result
+                })
+                console.log({ status: 'OK', message: 'Email notification sent' })
             })
-            console.log({ status: 'OK', message: 'Email notification sent' })
 
         } catch (e) {
             console.error(e)
@@ -712,18 +735,23 @@ module.exports.sendPaybackAccepted = async (loanId) => {
     }
 
     if (borrowerNotificationEmail) {
-        const subject = 'Payback Accepted | Cross-chain Loans'
+
+        const templatePath = APP_ROOT + '/app_api/email_templates/borrower_payback_accepted.ejs'
+        const subject = 'Action Required: Unlock Your Collateral | Cross-chain Loans'
         // const msg = `The Lender accepted the payback you made and you are now able to unlock your collateral. \n\n Account (Borrower): ${loan.borrower} \n Accept Payback Expiration: ${moment.unix(loan.acceptExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
 
         try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: borrowerNotificationEmail.email,
-                subject,
-                text: msg
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: borrowerNotificationEmail.email,
+                    subject,
+                    html: result
+                })
+                
+                console.log({ status: 'OK', message: 'Email notification sent' })
             })
-            console.log({ status: 'OK', message: 'Email notification sent' })
 
         } catch (e) {
             console.error(e)
