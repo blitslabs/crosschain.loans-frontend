@@ -126,14 +126,14 @@ module.exports.sendLoanCreatedEmailNotification = async (loanId) => {
         host: process.env.SERVER_HOST,
         currentDate: moment().format("DD/MM/YYYY"),
         contractLoanId: loan.contractLoanId,
-        lender: `${loan.lender.substring(0, 4)}...${loan.lender.substring(loan.lender.length - 4)}`,
-        secretHashB1: `${loan.secretHashB1.substring(0, 4)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 4)}`,
+        lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
         duration: '30d',
         principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
         interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
         tokenSymbol: loan.tokenSymbol,
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
-        loansContract: `${loan.loansContractAddress.substring(0, 4)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 4)}`,
+        loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         network: loan.network,
         allowedCollateral: 'ONE',
@@ -196,14 +196,14 @@ module.exports.sendLoanCanceled = async (loanId) => {
         host: process.env.SERVER_HOST,
         currentDate: moment().format("DD/MM/YYYY"),
         contractLoanId: loan.contractLoanId,
-        lender: `${loan.lender.substring(0, 4)}...${loan.lender.substring(loan.lender.length - 4)}`,
-        secretHashB1: `${loan.secretHashB1.substring(0, 4)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 4)}`,
+        lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
         duration: '30d',
         principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
         interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
         tokenSymbol: loan.tokenSymbol,
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
-        loansContract: `${loan.loansContractAddress.substring(0, 4)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 4)}`,
+        loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         network: loan.network,
         allowedCollateral: 'ONE',
@@ -354,7 +354,7 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
     }
 }
 
-module.exports.sendLoanApproved = async (loanId) => {
+module.exports.sendLoanApproved = async (loanId, res) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
@@ -386,40 +386,69 @@ module.exports.sendLoanApproved = async (loanId) => {
         }
     })
 
-    // if (lenderNotificationEmail) {
-    //     const subject = 'Loan Approved | Cross-chain Loans'
-    //     const msg = `The principal of your loan was withdrawn by the borrower: \n \n Account (Borrower): ${loan.borrower} \n Loan Expiration: ${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
+    const data = {
+        host: process.env.SERVER_HOST,
+        currentDate: moment().format("DD/MM/YYYY"),
+        contractLoanId: loan.contractLoanId,
+        lender: `${loan.lender.substring(0, 8)}...${loan.lender.substring(loan.lender.length - 8)}`,
+        secretHashB1: `${loan.secretHashB1.substring(0, 8)}...${loan.secretHashB1.substring(loan.secretHashB1.length - 8)}`,
+        loanExpiration: `${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC`,
+        principal: currencyFormatter.format(loan.principal, { code: 'USD', symbol: '' }),
+        interest: currencyFormatter.format(loan.interest, { code: 'USD', symbol: '' }),
+        tokenSymbol: loan.tokenSymbol,
+        apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
+        loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
+        blockchain: loan.blockchain,
+        network: loan.network,
+        allowedCollateral: 'ONE',
+        loanId: loan.id
+    }
 
-    //     try {
-    //         await transporter.verify()
-    //         await transporter.sendMail({
-    //             from: settings.SMTP_USER,
-    //             to: lenderNotificationEmail.email,
-    //             subject,
-    //             text: msg
-    //         })
-    //         console.log({ status: 'OK', message: 'Email notification sent' })
+    if (lenderNotificationEmail) {
 
-    //     } catch (e) {
-    //         console.error(e)
-    //         // return { status: 'ERROR', message: 'Error sending email' }
-    //     }
-    // }
+        const templatePath = APP_ROOT + '/app_api/email_templates/lender_loan_approved.ejs'
+        const subject = 'You have approved a loan | Cross-chain Loans'
+        // const msg = `The principal of your loan was withdrawn by the borrower: \n \n Account (Borrower): ${loan.borrower} \n Loan Expiration: ${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
 
-    if (borrowerNotificationEmail) {
-        const subject = 'Loan Approved | Cross-chain Loans'
-        const msg = `Your loan request was approved and you can now withdraw the loan's principal. \n \n Account (Borrower): ${loan.borrower} \n Loan Expiration: ${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
-
-        try {
-            await transporter.verify()
-            await transporter.sendMail({
-                from: settings.SMTP_USER,
-                to: borrowerNotificationEmail.email,
-                subject,
-                text: msg
+        try {            
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: lenderNotificationEmail.email,
+                    subject,
+                    html: result
+                })
+                
+                console.log({ status: 'OK', message: 'Email notification sent' })
             })
+            res.send(resu)
             console.log({ status: 'OK', message: 'Email notification sent' })
 
+        } catch (e) {
+            console.error(e)
+            // return { status: 'ERROR', message: 'Error sending email' }
+        }
+    }   
+
+    if (borrowerNotificationEmail) {
+        
+        const templatePath = APP_ROOT + '/app_api/email_templates/borrower_loan_approved.ejs'
+        const subject = 'Loan Approved | Cross-chain Loans'
+        // const msg = `Your loan request was approved and you can now withdraw the loan's principal. \n \n Account (Borrower): ${loan.borrower} \n Loan Expiration: ${moment.unix(loan.loanExpiration).format('MMMM Do YYYY, h:mm:ss a')} UTC \n Principal: ${loan.principal} \n Interest: ${loan.interest} \n Token: ${loan.tokenName} \n Blockchain: ${loan.blockchain} \n Network: ${loan.network} \n \n View Loan Details: \n ${process.env.SERVER_HOST}/app/loan/${loanId} \n \n - Crosschain Loans Protocol`
+
+        try {
+            ejs.renderFile(path.resolve(templatePath), { data: data }, async (err, result) => {
+                await transporter.verify()
+                await transporter.sendMail({
+                    from: `"Cross-chain Loans" ${settings.SMTP_USER}`,
+                    to: borrowerNotificationEmail.email,
+                    subject,
+                    html: result
+                })
+                
+                console.log({ status: 'OK', message: 'Email notification sent' })
+            })
         } catch (e) {
             console.error(e)
             // return { status: 'ERROR', message: 'Error sending email' }
