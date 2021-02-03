@@ -867,7 +867,16 @@ module.exports.sendCollateralSeized = async (loanId) => {
 
     if (!settings) return { status: 'ERROR', message: 'Error sending email' }
 
-    const loan = await Loan.findOne({ where: { id: loanId } })
+    const collateralLock = await CollateralLock.findOne({ where: { id: collateralLockId } })
+
+    if (!collateralLock) return { status: 'ERROR', message: 'Collareal Lock not found' }
+       
+    const loan = await Loan.findOne({
+        where: {
+            contractLoanId: collateralLock.bCoinContractLoanId,
+            loansContractAddress: collateralLock.loansContractAddress,           
+        }
+    })
 
     if (!loan) return { status: 'ERROR', message: 'Loan not found' }
 
