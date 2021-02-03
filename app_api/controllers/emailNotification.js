@@ -861,7 +861,7 @@ module.exports.sendPaybackRefunded = async (loanId) => {
     }
 }
 
-module.exports.sendCollateralSeized = async (loanId) => {
+module.exports.sendCollateralSeized = async (collateralLockId) => {
 
     const settings = await SystemSettings.findOne({ where: { id: 1 } })
 
