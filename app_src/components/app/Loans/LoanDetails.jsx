@@ -712,7 +712,7 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 2 && !loadingBtn) && (
+                                                    (status == 2 && !loadingBtn && eth_account?.toUpperCase() == borrower?.toUpperCase()) && (
                                                         <button onClick={this.handleWithdrawBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Withdraw Principal
