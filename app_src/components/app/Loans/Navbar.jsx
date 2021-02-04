@@ -33,7 +33,12 @@ class Navbar extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props
+        const { dispatch, providers } = this.props
+
+        if(providers?.ethereum !== 'testnet') {           
+            toast.error('Network not supported. Please change to Ropsten.', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        }
+
         dispatch(toggleSidebar(false))
         // getPrices()
         //     .then(data => data.json())
@@ -244,10 +249,11 @@ class Navbar extends Component {
     }
 }
 
-function mapStateToProps({ shared, accounts }) {
+function mapStateToProps({ shared, accounts, providers }) {
     return {
         shared,
-        accounts
+        accounts,
+        providers
     }
 }
 
