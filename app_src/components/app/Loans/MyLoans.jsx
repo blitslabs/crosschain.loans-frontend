@@ -91,8 +91,8 @@ class MyLoans extends Component {
     render() {
         const { loading } = this.state
         const { accounts, accountLoans } = this.props
-        const borrowed = Object.values(accountLoans).filter((l, i) => l.borrower.toUpperCase() == accounts.ETH.toUpperCase())
-        const lent = Object.values(accountLoans).filter((l, i) => l.lender.toUpperCase() == accounts.ETH.toUpperCase())
+        const borrowed = Object.values(accountLoans).filter((l, i) => l?.borrower?.toUpperCase() == accounts?.ETH?.toUpperCase())
+        const lent = Object.values(accountLoans).filter((l, i) => l?.lender?.toUpperCase() == accounts?.ETH?.toUpperCase())
 
         return (
             <Fragment>
