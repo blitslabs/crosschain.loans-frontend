@@ -101,7 +101,7 @@ class LoanDetails extends Component {
         let one_account
         try {
             one_account = await ONE.getAccount()
-            one_account = fromBech32(one_account.payload.address)
+            one_account = fromBech32(one_account?.payload?.address)
 
         } catch (e) {
             console.log(e)
@@ -635,7 +635,7 @@ class LoanDetails extends Component {
         const requiredCollateralValue = parseFloat(BigNumber(requiredCollateral).times(collateralPrice)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(principal).plus(interest)).toFixed(8)
         const apr = parseFloat(BigNumber(interest).times(100).div(principal).times(12)).toFixed(2)
-        const loanStatus = status == 1 ? 'Funded' : status == 2 ? 'Approved' : status == 3 ? 'Withdrawn' : status == 4 ? 'Repaid' : status == 5 ? 'Payback Refunded' : status == 6 ? 'Closed' : status == 7 ? 'Canceled' : ''
+        const loanStatus = status == 1 ? 'Funded' : status == 1.5 ? 'Awating Approval' : status == 2 ? 'Approved' : status == 3 ? 'Withdrawn' : status == 4 ? 'Repaid' : status == 5 ? 'Payback Refunded' : status == 6 ? 'Closed' : status == 7 ? 'Canceled' : ''
         const collateralStatus = collateralLock && 'status' in collateralLock && collateralLock.status == 0 ? 'Locked' : collateralLock.status == 1 ? 'Seized' : 'Unlocked'
 
         return (
@@ -677,7 +677,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title">Loan Status</div>
                                                 <div className="label-value" style={{ color: '#32ccdd' }}>{loanStatus}</div>
                                                 <div className="label-title mt-4">Collateral Status</div>
-                                                <div className="label-value" style={{ color: '#32ccdd' }}>{collateralStatus}</div>
+                                                <div className="label-value" style={{ color: '#32ccdd' }}><span style={{ }}>{collateralStatus === 'Locked' ? loanDetails?.collateralLock.collateral : ''} {loanDetails?.collateralLock?.blockchain}</span>  {collateralStatus} </div>
                                                 <div className="label-title mt-4">Lender</div>
                                                 <div className="label-value">
                                                     <a target='_blank' href={'https://etherscan.com/address/' + lender}>{lender.substring(0, 4)}...{lender.substr(lender.length - 4)}</a>
@@ -850,6 +850,7 @@ class LoanDetails extends Component {
                                         [
                                             { title: 'Funded' },
                                             { title: 'Lock Collateral' },
+                                            { title: 'Approve Loan'},
                                             { title: 'Withdraw Principal' },
                                             { title: 'Repay Loan' },
                                             { title: 'Redund Payback' },
@@ -861,6 +862,7 @@ class LoanDetails extends Component {
                                             [
                                                 { title: 'Funded' },
                                                 { title: 'Lock Collateral' },
+                                                { title: 'Approve Loan'},
                                                 { title: 'Withdraw Principal' },
                                                 { title: 'Seize Collateral' },
                                             ]
@@ -868,6 +870,7 @@ class LoanDetails extends Component {
                                             [
                                                 { title: 'Funded' },
                                                 { title: 'Lock Collateral' },
+                                                { title: 'Approve Loan'},
                                                 { title: 'Withdraw Principal' },
                                                 { title: 'Repay Loan' },
                                                 { title: 'Repayment Accepted' },

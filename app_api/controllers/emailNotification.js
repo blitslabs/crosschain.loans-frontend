@@ -84,6 +84,11 @@ module.exports.getEmailNotificationAccount = async (req, res) => {
         }
     })
 
+    if(!emailNotification) {
+        sendJSONresponse(res, 404, { status: 'ERROR', message: 'Notification email not found'})
+        return
+    }
+
     sendJSONresponse(res, 200, { status: 'OK', payload: emailNotification })
     return
 }

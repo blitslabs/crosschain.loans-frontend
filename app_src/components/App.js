@@ -70,7 +70,7 @@ class App extends Component {
         providerAccounts = await web3.eth.getAccounts()
         const account = providerAccounts[0] !== undefined ? providerAccounts[0] : ''
         if (accounts?.ETH !== account) {
-          
+
           dispatch(saveAccount({ blockchain: 'ETH', account: account }))
           window.location.href = process.env.SERVER_HOST + '/app/borrow';
         }
@@ -87,9 +87,14 @@ class App extends Component {
       .then((res) => {
         console.log(res)
         if (res.status === 'OK') {
-          dispatch(saveNotificationEmail(res.payload.email))
+          const email = 'email' in res.payload && res.payload.email ? res.payload.email : ''
+          console.log(email)
+          dispatch(saveNotificationEmail(email))
+          return
         }
+        dispatch(saveNotificationEmail(''))
       })
+      
 
 
     getLoanAssets({ blockchain: 'ETH', network: network })

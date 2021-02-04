@@ -1,6 +1,10 @@
 import { HarmonyAddress } from '@harmony-js/crypto'
 import { HarmonyExtension } from '@harmony-js/core'
 
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 const ONE = {
     isAddressValid: (address) => {
         try {
@@ -11,17 +15,20 @@ const ONE = {
     },
 
     getAccount: async () => {
-        
-        if(!window.onewallet) {
-            return { status: 'ERROR', message: 'ONE Provider not found'}
+
+        await sleep(2000)
+
+        if (!window.onewallet) {
+            return { status: 'ERROR', message: 'ONE Provider not found' }
         }
 
         try {
-            const harmony = await new HarmonyExtension(window.onewallet)
-            
-            const account = await harmony.login()            
+
+            const harmony = new HarmonyExtension(window.onewallet)
+            const account = await harmony.login()
             
             return { status: 'OK', payload: account }
+
         } catch (e) {
             console.log(e)
             return { status: 'ERROR', message: 'Error connecting Harmony provider' }
