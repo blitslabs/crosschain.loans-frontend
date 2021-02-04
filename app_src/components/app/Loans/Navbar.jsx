@@ -35,7 +35,7 @@ class Navbar extends Component {
     componentDidMount() {
         const { dispatch, providers } = this.props
 
-        if(providers?.ethereum !== 'testnet') {           
+        if (!(providers?.ethereum !== 'mainnet' || providers?.ethereum !== 'testnet')) {
             toast.error('Network not supported. Please change to Ropsten.', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
         }
 

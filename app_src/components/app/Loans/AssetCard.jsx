@@ -82,7 +82,7 @@ class AssetCard extends Component {
                 </div>
                 <div className="row mt-4">
                     <div className="col-12">
-                        <button onClick={this.handleLendBtn} className="btn" style={{ width: '100%' }}>LEND</button>
+                        <button disabled={asset?.symbol !== 'DAI' ? true : false} onClick={this.handleLendBtn} className="btn" style={{ width: '100%' }}>LEND</button>
                     </div>
                 </div>
             </div>
