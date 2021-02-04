@@ -16,23 +16,23 @@ const ONE = {
 
     getAccount: async () => {
 
-        await sleep(2000)
+        const intervalId = setInterval(async () => {
+            if (!window.onewallet) return
 
-        if (!window.onewallet) {
-            return { status: 'ERROR', message: 'ONE Provider not found' }
-        }
+            try {
 
-        try {
+                const harmony = new HarmonyExtension(window.onewallet)
+                const account = await harmony.login()
+                clearInterval(intervalId)
+                return { status: 'OK', payload: account }
 
-            const harmony = new HarmonyExtension(window.onewallet)
-            const account = await harmony.login()
-            
-            return { status: 'OK', payload: account }
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: 'Error connecting Harmony provider' }
+                clearInterval(intervalId)
+            }
 
-        } catch (e) {
-            console.log(e)
-            return { status: 'ERROR', message: 'Error connecting Harmony provider' }
-        }
+        }, 500)
     }
 }
 
