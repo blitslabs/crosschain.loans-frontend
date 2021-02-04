@@ -103,6 +103,7 @@ class Activity extends Component {
                                                         <th>TxHash</th>
                                                         <th>Event</th>
                                                         <th>Blockchain</th>
+                                                        <th>Network</th>
                                                         <th>Contract</th>
                                                         <th>Loan ID</th>
                                                         {/* <th>Account</th> */}
@@ -128,6 +129,7 @@ class Activity extends Component {
                                                                         </div>
                                                                     </td>
                                                                     <td>{e.blockchain}</td>
+                                                                    <td>{e.network}</td>
                                                                     <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
                                                                     <td>{loanId}</td>
                                                                     <td>{moment(e.createdAt).format()}</td>

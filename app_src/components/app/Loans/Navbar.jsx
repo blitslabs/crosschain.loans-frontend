@@ -36,7 +36,7 @@ class Navbar extends Component {
         const { dispatch, providers } = this.props
 
         if (!(providers?.ethereum !== 'mainnet' || providers?.ethereum !== 'testnet')) {
-            toast.error('Network not supported. Please change to Ropsten.', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            toast.error('Network not supported. Please switch to Mainnet or Ropsten', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
         }
 
         dispatch(toggleSidebar(false))
