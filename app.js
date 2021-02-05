@@ -43,7 +43,8 @@ const matching_engine = new CronJob('*/30 * * * * *', async function () {
     console.log('Matching Engine Activated...')
 })
 
-const oracle_testnet = new CronJob('0 * * * *', async function () {
+const oracle = new CronJob('0 * * * *', async function () {
+    await rp(process.env.API_LOCALHOST + 'oracle/ONE/mainnet')
     await rp(process.env.API_LOCALHOST + 'oracle/ONE/testnet')
     console.log('Testnet Oracle prices updated...')
 })
@@ -71,7 +72,7 @@ app.set('port', process.env.PORT || 3000)
 app.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'))
     // matching_engine.start()
-    // oracle_testnet.start()
+    oracle.start()
     sync_eth_loans.start()
 })
 
