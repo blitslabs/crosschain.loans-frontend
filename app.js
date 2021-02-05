@@ -48,6 +48,11 @@ const oracle_testnet = new CronJob('0 * * * *', async function () {
     console.log('Testnet Oracle prices updated...')
 })
 
+const sync_eth_loans = new CronJob('*/5 * * * *', async function () {
+    await rp(process.env.API_LOCALHOST + 'sync/ETH/loans/mainnet')
+    console.log('Mainnet ETH Loans Updated...')
+})
+
 app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401)
@@ -67,6 +72,7 @@ app.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'))
     // matching_engine.start()
     // oracle_testnet.start()
+    sync_eth_loans.start()
 })
 
 module.exports = app

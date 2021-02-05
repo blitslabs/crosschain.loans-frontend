@@ -13,6 +13,7 @@ const matching = require('../controllers/matching')
 const loanEvent = require('../controllers/loanEvent')
 const emailNotification = require('../controllers/emailNotification')
 const oracle = require('../controllers/oracle')
+const cronjob = require('../controllers/cronjob')
 const test = require('../controllers/test')
 
 
@@ -48,6 +49,10 @@ router.get('/emailNotification/test', emailNotification.test)
 
 // Price Oracles
 router.get('/oracle/ONE/:network', oracle.updateAggregatorPrice_ONE)
+
+// Cronjobs
+router.get('/sync/ETH/loans/:network', cronjob.confirmLoanOperations_ETH)
+router.get('/sync/ONE/collateral/:network', cronjob.confirmCollateralLockOperations_ONE)
 
 // Test
 router.get('/test/email', test.emailTest)
