@@ -13,7 +13,7 @@ const emailNotification = require('./emailNotification')
 
 module.exports.getLoansByStatus = async (req, res) => {
 
-    let { status, network } = req.params
+    let { status } = req.params
 
     if (!status) {
         sendJSONresponse(res, 422, { status: 'ERROR', message: 'Missing required parameters' })
@@ -25,8 +25,7 @@ module.exports.getLoansByStatus = async (req, res) => {
 
     const loans = await Loan.findAll({
         where: {
-            status,
-            network
+            status            
         }
     })
 

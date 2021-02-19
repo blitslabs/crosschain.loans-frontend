@@ -123,18 +123,18 @@ class LoanDetails extends Component {
      */
     handleLockCollateralBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, prices, protocolContracts, providers } = this.props
+        const { loanDetails, prices, protocolContracts, shared } = this.props
         const {
             aCoinLenderAddress, secretHashB1, principal, contractLoanId, loansContractAddress
         } = loanDetails
 
-        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const collateralLockContract = protocolContracts[shared?.networkId].CollateralLockV2_ONE.address
         const requiredCollateral = parseFloat(BigNumber(principal).div(prices.ONE.usd).times(1.5)).toFixed(2)
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         const bCoinBorrowerAddress = (await ETH.getAccount()).payload
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         // Generate secretHash
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`

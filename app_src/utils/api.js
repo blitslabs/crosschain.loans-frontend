@@ -32,9 +32,9 @@ export function getNewEngineSecretHash(params) {
 
 export function confirmLoanOperation(params) {
     return fetch(API_HOST + `loan/operation/confirm`, {
-        method:  'POST',
+        method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(params)
     })
@@ -51,7 +51,7 @@ export function confirmCollateralLockOperation(params) {
 }
 
 export function getAvailableLoans(params) {
-    return fetch(API_HOST + 'loans/available/' + params.network, {
+    return fetch(API_HOST + 'loans/available/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ export function getAvailableLoans(params) {
 
 //
 export function getLoansSettings(params) {
-    return fetch(API_HOST + 'loans/settings/' + params.network, {
+    return fetch(API_HOST + 'loans/settings/' + params.networkId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ export function getLoansHistory() {
 }
 
 export function getAccountLoansCount(params) {
-    return fetch(API_HOST + `loans/accountCount/${params.account}/${params.actor}/${params.blockchain}` , {
+    return fetch(API_HOST + `loans/accountCount/${params.account}/${params.actor}/${params.blockchain}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

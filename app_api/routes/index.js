@@ -20,7 +20,7 @@ const test = require('../controllers/test')
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
 router.post('/loan/operation/confirm', loan.confirmLoanOperation)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
-router.get('/loans/:status/:network', loan.getLoansByStatus)
+router.get('/loans/:status/', loan.getLoansByStatus)
 router.get('/loan/:loanId', loan.getLoanDetails)
 router.get('/loans/account/:account/:network', loan.getAccountLoans)
 

@@ -73,7 +73,7 @@ class App extends Component {
         if (networkId != shared?.networkId) {
           dispatch(saveNetwork(networkId))
           // Reload ...
-          window.location.href = process.env.SERVER_HOST + '/app/borrow';
+          // window.location.href = process.env.SERVER_HOST + '/app/borrow';
         }
 
         // Get Account
