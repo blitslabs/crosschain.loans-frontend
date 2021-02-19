@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
         blockchain: {
             type: DataTypes.STRING,
         },
-        network: {
+        networkId: {
             type: DataTypes.STRING,
             allowNull: true,
         },

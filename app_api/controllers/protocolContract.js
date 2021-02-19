@@ -5,14 +5,16 @@ const {
 
 module.exports.getProtocolContracts = async (req, res) => {
 
-
-    const protocolContracts = await ProtocolContract.findAll({ raw: true })
+    const protocolContracts = await ProtocolContract.findAll({ 
+        attributes: ['id', 'address', 'blockchain', 'name', 'networkId', 'status'],
+        raw: true
+     })
+     
     const payload = {}
 
     for (let c of protocolContracts) {
-        console.log()
-        payload[c.network] = {
-            ...payload[c.network],
+        payload[c.networkId] = {
+            ...payload[c.networkId],
             [c.name]: { ...c }
         }
     }

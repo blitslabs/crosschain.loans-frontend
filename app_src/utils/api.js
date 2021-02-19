@@ -4,7 +4,7 @@ const API_WALLET = process.env.API_WALLET
 // CROSS-CHAIN LOANS
 
 export function getLoanAssets(params) {
-    return fetch(API_HOST + `loanAssets/${params.blockchain}/${params.network}`, {
+    return fetch(API_HOST + `loanAssets/${params.networkId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ export function getNewEngineSecretHash(params) {
 }
 
 export function confirmLoanOperation(params) {
-    return fetch(API_HOST + `loan/${params.blockchain}/operation/confirm`, {
+    return fetch(API_HOST + `loan/operation/confirm`, {
         method:  'POST',
         headers: {
             'Content-Type':'application/json'

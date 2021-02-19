@@ -68,7 +68,7 @@ class LoanCreated extends Component {
                                             </div>
                                             <div className="col-sm-12 col-md-6">
                                                 <div className="label-title">Asset / Blockchain / Network</div>
-                                                <div className="label-value">{token.symbol} / {token.blockchain} / {token.network}</div>
+                                                <div className="label-value">{token.symbol} / {token.blockchain} / {token.networkId}</div>
                                                 <div className="label-title mt-4">APY</div>
                                                 <div className="label-value">{apy}%</div>
                                                 <div className="label-title mt-4">Collateralization Ratio</div>

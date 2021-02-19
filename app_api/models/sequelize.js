@@ -11,6 +11,7 @@ const CollateralLockModel = require('./collateralLock')
 const MatchingModel = require('./matching')
 const SystemSettingsModel = require('./systemSettings')
 const EmailNotificationModel = require('./emailNotification')
+const LogTopicModel = require('./logTopic')
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -38,7 +39,7 @@ const CollateralLock = CollateralLockModel(sequelize, Sequelize)
 const Matching = MatchingModel(sequelize, Sequelize)
 const SystemSettings = SystemSettingsModel(sequelize, Sequelize)
 const EmailNotification = EmailNotificationModel(sequelize, Sequelize)
-
+const LogTopic = LogTopicModel(sequelize, Sequelize)
 
 sequelize
     .query('SET FOREIGN_KEY_CHECKS = 0', { raw: true })
@@ -62,5 +63,6 @@ module.exports = {
     Matching,
     SystemSettings,
     EmailNotification,
+    LogTopic,
     sequelize,
 }

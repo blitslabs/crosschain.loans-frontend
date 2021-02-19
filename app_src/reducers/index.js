@@ -8,7 +8,6 @@ import lendRequest from './lendRequest'
 import prices from './prices'
 import loanDetails from './loanDetails'
 import shared from './shared'
-import accounts from './accounts'
 import accountLoans from './accountLoans'
 import protocolContracts from './protocolContracts'
 import providers from './providers'
@@ -24,7 +23,6 @@ const appReducer = combineReducers({
     prices,
     loanDetails,
     shared,
-    accounts,
     accountLoans,
     protocolContracts,
     providers,

@@ -179,14 +179,13 @@ class NewLoan extends Component {
         e.preventDefault()
 
         const { amount, aCoinLender, duration, } = this.state
-        const { dispatch, history, lendRequest, loanAssets, providers, protocolContracts } = this.props
+        const { dispatch, history, lendRequest, loanAssets, providers, protocolContracts, shared } = this.props
         const asset = loanAssets[lendRequest.contractAddress]
         this.setState({ btnLoading: true })
 
-        if (!asset || !amount || !aCoinLender) {
+        if (!asset || !amount) {
             if (!asset) this.setState({ assetSymbolIsInvalid: true })
-            if (!amount) this.setState({ amountIsInvalid: true })
-            if (!aCoinLender) this.setState({ aCoinLenderIsInvalid: true })
+            if (!amount) this.setState({ amountIsInvalid: true })            
             this.setState({ btnLoading: false })
             toast.error('Missing required fields', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             return
@@ -200,7 +199,7 @@ class NewLoan extends Component {
 
         // Get userLoansCount
         const account = (await ETH.getAccount()).payload
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
         const userLoansCount = (await BlitsLoans.ETH.getUserLoansCount(account, loansContract)).payload
 
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${parseInt(userLoansCount) + 1}. Loans Contract: ${loansContract}`
@@ -216,7 +215,7 @@ class NewLoan extends Component {
         const { secret, secretHash } = response.payload
 
         const params = {
-            tokenContractAddress: lendRequest.contractAddress, amount, aCoinLender: fromBech32(aCoinLender), secret, secretHash, duration
+            tokenContractAddress: lendRequest.contractAddress, amount, aCoinLender: account, secret, secretHash, duration
         }
 
         dispatch(saveLendRequest(params))
@@ -271,6 +270,14 @@ class NewLoan extends Component {
 
                                         </div>
 
+                                        <div className="app-form-label text-black mt-2">2. Account</div>
+                                        <div className="details-container mt-2">
+                                            <div className="details-label ">{shared?.account}</div>
+
+                                        </div>
+                                        <div style={{ color: this.state.aCoinLenderIsInvalid ? 'red' : 'black' }} className="text-left mt-2 mb-4">You will receive the borrower's seizable collateral to this address if he fails to repay the loan. </div>
+
+
                                         {/* <div className="form-group mt-4">
                                             <div className="app-form-label text-black">2. Amount</div>
                                             <div className="input-group mb-3">
@@ -286,7 +293,7 @@ class NewLoan extends Component {
                                         </div> */}
 
                                         <div className="form-group mt-4">
-                                            <div className="app-form-label text-black">2. Amount: {this.state.amount ? this.state.amount : '0'} {this.state.assetSymbol.toUpperCase()}</div>
+                                            <div className="app-form-label text-black">3. Amount: {this.state.amount ? this.state.amount : '0'} {asset.symbol}</div>
                                             <div className="mt-3">
                                                 <Slider min={parseInt(assetType.minLoanAmount)} max={parseInt(assetType.maxLoanAmount)} step={10} value={this.state.amount} onChange={value => this.setState({ amount: value })} />
                                             </div>
@@ -330,33 +337,14 @@ class NewLoan extends Component {
                                         </div>
                                         <div className="text-right text-black">Min: 1 | Max: 30 </div> */}
 
-                                        <div className="app-form-label text-black mt-2">3. Your Harmony (ONE) Address</div>
-                                        {
-                                            this.state.aCoinLender ?
-                                                <div className="input-group mt-3">
-                                                    <input value={this.state.aCoinLender} readOnly={true} onChange={this.handleACoinLenderChange} type="text" className={this.state.aCoinLenderIsInvalid ? "form-control is-invalid" : "form-control"} placeholder="Harmony Address" autoCorrect="false" autoComplete="false" />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.aCoinLenderErrorMsg}
-                                                    </div>
-                                                </div>
-                                                :
-                                                <div className="mt-3">
-                                                    <button onClick={this.handleCollateralAddressBtn} className="btn btn-blits" style={{ fontSize: '14px', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
-                                                        <Emoji text="🔓" onlyEmojiClassName="sm-emoji" />
-                                                        <span style={{ marginLeft: 5 }}>Unlock ONE Wallet</span>
-                                                    </button>
-                                                </div>
-
-                                        }
-                                        <div style={{ color: this.state.aCoinLenderIsInvalid ? 'red' : 'black' }} className="text-left mt-2 mb-4">You will receive the borrower's seizable collateral to this address if he fails to repay the loan. </div>
-
+                                        
 
                                         {
                                             !('email' in shared) || shared.email === undefined || shared.email === '' && (
                                                 <Fragment>
                                                     <div className="app-form-label text-black mt-2">4. Receive Email Notifications (Optional)</div>
                                                     <div className="">
-                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-primary mt-3" >
+                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-blits mt-3" style={{ fontSize: '14px', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                             <Emoji text="✉️" onlyEmojiClassName="sm-emoji" />
                                                             <span style={{ marginLeft: 10 }}> Receive Email Notifications</span>
                                                         </button>
@@ -369,12 +357,12 @@ class NewLoan extends Component {
 
                                         <div className="form-group mt-4">
                                             <div className="app-form-label text-black mt-2">Details</div>
-                                            <label className="details-label text-black mt-4">You are lending {this.state.amount} {this.state.assetSymbol} for {this.state.duration} days</label>
+                                            <label className="details-label text-black mt-4">You are lending {this.state.amount} {asset.symbol} for {this.state.duration} days</label>
                                             <table className="table mt-2">
                                                 <tbody>
                                                     <tr>
                                                         <td className="details-title">Interest:</td>
-                                                        <td className="details-label">{(assetType.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(assetType.interestRate)) : 0).toFixed(2)} {this.state.assetSymbol} <Emoji text=":moneybag:" /></td>
+                                                        <td className="details-label">{(assetType.interestRate && this.state.amount ? parseFloat(BigNumber(this.state.amount).multipliedBy(assetType.interestRate)) : 0).toFixed(2)} {asset.symbol} <Emoji text=":moneybag:" /></td>
                                                     </tr>
                                                     <tr>
                                                         <td className="details-title">Duration:</td>

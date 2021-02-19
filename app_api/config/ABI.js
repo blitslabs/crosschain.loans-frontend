@@ -369,6 +369,44 @@ module.exports.ABI = {
                 "inputs": [
                     {
                         "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_maxLoanAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_minLoanAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_baseRatePerYear",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_multiplierPerYear",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_referralFees",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "addAssetType",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
                         "name": "account",
                         "type": "address"
                     }
@@ -429,9 +467,9 @@ module.exports.ABI = {
                         "type": "address"
                     },
                     {
-                        "internalType": "contract ERC20",
-                        "name": "token",
-                        "type": "address"
+                        "internalType": "uint256",
+                        "name": "referralFees",
+                        "type": "uint256"
                     }
                 ],
                 "stateMutability": "view",
@@ -473,8 +511,34 @@ module.exports.ABI = {
                 "constant": true
             },
             {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "disableAssetType",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
                 "inputs": [],
                 "name": "disableContract",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "enableAssetType",
                 "outputs": [],
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -485,6 +549,91 @@ module.exports.ABI = {
                 "outputs": [],
                 "stateMutability": "nonpayable",
                 "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "getAssetInterestRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "getAssetType",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "maxLoanAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "minLoanAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "supply",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "demand",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "baseRatePerPeriod",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "multiplierPerPeriod",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "interestRate",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "enabled",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "contractAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "referralFees",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
             },
             {
                 "inputs": [],
@@ -513,6 +662,47 @@ module.exports.ABI = {
                 "stateMutability": "view",
                 "type": "function",
                 "constant": true
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_parameter",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_data",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "modifyAssetTypeLoanParameters",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_parameter",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_data",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "modifyLoanParameters",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
             },
             {
                 "inputs": [
@@ -608,26 +798,6 @@ module.exports.ABI = {
                     }
                 ],
                 "stateMutability": "pure",
-                "type": "function",
-                "constant": true
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "getAssetInterestRate",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
                 "type": "function",
                 "constant": true
             },
@@ -781,66 +951,6 @@ module.exports.ABI = {
             {
                 "inputs": [
                     {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "getAssetType",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "maxLoanAmount",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "minLoanAmount",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "supply",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "demand",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "baseRatePerPeriod",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "multiplierPerPeriod",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "interestRate",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "enabled",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function",
-                "constant": true
-            },
-            {
-                "inputs": [
-                    {
                         "internalType": "uint256",
                         "name": "_loanId",
                         "type": "uint256"
@@ -912,106 +1022,6 @@ module.exports.ABI = {
                 "stateMutability": "view",
                 "type": "function",
                 "constant": true
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "_parameter",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_data",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "modifyLoanParameters",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_parameter",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_data",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "modifyAssetTypeLoanParameters",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "disableAssetType",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "enableAssetType",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_maxLoanAmount",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_minLoanAmount",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_baseRatePerYear",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_multiplierPerYear",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "addAssetType",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
             }
         ]
     },

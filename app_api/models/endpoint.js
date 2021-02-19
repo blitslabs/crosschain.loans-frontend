@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 'ETH'
         },
-        network: {
+        networkId: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'mainnet'
+            defaultValue: '1'
         },
         shard: {
             type: DataTypes.STRING,

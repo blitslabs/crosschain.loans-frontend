@@ -1,7 +1,7 @@
 import {
     SET_PROVIDER_STATUS, TOGGLE_SIDEBAR,
-    SET_BLOCKCHAIN_NETWORK, SAVE_NOTIFICATION_EMAIL
-
+    SAVE_NETWORK, SAVE_NOTIFICATION_EMAIL,
+    SAVE_ACCOUNT
 } from '../actions/shared'
 
 const initialState = {
@@ -22,10 +22,16 @@ export default function shared(state = initialState, action) {
                 [action.providerStatus.name]: action.providerStatus.status
             }
 
-        case SET_BLOCKCHAIN_NETWORK:
+        case SAVE_NETWORK:
             return {
                 ...state,
-                [action.details.blockchain + '_network']: action.details.network
+                networkId: action.networkId
+            }
+
+        case SAVE_ACCOUNT:
+            return {
+                ...state,
+                account: action.account
             }
 
         case TOGGLE_SIDEBAR:
@@ -33,6 +39,8 @@ export default function shared(state = initialState, action) {
                 ...state,
                 sidebar: action.sidebar
             }
+
+        
         default:
             return state
     }

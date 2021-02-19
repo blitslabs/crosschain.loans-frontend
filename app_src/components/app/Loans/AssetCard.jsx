@@ -22,24 +22,31 @@ class AssetCard extends Component {
     }
 
     loadAssetTypeData = async () => {
-        const { protocolContracts, providers, asset, dispatch } = this.props
+        const { protocolContracts, shared, asset, dispatch } = this.props
 
-        let account, assetTypeData, liquidity
-        if (asset.blockchain === 'ETH') {
-            const contract = protocolContracts[providers.ethereum].CrosschainLoans.address
-            assetTypeData = await BlitsLoans.ETH.getAssetTypeData(
-                asset.contractAddress,
-                contract
-            )
-            dispatch(saveAssetType({ contractAddress: asset.contractAddress, ...assetTypeData }))
+        // Get Loans Contract
+        const contract = protocolContracts[shared?.networkId].CrosschainLoans.address
+        
+        // Get AssetType data
+        const assetTypeData = await BlitsLoans.ETH.getAssetTypeData(
+            asset.contractAddress,
+            contract
+        )
 
-            const apy = parseFloat(BigNumber(assetTypeData.interestRate).multipliedBy(12).multipliedBy(100)).toFixed(2)
-            liquidity = (await ETH.getERC20Balance(contract, asset.contractAddress)).payload
-            this.setState({
-                apy,
-                liquidity,
-            })
-        }
+        // Save AssetType data
+        dispatch(saveAssetType({ contractAddress: asset.contractAddress, ...assetTypeData }))
+
+        // Calculate APY
+        const apy = parseFloat(BigNumber(assetTypeData.interestRate).multipliedBy(12).multipliedBy(100)).toFixed(2)
+        
+        // Get AssetType Liquidity
+        const liquidity = (await ETH.getERC20Balance(contract, asset.contractAddress)).payload
+        
+        // Update APY & Liquidity
+        this.setState({
+            apy,
+            liquidity,
+        })
     }
 
     handleLendBtn = (e) => {
@@ -82,7 +89,7 @@ class AssetCard extends Component {
                 </div>
                 <div className="row mt-4">
                     <div className="col-12">
-                        <button disabled={asset?.symbol !== 'DAI' ? true : false} onClick={this.handleLendBtn} className="btn" style={{ width: '100%' }}>LEND</button>
+                        <button /*disabled={asset?.symbol !== 'DAI' ? true : false}*/ onClick={this.handleLendBtn} className="btn" style={{ width: '100%' }}>LEND</button>
                     </div>
                 </div>
             </div>
@@ -90,10 +97,10 @@ class AssetCard extends Component {
     }
 }
 
-function mapStateToProps({ protocolContracts, providers }) {
+function mapStateToProps({ protocolContracts, shared }) {
     return {
         protocolContracts,
-        providers
+        shared
     }
 }
 

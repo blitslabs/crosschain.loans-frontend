@@ -5,7 +5,8 @@ export const HIDE_SIDEBAR = 'HIDE_SIDEBAR'
 export const RESET_SIDEBAR = 'RESET_SIDEBAR'
 export const SET_PROVIDER_STATUS = 'SET_PROVIDER_STATUS'
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
-export const SET_BLOCKCHAIN_NETWORK = 'SET_BLOCKCHAIN_NETWORK'
+export const SAVE_NETWORK = 'SAVE_NETWORK'
+export const SAVE_ACCOUNT = 'SAVE_ACCOUNT'
 export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
 
 export function saveNotificationEmail(email) {
@@ -15,10 +16,17 @@ export function saveNotificationEmail(email) {
     }
 }
 
-export function setBlockchainNetwork(details) {
+export function saveNetwork(networkId) {
     return {
-        type: SET_BLOCKCHAIN_NETWORK,
-        details,
+        type: SAVE_NETWORK,
+        networkId
+    }
+}
+
+export function saveAccount(account) {
+    return {
+        type: SAVE_ACCOUNT,
+        account
     }
 }
 

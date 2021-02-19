@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        network: {
+        networkId: {
             type: DataTypes.STRING,
             allowNull: false
         },

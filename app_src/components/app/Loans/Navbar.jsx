@@ -60,47 +60,7 @@ class Navbar extends Component {
     }
 
     loandInitialData = async () => {
-        const { dispatch } = this.props
-
-        let web3, accounts
-        try {
-            web3 = new Web3(window.ethereum)
-            accounts = await web3.eth.getAccounts()
-        } catch (e) {
-            console.log(e)
-        }
-
-        // Check network
-        const networkId = await web3.eth.net.getId()
-
-        // if (networkId != 3) {
-        //     toast.error('Please connect to the Ropsten Network', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-        // }
-
-        if (window.ethereum && accounts.length > 0) {
-            dispatch(setProviderStatus({ name: 'ethereum', status: true }))
-            dispatch(saveAccount({ blockchain: 'ETH', account: accounts[0] }))
-        } else {
-            dispatch(setProviderStatus({ name: 'ethereum', status: false }))
-            dispatch(saveAccount({ blockchain: 'ETH', account: '' }))
-        }
-
-        let harmonyAccount
-        try {
-            const res = await ONE.getAccount()
-            if (res.status === 'OK') {
-                harmonyAccount = res.payload
-            }
-        } catch (e) {
-            console.log(e)
-        }
-
-        if (harmonyAccount) {
-            dispatch(setProviderStatus({ name: 'harmony', status: true }))
-            dispatch(saveAccount({ blockchain: 'ONE', account: harmonyAccount.address }))
-        } else {
-            dispatch(setProviderStatus({ name: 'harmony', status: false }))
-        }
+         
     }
 
     handleToggleConnectModal = async (value) => this.setState({ showConnectModal: value })
@@ -155,7 +115,7 @@ class Navbar extends Component {
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
                                                 {
-                                                    accounts?.ETH
+                                                    shared?.account
                                                         ?
                                                         <li className="navigation-menu__item">
                                                             <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
@@ -167,7 +127,7 @@ class Navbar extends Component {
                                         </nav>
                                         {/* nav item end */}
                                         {
-                                            !accounts?.ETH
+                                            !shared?.account
                                                 ?
                                                 <div className="navigation-button navigation-button-couple">
                                                     <button onClick={() => this.handleToggleConnectModal(true)} style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</button>
@@ -175,14 +135,13 @@ class Navbar extends Component {
                                                 :
                                                 <div className="navigation-menu__item">
                                                     <Gravatar
-                                                        email={accounts?.ETH}
+                                                        email={shared?.account}
                                                         size={30}
                                                         rating="pg" default="retro" className="gravatar"
                                                     />
-                                                    <a href="#" className='navigation-menu__link'>ETH: {accounts?.ETH?.substring(0, 4)}...{accounts?.ETH?.substring(accounts?.ETH?.length - 4)}</a>
+                                                    <a href="#" className='navigation-menu__link'>Account: {shared?.account?.substring(0, 4)}...{shared?.account?.substring(shared?.account?.length - 4)}</a>
                                                 </div>
                                         }
-
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +176,7 @@ class Navbar extends Component {
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
                                                 {
-                                                    accounts?.ETH
+                                                    shared?.account
                                                         ?
                                                         <li className="navigation-menu__item">
                                                             <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
@@ -228,7 +187,7 @@ class Navbar extends Component {
                                         </nav>
                                         {/* nav item end */}
                                         {
-                                            !accounts?.ETH
+                                            !shared?.account
                                                 ?
                                                 <div className="navigation-button navigation-button-couple">
                                                     <button onClick={() => this.handleToggleConnectModal(true)} style={{ backgroundColor: 'black' }} className="db-btn nav-cta-btn navigation-button-couple__fill">Connect</button>

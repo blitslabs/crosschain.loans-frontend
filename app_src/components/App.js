@@ -33,11 +33,11 @@ import { saveLoanAssets } from '../actions/loanAssets'
 import { saveProtocolContracts } from '../actions/protocolContracts'
 import { saveProvider } from '../actions/providers'
 import { savePrices } from '../actions/prices'
-import { saveNotificationEmail } from '../actions/shared'
+import { saveNotificationEmail, saveAccount, saveNetwork } from '../actions/shared'
 
 // Web3
 import Web3 from 'web3'
-import { saveAccount } from '../actions/accounts'
+
 
 class App extends Component {
 
@@ -48,34 +48,45 @@ class App extends Component {
   loadInitialData = async () => {
     const { dispatch } = this.props
 
-    let web3, providerAccounts, networkId, network
+    let web3, providerAccounts, networkId
     try {
+      // Connect Provider
       web3 = new Web3(window.ethereum)
+
+      // Get Connected Account
       providerAccounts = await web3.eth.getAccounts()
 
-      dispatch(saveAccount({ blockchain: 'ETH', account: providerAccounts[0] != undefined ? providerAccounts[0] : '' }))
-      // Check network
+      // Save Account
+      dispatch(saveAccount(providerAccounts[0]))
+
+      // Save network
       networkId = await web3.eth.net.getId()
-      network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
-      dispatch(saveProvider({ blockchain: 'ethereum', network }))
+      dispatch(saveNetwork(networkId))
 
       setInterval(async () => {
-        const { providers, accounts } = this.props
+        const { shared } = this.props
+
+        // Get Network ID
         networkId = await web3.eth.net.getId()
-        network = networkId == 1 ? 'mainnet' : networkId == 3 ? 'testnet' : ''
-        if (providers.ethereum != network) {
+
+        // Check if Network ID changed
+        if (networkId != shared?.networkId) {
+          dispatch(saveNetwork(networkId))
+          // Reload ...
           window.location.href = process.env.SERVER_HOST + '/app/borrow';
         }
 
+        // Get Account
         providerAccounts = await web3.eth.getAccounts()
         const account = providerAccounts[0] !== undefined ? providerAccounts[0] : ''
-        if (accounts?.ETH !== account) {
-
-          dispatch(saveAccount({ blockchain: 'ETH', account: account }))
-          window.location.href = process.env.SERVER_HOST + '/app/borrow';
+        
+        // Check if Account changed
+        if (shared?.account != account) {
+          dispatch(saveAccount(account))
+          // window.location.href = process.env.SERVER_HOST + '/app/borrow';
         }
 
-      }, 2000)
+      }, 1000)
 
     } catch (e) {
       console.log(e)
@@ -94,10 +105,10 @@ class App extends Component {
         }
         dispatch(saveNotificationEmail(''))
       })
-      
 
 
-    getLoanAssets({ blockchain: 'ETH', network: network })
+
+    getLoanAssets({ networkId })
       .then(data => data.json())
       .then((res) => {
         console.log(res)
@@ -156,11 +167,10 @@ class App extends Component {
 }
 
 
-function mapStateToProps({ loading, providers, accounts }) {
+function mapStateToProps({ loading, shared }) {
   return {
     loading,
-    providers,
-    accounts
+    shared
   }
 }
 

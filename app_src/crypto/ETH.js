@@ -128,8 +128,7 @@ const ETH = {
         amount = ETH.pad(amount, decimals)
 
         try {
-            const receipt = await token.methods.approve(spender, amount).send({ from: account })
-            console.log('test')
+            const receipt = await token.methods.approve(spender, amount).send({ from: account })            
             console.log(receipt)
             return { status: 'OK', payload: receipt }
 

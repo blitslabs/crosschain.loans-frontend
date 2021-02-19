@@ -38,9 +38,9 @@ class ConfirmLoan extends Component {
 
     componentDidMount = async () => {
         document.title = 'Confirm Loan | Cross-chain Loans'
-        const { lendRequest, providers, protocolContracts } = this.props
+        const { lendRequest, providers, protocolContracts, shared } = this.props
         const { amount, tokenContractAddress } = lendRequest
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         let allowanceRes = await ETH.getAllowance(loansContract, tokenContractAddress)
         console.log('Allowance: ', allowanceRes)
@@ -57,8 +57,8 @@ class ConfirmLoan extends Component {
 
     handleAllowanceBtn = async (e) => {
         e.preventDefault()
-        const { lendRequest, providers, protocolContracts } = this.props
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const { lendRequest, shared, protocolContracts } = this.props
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
         const { amount, tokenContractAddress } = lendRequest
 
         this.setState({ loading: true, btnLoading: true })
@@ -89,8 +89,8 @@ class ConfirmLoan extends Component {
     handleCreateLoanBtn = async (e) => {
         e.preventDefault()
 
-        const { lendRequest, protocolContracts, providers, dispatch, history } = this.props
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const { lendRequest, protocolContracts, providers, dispatch, history, shared } = this.props
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         const {
             secretHash, amount, tokenContractAddress, aCoinLender
@@ -126,11 +126,10 @@ class ConfirmLoan extends Component {
         }
 
         const params = {
-            blockchain: 'ETH',
-            network: providers.ethereum,
+            operation: 'LoanCreated',
+            networkId: shared?.networkId,
             txHash: response.payload.transactionHash
         }
-
 
         const intervalId = setInterval(() => {
             confirmLoanOperation(params)
@@ -165,7 +164,7 @@ class ConfirmLoan extends Component {
 
     render() {
 
-        const { lendRequest, loanAssets, assetTypes } = this.props
+        const { lendRequest, loanAssets, assetTypes, shared } = this.props
         const { interestRate } = assetTypes[lendRequest.tokenContractAddress]
         let { tokenContractAddress, amount, aCoinLender, secret, secretHash, duration } = lendRequest
         const token = loanAssets[tokenContractAddress]
@@ -200,7 +199,7 @@ class ConfirmLoan extends Component {
                                             </div>
                                             <div className="col-sm-12 col-md-6">
                                                 <div className="label-title">Asset / Blockchain / Network</div>
-                                                <div className="label-value">{token.symbol} / {token.blockchain} / {token.network}</div>
+                                                <div className="label-value">{token.symbol} / {token.blockchain} / {token.networkId}</div>
                                                 <div className="label-title mt-4">APY</div>
                                                 <div className="label-value">{apy}%</div>
                                                 <div className="label-title mt-4">Collateralization Ratio</div>
@@ -259,13 +258,14 @@ class ConfirmLoan extends Component {
 }
 
 
-function mapStateToProps({ lendRequest, loanAssets, protocolContracts, providers, assetTypes }) {
+function mapStateToProps({ lendRequest, loanAssets, protocolContracts, providers, assetTypes, shared }) {
     return {
         lendRequest,
         protocolContracts,
         loanAssets,
         providers,
-        assetTypes
+        assetTypes,
+        shared
     }
 }
 

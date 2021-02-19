@@ -18,6 +18,7 @@ const test = require('../controllers/test')
 
 
 // router.get('/loan/:blockchain/:network/:event/:txHash', loan.saveLoanEvent)
+router.post('/loan/operation/confirm', loan.confirmLoanOperation)
 router.post('/loan/ETH/operation/confirm', loan.confirmLoanOperation_ETH)
 router.get('/loans/:status/:network', loan.getLoansByStatus)
 router.get('/loan/:loanId', loan.getLoanDetails)
@@ -29,7 +30,7 @@ router.post('/collateralLock/ONE/operation/confirm', collateralLock.confirmColla
 
 router.get('/updateCollateralLock_ONE/:network', collateralLock.updateCollateralLockData_ONE)
 router.get('/updateCollateralLock_ETH/:network', collateralLock.updateCollateralLockData_ETH)
-router.get('/loanAssets/:blockchain/:network', loanAsset.getLoanAssets)
+router.get('/loanAssets/:networkId', loanAsset.getLoanAssets)
 router.get('/logo/:blockchain/:symbol', assetLogo.getAssetLogo)
 router.get('/protocolContracts/', protocolContract.getProtocolContracts)
 

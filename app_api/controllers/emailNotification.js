@@ -140,7 +140,7 @@ module.exports.sendLoanCreatedEmailNotification = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -210,7 +210,7 @@ module.exports.sendLoanCanceled = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -289,7 +289,7 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id,
         collateral: {
@@ -304,7 +304,7 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
             collateral: collateralLock.collateral,
             collateralValue: currencyFormatter.format(collateralLock.collateralValue, { code: 'USD', symbol: '$' }),
             collateralizationRate: '150%',
-            network: collateralLock.network,
+            networkId: collateralLock.networkId,
             collateralLockContractAddress: `${collateralLock.collateralLockContractAddress.substring(0, 4)}...${collateralLock.collateralLockContractAddress.substring(collateralLock.collateralLockContractAddress.length - 4)}`,
         }
     }
@@ -404,7 +404,7 @@ module.exports.sendLoanApproved = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -506,7 +506,7 @@ module.exports.sendPrincipalWithdrawn = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -609,7 +609,7 @@ module.exports.sendPayback = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -710,7 +710,7 @@ module.exports.sendPaybackAccepted = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -811,7 +811,7 @@ module.exports.sendPaybackRefunded = async (loanId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -921,7 +921,7 @@ module.exports.sendCollateralSeized = async (collateralLockId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id
     }
@@ -1022,7 +1022,7 @@ module.exports.sendCollateralUnlocked = async (collateralLockId) => {
         apy: parseFloat(BigNumber(loan.interest).dividedBy(loan.principal).multipliedBy(1200)).toFixed(2),
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
-        network: loan.network,
+        networkId: loan.networkId,
         allowedCollateral: 'ONE',
         loanId: loan.id,
         collateral: {
@@ -1037,7 +1037,7 @@ module.exports.sendCollateralUnlocked = async (collateralLockId) => {
             collateral: collateralLock.collateral,
             collateralValue: currencyFormatter.format(collateralLock.collateralValue, { code: 'USD', symbol: '$' }),
             collateralizationRate: '150%',
-            network: collateralLock.network,
+            networkId: collateralLock.networkId,
             collateralLockContractAddress: `${collateralLock.collateralLockContractAddress.substring(0, 8)}...${collateralLock.collateralLockContractAddress.substring(collateralLock.collateralLockContractAddress.length - 8)}`,
         }
     }
