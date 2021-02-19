@@ -99,7 +99,7 @@ const BlitsLoans = {
                 return { status: 'ERROR', message: 'No web3 provider detected' }
             }
 
-            if(!account) return { status: 'ERROR', message: 'Missing account'}
+            if (!account) return { status: 'ERROR', message: 'Missing account' }
             if (!loansContractAddress) return { status: 'ERROR', message: 'Missing loans contract address' }
 
             await window.ethereum.enable()
@@ -202,7 +202,7 @@ const BlitsLoans = {
             }
 
             if (!loanId) return { status: 'ERROR', message: 'Missing Loan ID' }
-            if(!borrower) return { status: 'ERROR', message: 'Missing Borrower'}
+            if (!borrower) return { status: 'ERROR', message: 'Missing Borrower' }
             if (!secretHashA1) return { status: 'ERROR', message: 'Missing secretHashA1' }
             if (!loansContractAddress) return { status: 'ERROR', message: 'Missing Loans Contract Address' }
 
@@ -422,13 +422,163 @@ const BlitsLoans = {
                 return { status: 'ERROR', message: e ? e : 'Error refunding payback' }
             }
         },
+
+        lockCollateral: async (
+            amount, lender, secretHashA1, secretHashB1,
+            lockContractAddress, bCoinBorrowerAddress,
+            bCoinLoanId, loansContractAddress,
+        ) => {
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
+            }
+
+            if (!amount) return { status: 'ERROR', message: 'Missing amount' }
+            if (!lender) return { status: 'ERROR', message: 'Missing lender' }
+            if (!secretHashA1) return { status: 'ERROR', message: 'Missing secretHashA1' }
+            if (!secretHashB1) return { status: 'ERROR', message: 'Missing secretHashB1' }
+            if (!lockContractAddress) return { status: 'ERROR', message: 'Missing lockContractAddress' }
+            if (!bCoinBorrowerAddress) return { status: 'ERROR', message: 'Missing bCoinBorrowerAddress' }
+            if (!bCoinLoanId) return { status: 'ERROR', message: 'Missing bCoinLoanId' }
+            if (!loansContractAddress) return { status: 'ERROR', message: 'Missing loansContractAddress' }
+
+            // Connect to HTTP Provider
+            const web3 = new Web3(window.ethereum)
+
+            // Get  account
+            const accounts = await web3.eth.getAccounts()
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract = new web3.eth.Contract(ABI.COLLATERAL_LOCK.abi, lockContractAddress)
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: 'Error instantiating contract' }
+            }
+
+            // Set Gas
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
+            const gasLimit = '500000'
+
+            try {
+
+                const tx = await contract.methods.lockCollateral(
+                    lender, secretHashA1, secretHashB1, bCoinBorrowerAddress,
+                    bCoinLoanId, loansContractAddress
+                ).send({
+                    value: BigNumber(amount).multipliedBy(1e18).toString(),
+                    from: accounts[0],
+                    gasPrice,
+                    gasLimit
+                })
+
+                return { status: 'OK', payload: tx }
+
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: e ? e : 'Error sending transaction' }
+            }
+        },
+
+        unlockCollateral: async (loanId, secretB1, lockContractAddress) => {
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
+            }
+
+            if (!loanId) return { status: 'ERROR', message: 'Missing Loan ID' }
+            if (!secretB1) return { status: 'ERROR', message: 'Missing secretB1' }
+            if (!lockContractAddress) return { status: 'ERROR', message: 'Missing lockContractAddress' }
+
+            // Connect to HTTP Provider
+            const web3 = new Web3(window.ethereum)
+
+            // Get  account
+            const accounts = await web3.eth.getAccounts()
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract = new web3.eth.Contract(ABI.COLLATERAL_LOCK.abi, lockContractAddress)
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: 'Error instantiating contract' }
+            }
+
+            // Set Gas
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
+            const gasLimit = '500000'
+
+            try {
+                const tx = await contract.methods.unlockCollateralAndCloseLoan(
+                    loanId, secretB1
+                ).send({
+                    value: '0x0',
+                    from: accounts[0],
+                    gasPrice,
+                    gasLimit
+                })
+
+                return { status: 'OK', payload: tx }
+
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: e ? e : 'Error sending transaction' }
+            }
+        },
+
+        seizeCollateral: async (loanId, secretA1, lockContractAddress) => {
+
+            if (!window.ethereum) {
+                return { status: 'ERROR', message: 'No web3 provider detected' }
+            }
+
+            if (!loanId) return { status: 'ERROR', message: 'Missing Loan ID' }
+            if (!secretA1) return { status: 'ERROR', message: 'Missing secretA1' }
+            if (!lockContractAddress) return { status: 'ERROR', message: 'Missing lockContractAddress' }
+
+            // Connect to HTTP Provider
+            const web3 = new Web3(window.ethereum)
+
+            // Get  account
+            const accounts = await web3.eth.getAccounts()
+
+            // Instantiate Contract
+            let contract
+            try {
+                contract = new web3.eth.Contract(ABI.COLLATERAL_LOCK.abi, lockContractAddress)
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: 'Error instantiating contract' }
+            }
+
+            // Set Gas
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
+            const gasLimit = '500000'
+            
+            try {
+                const tx = await contract.methods.seizeCollateral(
+                    loanId, secretA1
+                ).send({
+                    value: '0x0',
+                    from: accounts[0],
+                    gasPrice,
+                    gasLimit
+                })
+
+                return { status: 'OK', payload: tx }
+
+            } catch (e) {
+                console.log(e)
+                return { status: 'ERROR', message: e ? e : 'Error sending transaction' }
+            }
+        }
     },
 
 
     ONE: {
         lockCollateral: async (
-            amount, lender, secretHashA1, secretHashB1, 
-            lockContractAddress, bCoinBorrowerAddress, 
+            amount, lender, secretHashA1, secretHashB1,
+            lockContractAddress, bCoinBorrowerAddress,
             bCoinLoanId, loansContractAddress,
             shard, network
         ) => {
@@ -442,8 +592,8 @@ const BlitsLoans = {
             if (!secretHashB1) return { status: 'ERROR', message: 'Missing secretHashB1' }
             if (!lockContractAddress) return { status: 'ERROR', message: 'Missing lockContractAddress' }
             if (!bCoinBorrowerAddress) return { status: 'ERROR', message: 'Missing bCoinBorrowerAddress' }
-            if(!bCoinLoanId) return { status: 'ERROR', message: 'Missing bCoinLoanId'}
-            if(!loansContractAddress) return { status: 'ERROR', message: 'Missing loansContractAddress'}
+            if (!bCoinLoanId) return { status: 'ERROR', message: 'Missing bCoinLoanId' }
+            if (!loansContractAddress) return { status: 'ERROR', message: 'Missing loansContractAddress' }
             if (!shard) return { status: 'ERROR', message: 'Missing shard' }
             if (!network) return { status: 'ERROR', message: 'Missing network' }
 
@@ -463,7 +613,7 @@ const BlitsLoans = {
 
             // Connect Account / Unlock Wallet
             const account = await harmony.login()
-            
+
             // Instantiate Contract
             let contract
             try {
@@ -475,7 +625,7 @@ const BlitsLoans = {
             try {
                 // Get checksum address
                 lender = harmony.crypto.getAddress(lender).checksum
-                
+
                 const response = await contract.methods.lockCollateral(
                     lender, secretHashA1, secretHashB1, bCoinBorrowerAddress,
                     bCoinLoanId, loansContractAddress
@@ -498,7 +648,7 @@ const BlitsLoans = {
                 //     console.log(error)
                 //     return { status: 'ERROR', message: error ? error : 'Error unlocking collateral' }
                 // })
-               
+
 
             } catch (e) {
                 console.log(e)
@@ -533,7 +683,7 @@ const BlitsLoans = {
 
             // Connect Account / Unlock Wallet
             const account = await harmony.login()
-           
+
             // Instantiate Contract
             let contract
             try {
@@ -560,7 +710,7 @@ const BlitsLoans = {
         },
 
         seizeCollateral: async (loanId, secretA1, lockContractAddress, shard, network) => {
-            
+
             if (!window.onewallet) {
                 return { status: 'ERROR', message: 'Harmony Provider not found' }
             }
@@ -587,7 +737,7 @@ const BlitsLoans = {
 
             // Connect Account / Unlock Wallet
             const account = await harmony.login()
-           
+
             // Instantiate Contract
             let contract
             try {

@@ -128,13 +128,12 @@ class LoanDetails extends Component {
             aCoinLenderAddress, secretHashB1, principal, contractLoanId, loansContractAddress
         } = loanDetails
 
-        const collateralLockContract = protocolContracts[shared?.networkId].CollateralLockV2_ONE.address
+        const collateralLockContract = protocolContracts[shared?.networkId]?.CollateralLockV2?.address        
         const requiredCollateral = parseFloat(BigNumber(principal).div(prices.ONE.usd).times(1.5)).toFixed(2)
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
-        const bCoinBorrowerAddress = (await ETH.getAccount()).payload
-        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
+        const bCoinBorrowerAddress = (await ETH.getAccount()).payload        
 
         // Generate secretHash
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`
@@ -149,7 +148,7 @@ class LoanDetails extends Component {
 
         const { secret, secretHash } = response.payload
 
-        response = await BlitsLoans.ONE.lockCollateral(
+        response = await BlitsLoans.ETH.lockCollateral(
             requiredCollateral,
             aCoinLenderAddress,
             secretHash,
@@ -157,9 +156,7 @@ class LoanDetails extends Component {
             collateralLockContract,
             bCoinBorrowerAddress,
             contractLoanId,
-            loansContractAddress,
-            '0', // shard
-            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
+            loansContractAddress,            
         )
 
         console.log(response)

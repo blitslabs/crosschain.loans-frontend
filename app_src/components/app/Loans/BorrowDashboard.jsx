@@ -35,7 +35,7 @@ class BorrowDashboard extends Component {
         document.title = "Borrow | Cross-chain Loans"
         const { dispatch, providers, shared } = this.props
 
-        getAvailableLoans({})
+        getAvailableLoans()
             .then(data => data.json())
             .then((res) => {
                 console.log(res)

@@ -1,7 +1,7 @@
 const { sendJSONresponse } = require('../utils')
 const {
     CollateralLock, Endpoint, ProtocolContract, sequelize,
-    CollateralEvent, LoanEvent, Loan, Matching
+    CollateralEvent, LoanEvent, Loan, Matching, LogTopic
 } = require('../models/sequelize')
 const { Harmony } = require('@harmony-js/core')
 const { ChainType, ChainID } = require('@harmony-js/utils')
