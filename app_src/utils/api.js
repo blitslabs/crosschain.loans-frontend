@@ -97,7 +97,7 @@ export function getActivityHistory(params) {
 }
 
 export function getAccountLoans(params) {
-    return fetch(API_HOST + 'loans/account/' + params.account + '/' + params.network, {
+    return fetch(API_HOST + 'loans/account/' + params.account, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

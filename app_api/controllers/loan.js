@@ -547,17 +547,16 @@ module.exports.confirmLoanOperation_ETH = async (req, res) => {
 
 module.exports.getAccountLoans = async (req, res) => {
 
-    const { account, network } = req.params
+    const { account } = req.params
 
-    if (!account || !network) {
+    if (!account) {
         sendJSONresponse(res, 422, { status: 'ERROR', message: 'Missing required parameter' })
         return
     }
 
     const loans = await Loan.findAll({
         where: {
-            [Op.or]: [{ borrower: account }, { lender: account }],
-            network,
+            [Op.or]: [{ borrower: account }, { lender: account }],            
         },
         raw: true
     })
@@ -568,7 +567,7 @@ module.exports.getAccountLoans = async (req, res) => {
         const collateralLock = await CollateralLock.findOne({
             where: {
                 bCoinContractLoanId: l.contractLoanId,
-                network
+                loansContractAddress: l.loansContractAddress
             },
             raw: true
         })

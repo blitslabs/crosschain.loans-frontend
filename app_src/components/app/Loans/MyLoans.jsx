@@ -41,46 +41,19 @@ class MyLoans extends Component {
     }
 
     loadInitialData = async () => {
-        const { accounts, dispatch, providers } = this.props
-        console.log(providers.ethereum)
-        Promise.all([
-            getAccountLoans({ account: accounts?.ETH, network: providers.ethereum }),
-            // getAccountLoans({ account: fromBech32(accounts.ONE) })
-        ])
-            .then((responses) => {
-                return Promise.all(responses.map(res => res.json()))
+        const { shared, dispatch } = this.props
+
+        console.log(shared?.account)
+        getAccountLoans({ account: shared?.account })
+            .then(data => data.json())
+            .then((res) => {
+                console.log(res)
+                if (res.status === 'OK') {
+                    const loans = { ...res.payload }
+                    dispatch(saveAccountLoans(loans))
+                    this.setState({ loading: false })
+                }
             })
-            .then((data) => {
-                console.log(data)
-                const loans_1 = data[0].status === 'OK' ? data[0].payload : {}
-                // const loans_2 = data[0].status === 'OK' ? data[1].payload : {}
-                // const loans = { ...loans_1, ...loans_2 }
-                const loans = { ...loans_1 }
-                // dispatch(removeAccountLoans())
-                dispatch(saveAccountLoans(loans))
-                this.setState({ loading: false })
-            })
-
-        // getAccountLoans({ account: accounts.ETH })
-        //     .then(data => data.json())
-        //     .then((res) => {
-        //         console.log(res)
-        //         if (res.status === 'OK') {
-        //             dispatch(saveAccountLoans(res.payload))
-        //         }
-        //     })
-
-        // if ('ONE' in accounts && accounts.ONE) {
-        //     getAccountLoans({ account: fromBech32(accounts.ONE) })
-        //         .then(data => data.json())
-        //         .then((res) => {
-        //             console.log(res)
-        //             if (res.status === 'OK') {
-        //                 dispatch(saveAccountCollateralTxs(res.payload))
-        //             }
-        //         })
-        // }
-
     }
 
     handleViewDetailsBtn = async (loanId) => {
@@ -90,9 +63,9 @@ class MyLoans extends Component {
 
     render() {
         const { loading } = this.state
-        const { accounts, accountLoans } = this.props
-        const borrowed = Object.values(accountLoans).filter((l, i) => l?.borrower?.toUpperCase() == accounts?.ETH?.toUpperCase())
-        const lent = Object.values(accountLoans).filter((l, i) => l?.lender?.toUpperCase() == accounts?.ETH?.toUpperCase())
+        const { shared, accountLoans } = this.props
+        const borrowed = Object.values(accountLoans).filter((l, i) => l?.borrower?.toUpperCase() == shared?.account?.toUpperCase())
+        const lent = Object.values(accountLoans).filter((l, i) => l?.lender?.toUpperCase() == shared?.account?.toUpperCase())
 
         return (
             <Fragment>
@@ -159,19 +132,19 @@ class MyLoans extends Component {
                                                                         <td>30 days</td>
                                                                         <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
                                                                         <td>
-                                                                                <div className="loanBook__apr">
-                                                                                    {
-                                                                                        l.status == 1 ? 'Funded' :
+                                                                            <div className="loanBook__apr">
+                                                                                {
+                                                                                    l.status == 1 ? 'Funded' :
                                                                                         l.status == 1.5 ? 'Awaiting Approval' :
-                                                                                        l.status == 2 ? 'Approved' :
-                                                                                        l.status == 3 ? 'Withdrawn' : 
-                                                                                        l.status == 4 ? 'Repaid' :
-                                                                                        l.status == 5 ? 'PaybackRefunded' :
-                                                                                        l.status == 6 ? 'Closed' : 
-                                                                                        l.status == 7 ? 'Canceled' : ''
-                                                                                    }
-                                                                                </div>
-                                                                            </td>
+                                                                                            l.status == 2 ? 'Approved' :
+                                                                                                l.status == 3 ? 'Withdrawn' :
+                                                                                                    l.status == 4 ? 'Repaid' :
+                                                                                                        l.status == 5 ? 'PaybackRefunded' :
+                                                                                                            l.status == 6 ? 'Closed' :
+                                                                                                                l.status == 7 ? 'Canceled' : ''
+                                                                                }
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <a href={'/app/loan/' + l.id}>Details</a>
                                                                         </td>
@@ -241,13 +214,13 @@ class MyLoans extends Component {
                                                                                 <div className="loanBook__apr">
                                                                                     {
                                                                                         l.status == 1 ? 'Funded' :
-                                                                                        l.status == 1.5 ? 'Awaiting Approval' :
-                                                                                        l.status == 2 ? 'Approved' :
-                                                                                        l.status == 3 ? 'Withdrawn' : 
-                                                                                        l.status == 4 ? 'Repaid' :
-                                                                                        l.status == 5 ? 'PaybackRefunded' :
-                                                                                        l.status == 6 ? 'Closed' : 
-                                                                                        l.status == 7 ? 'Canceled' : ''
+                                                                                            l.status == 1.5 ? 'Awaiting Approval' :
+                                                                                                l.status == 2 ? 'Approved' :
+                                                                                                    l.status == 3 ? 'Withdrawn' :
+                                                                                                        l.status == 4 ? 'Repaid' :
+                                                                                                            l.status == 5 ? 'PaybackRefunded' :
+                                                                                                                l.status == 6 ? 'Closed' :
+                                                                                                                    l.status == 7 ? 'Canceled' : ''
                                                                                     }
                                                                                 </div>
                                                                             </td>
@@ -281,11 +254,10 @@ class MyLoans extends Component {
 }
 
 
-function mapStateToProps({ accounts, accountLoans, providers }) {
-    return {
-        accounts,
+function mapStateToProps({ accountLoans, shared }) {
+    return {        
         accountLoans,
-        providers
+        shared
     }
 }
 
