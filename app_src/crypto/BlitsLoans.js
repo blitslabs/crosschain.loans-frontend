@@ -302,7 +302,7 @@ const BlitsLoans = {
             }
 
             try {
-                const tx = await contract.methods.payback(loanId).send({ from: borrower })
+                const tx = await contract.methods.payback(loanId).send({ from: borrower, gasLimit: '500000' })
                 return { status: 'OK', payload: tx }
             } catch (e) {
                 console.log(e)

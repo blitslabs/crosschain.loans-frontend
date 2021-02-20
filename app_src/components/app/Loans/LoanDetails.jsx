@@ -294,7 +294,7 @@ class LoanDetails extends Component {
 
         const params = {
             operation: 'LoanPrincipalWithdrawn',
-            networkId: shared?.networkId,            
+            networkId: shared?.networkId,
             txHash: txResponse.payload.transactionHash
         }
 
@@ -314,11 +314,24 @@ class LoanDetails extends Component {
 
     handleRepayBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
-        const { contractLoanId } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const { loanDetails, protocolContracts, shared } = this.props
+        const { contractLoanId, tokenContractAddress, principal, interest } = loanDetails
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
+
+        // Check Allowance
+        const repayment = new BigNumber(principal).plus(interest)
+        const allowance = await ETH.getAllowance(loansContract, tokenContractAddress)
+        console.log(allowance)
+        
+        if (!repayment.lt(allowance?.payload)) {
+            const allowance_res = await ETH.approveAllowance(loansContract, '10000', tokenContractAddress)
+            console.log(allowance_res)
+            this.setState({ loadingBtn: false })
+            toast.success('Allowance Approved', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
+        }
 
         const response = await BlitsLoans.ETH.repayLoan(contractLoanId, loansContract)
 
@@ -329,8 +342,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'Payback',
+            networkId: shared?.networkId,
             txHash: response.payload.transactionHash
         }
 
@@ -731,8 +744,8 @@ class LoanDetails extends Component {
                                                 {
                                                     (status == 4 && !loadingBtn && shared?.account?.toUpperCase() != lender?.toUpperCase()) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
-                                                            Awaiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral.
-                                                            If the repayment is not accepted before the expiration, then you'll be able to refund your repayment and unlock your refundable collateral.
+                                                            Awaiting for the Lender to accept the payback. Once it's accepted you'll be able to unlock your collateral.
+                                                            If the payback is not accepted before the expiration, then you'll be able to refund your payback and unlock your refundable collateral.
                                                         </div>
                                                     )
                                                 }
@@ -857,7 +870,7 @@ class LoanDetails extends Component {
                                                 { title: 'Repayment Accepted' },
                                             ]
                                 }
-                                activeStep={parseInt(status)}
+                                activeStep={status >= 3 ? parseInt(status) + 1 : parseInt(status)}
                                 completeBarColor="#32CCDD"
                                 completeColor="#32CCDD"
                                 activeColor="black"

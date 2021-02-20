@@ -82,8 +82,7 @@ module.exports.confirmLoanOperation = async (req, res) => {
         operation === 'Payback' || operation === 'RefundPayback' ||
         operation === 'CancelLoan'
     )
-    ) {
-        console.log(operation === 'LoanPrincipalWithdrawn')
+    ) {        
         sendJSONresponse(res, 422, { status: 'ERROR', message: 'Invalid Loan Operation' })
         return
     }
