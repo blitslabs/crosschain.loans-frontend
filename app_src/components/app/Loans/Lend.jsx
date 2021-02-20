@@ -9,19 +9,20 @@ import Loading from '../../Loading'
 class Lend extends Component {
 
     state = {
+        networkId: '',
         loading: true
     }
 
-    componentDidMount() {
-        document.title = "Lend | Cross-chain Loans"
-        this.setState({ loading: false})
+    componentDidMount() {        
+        document.title = "Lend | Cross-chain Loans"       
+        this.setState({ loading: false })
     }
 
     render() {
-        const { loanAssets, navigation } = this.props
+        const { loanAssets, shared } = this.props
         const { loading } = this.state
 
-        if(loading) {
+        if (loading) {
             return <Loading />
         }
 
@@ -42,11 +43,16 @@ class Lend extends Component {
                                         <div className="row">
                                             {
                                                 Object.values(loanAssets).length > 0
-                                                    ? Object.values(loanAssets).map((a, i) => (
-                                                        <div key={i} className="col-sm-12 col-md-4">
-                                                            <AssetCard asset={a} />
-                                                        </div>
-                                                    ))
+                                                    ? Object.values(loanAssets)
+                                                        .sort((a, b) => {
+                                                            if (a?.networkId == shared?.networkId) return 1
+                                                            else if (b?.networkId != shared?.networkId) return 1
+                                                        })
+                                                        .map((a, i) => (
+                                                            <div key={i} className="col-sm-12 col-md-4">
+                                                                <AssetCard asset={a} />
+                                                            </div>
+                                                        ))
                                                     : ''
                                             }
 

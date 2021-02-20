@@ -6,20 +6,30 @@ const {
 module.exports.getLoanAssets = async (req, res) => {
     const { networkId } = req.params
 
-    if (!networkId) {
-        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Missing required parameters' })
+    if(!networkId) {
+        sendJSONresponse(res, 404, { status: 'ERROR', message: 'Missing Network ID'})
         return
     }
 
-    const loanAssets = await LoanAsset.findAll({
-        where: {
-            networkId,
-            status: 'ACTIVE'
-        },
-        attributes: ['id', 'name', 'symbol', 'contractAddress', 'blockchain', 'networkId', 'status'],
-        raw: true
-    })
-
+    let loanAssets
+    if (networkId !== 'ALL') {
+        loanAssets = await LoanAsset.findAll({
+            where: {
+                networkId,
+                status: 'ACTIVE'
+            },
+            attributes: ['id', 'name', 'symbol', 'contractAddress', 'blockchain', 'networkId', 'status'],
+            raw: true
+        })
+    } else {
+        loanAssets = await LoanAsset.findAll({
+            where: {
+                status: 'ACTIVE'
+            },
+            attributes: ['id', 'name', 'symbol', 'contractAddress', 'blockchain', 'networkId', 'status'],
+            raw: true
+        })
+    }
 
     const payload = {}
 

@@ -10,23 +10,46 @@ import currencyFormatter from 'currency-formatter'
 import { saveAssetType } from '../../../actions/assetTypes'
 import { saveLendRequest } from '../../../actions/lendRequest'
 
+const NETWORKS = {
+    '1': 'ETH-mainnet',
+    '3': 'ETH-ropsten',
+    '56': 'BNB-mainnet',
+    '97': 'BNB-testnet',
+    '1666600000': 'ONE-mainnet',
+    '1666700000': 'ONE-testnet'
+}
+
 class AssetCard extends Component {
 
     state = {
         apy: '-',
-        liquidity: '-'
+        liquidity: '-',
+        networkId: ''
     }
 
     componentDidMount() {
+        const { shared } = this.props
+        this.setState({ networkId: shared?.networkId })
         this.loadAssetTypeData()
+    }
+
+    componentWillReceiveProps(prevProps, prevState) {
+        setTimeout(() => {
+            this.loadAssetTypeData()
+        }, 1000)
     }
 
     loadAssetTypeData = async () => {
         const { protocolContracts, shared, asset, dispatch } = this.props
 
+        // Check Network
+        if (asset?.networkId != shared?.networkId) {
+            return
+        }
+
         // Get Loans Contract
         const contract = protocolContracts[shared?.networkId].CrosschainLoans.address
-        
+
         // Get AssetType data
         const assetTypeData = await BlitsLoans.ETH.getAssetTypeData(
             asset.contractAddress,
@@ -38,10 +61,10 @@ class AssetCard extends Component {
 
         // Calculate APY
         const apy = parseFloat(BigNumber(assetTypeData.interestRate).multipliedBy(12).multipliedBy(100)).toFixed(2)
-        
+
         // Get AssetType Liquidity
         const liquidity = (await ETH.getERC20Balance(contract, asset.contractAddress)).payload
-        
+
         // Update APY & Liquidity
         this.setState({
             apy,
@@ -57,7 +80,7 @@ class AssetCard extends Component {
     }
 
     render() {
-        const { asset } = this.props
+        const { asset, shared } = this.props
         const { apy, liquidity } = this.state
 
         return (
@@ -73,7 +96,7 @@ class AssetCard extends Component {
                         </div>
                         <div>
                             <div className="card-title">Blockchain</div>
-                            <div className="card-value">{asset.blockchain}</div>
+                            <div className="card-value" style={{ fontSize: '16px' }}>{NETWORKS[asset?.networkId]}</div>
                         </div>
                     </div>
                     <div className="col-6 text-right">
@@ -89,7 +112,13 @@ class AssetCard extends Component {
                 </div>
                 <div className="row mt-4">
                     <div className="col-12">
-                        <button /*disabled={asset?.symbol !== 'DAI' ? true : false}*/ onClick={this.handleLendBtn} className="btn btn-blits" style={{ width: '100%' }}>LEND</button>
+                        <button
+                            disabled={asset?.networkId != shared?.networkId ? true : false}
+                            onClick={this.handleLendBtn} className="btn btn-blits"
+                            style={{ width: '100%' }}
+                        >
+                            {asset?.networkId == shared?.networkId ? 'LEND' : `CONNECT ${NETWORKS[asset?.networkId]}`}
+                        </button>
                     </div>
                 </div>
             </div>

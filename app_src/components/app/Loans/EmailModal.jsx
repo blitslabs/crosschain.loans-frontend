@@ -29,7 +29,7 @@ class EmailModal extends Component {
         e.preventDefault()
 
         const { email } = this.state
-        const { accounts, dispatch } = this.props
+        const { shared, dispatch } = this.props
 
         if (!this.validEmail(email)) {
             this.setState({ emailsIsInvalid: true })
@@ -38,7 +38,7 @@ class EmailModal extends Component {
 
         const params = {
             email,
-            account: accounts?.ETH
+            account: shared?.account
         }
 
         saveEmailNotification(params)

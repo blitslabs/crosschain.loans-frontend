@@ -118,7 +118,7 @@ class App extends Component {
 
 
 
-    getLoanAssets({ networkId })
+    getLoanAssets({ networkId: 'ALL' })
       .then(data => data.json())
       .then((res) => {
         console.log(res)

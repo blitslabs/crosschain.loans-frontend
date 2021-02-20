@@ -101,6 +101,7 @@ class MyLoans extends Component {
                                                                 <th>ID</th>
                                                                 <th>Amount</th>
                                                                 <th>Blockchain</th>
+                                                                <th>Network</th>
                                                                 <th>Repayment</th>
                                                                 <th>Interest</th>
                                                                 <th>APR</th>
@@ -117,6 +118,7 @@ class MyLoans extends Component {
                                                                         <td>#{l.id}</td>
                                                                         <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                         <td>{l.blockchain}</td>
+                                                                        <td>{l.networkId}</td>
                                                                         <td>
                                                                             {/* <Emoji text="💸" /> */}
                                                                             {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
@@ -179,6 +181,7 @@ class MyLoans extends Component {
                                                                     <th>ID</th>
                                                                     <th>Amount</th>
                                                                     <th>Blockchain</th>
+                                                                    <th>Network</th>
                                                                     <th>Repayment</th>
                                                                     <th>Interest</th>
                                                                     <th>APR</th>
@@ -195,6 +198,7 @@ class MyLoans extends Component {
                                                                             <td>#{l.id}</td>
                                                                             <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                             <td>{l.blockchain}</td>
+                                                                            <td>{l.networkId}</td>
                                                                             <td>
                                                                                 {/* <Emoji text="💸" /> */}
                                                                                 {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
