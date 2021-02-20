@@ -25,7 +25,7 @@ module.exports.getLoansByStatus = async (req, res) => {
 
     const loans = await Loan.findAll({
         where: {
-            status            
+            status
         }
     })
 
@@ -77,12 +77,14 @@ module.exports.confirmLoanOperation = async (req, res) => {
     }
 
     if (!(
-        operation === 'LoanCreated' || operation === 'LoanAssignedAndApproved') ||
+        operation === 'LoanCreated' || operation === 'LoanAssignedAndApproved' ||
         operation === 'LoanPrincipalWithdrawn' || operation === 'LoanRepaymentAccepted' ||
         operation === 'Payback' || operation === 'RefundPayback' ||
         operation === 'CancelLoan'
+    )
     ) {
-        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Invalid Lock Collateral Operation' })
+        console.log(operation === 'LoanPrincipalWithdrawn')
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Invalid Loan Operation' })
         return
     }
 
@@ -165,7 +167,7 @@ module.exports.confirmLoanOperation = async (req, res) => {
             }
         }
     }
-    
+
     // Decode Log
     const logs = await web3.eth.abi.decodeLog(eventInputs[0].inputs, data, topics)
 

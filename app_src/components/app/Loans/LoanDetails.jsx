@@ -219,9 +219,9 @@ class LoanDetails extends Component {
 
     handleApproveBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { contractLoanId, collateralLock } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
@@ -239,8 +239,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'LoanAssignedAndApproved',
+            networkId: shared?.networkId,
             txHash: txResponse.payload.transactionHash
         }
 
@@ -260,11 +260,11 @@ class LoanDetails extends Component {
 
     handleWithdrawBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { contractLoanId } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
-        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
-
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
+        const collateralNetworkId = loanDetails?.collateralLock?.networkId
+        const collateralLockContract = protocolContracts[collateralNetworkId]?.CollateralLockV2?.address
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
         // Generate secretHash
@@ -293,8 +293,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'LoanPrincipalWithdrawn',
+            networkId: shared?.networkId,            
             txHash: txResponse.payload.transactionHash
         }
 
