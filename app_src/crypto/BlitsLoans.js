@@ -466,7 +466,7 @@ const BlitsLoans = {
                     lender, secretHashA1, secretHashB1, bCoinBorrowerAddress,
                     bCoinLoanId, loansContractAddress
                 ).send({
-                    value: BigNumber(amount).multipliedBy(1e18).toString(),
+                    value: BigNumber(amount).multipliedBy(1e18),
                     from: accounts[0],
                     gasPrice,
                     gasLimit
@@ -505,7 +505,7 @@ const BlitsLoans = {
             }
 
             // Set Gas
-            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()))
             const gasLimit = '500000'
 
             try {

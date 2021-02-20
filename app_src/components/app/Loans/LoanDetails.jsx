@@ -139,9 +139,9 @@ class LoanDetails extends Component {
         }
 
         const params = {
+            operation: 'LockCollateral',
             networkId: shared?.networkId,
-            txHash: response.payload,
-            operation: 'LockCollateral'
+            txHash: response.payload.transactionHash
         }
 
         const intervalId = setInterval(() => {
@@ -423,19 +423,17 @@ class LoanDetails extends Component {
 
     handleUnlockCollateralBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { collateralLock, secretB1 } = loanDetails
-        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const collateralLockContract = protocolContracts[shared?.networkId].CollateralLockV2.address
         const { contractLoanId } = collateralLock
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
-        const response = await BlitsLoans.ONE.unlockCollateral(
+        const response = await BlitsLoans.ETH.unlockCollateral(
             contractLoanId,
             secretB1,
-            collateralLockContract,
-            '0',
-            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
+            collateralLockContract,            
         )
 
         if (response.status !== 'OK') {
@@ -445,10 +443,9 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            txHash: response.payload,
-            blockchain: 'ONE',
-            operation: 'UnlockAndClose'
+            operation: 'UnlockAndClose',
+            networkId: shared?.networkId,
+            txHash: response.payload.transactionHash
         }
 
         const intervalId = setInterval(() => {
@@ -869,7 +866,7 @@ class LoanDetails extends Component {
                                                 { title: 'Repayment Accepted' },
                                             ]
                                 }
-                                activeStep={status >= 3 ? parseInt(status) + 1 : parseInt(status)}
+                                activeStep={status >= 2 ? parseInt(status) + 1 : parseInt(status)}
                                 completeBarColor="#32CCDD"
                                 completeColor="#32CCDD"
                                 activeColor="black"
