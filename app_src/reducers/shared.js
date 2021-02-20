@@ -1,12 +1,14 @@
 import {
     SET_PROVIDER_STATUS, TOGGLE_SIDEBAR,
     SAVE_NETWORK, SAVE_NOTIFICATION_EMAIL,
-    SAVE_ACCOUNT, SAVE_SELECTED_COLLATERAL_ASSET
+    SAVE_ACCOUNT, SAVE_SELECTED_COLLATERAL_ASSET,
+    CHANGE_THEME
 } from '../actions/shared'
 
 const initialState = {
     sidebar: false,
-    collatera_asset: 'ONE'
+    collatera_asset: 'ONE',
+    theme: 'dark'
 }
 
 export default function shared(state = initialState, action) {
@@ -47,6 +49,11 @@ export default function shared(state = initialState, action) {
                 sidebar: action.sidebar
             }
 
+        case CHANGE_THEME:
+            return {
+                ...state,
+                theme: action.theme
+            }
         
         default:
             return state

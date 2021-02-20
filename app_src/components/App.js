@@ -20,7 +20,7 @@ import LoanDetails from './app/Loans/LoanDetails'
 import Activity from './app/Loans/Activity'
 import MyLoans from './app/Loans/MyLoans'
 
-import './styles.css'
+// import './styles.css'
 
 // API
 import {
@@ -42,7 +42,17 @@ import Web3 from 'web3'
 class App extends Component {
 
   componentDidMount() {
+    const { shared } = this.props
+
+    if(shared?.theme === 'dark' || !shared?.theme) {
+      require('./styles_dark.css')
+    } else {
+      require('./styles.css')
+    }
     this.loadInitialData()
+
+ 
+    // document.querySelector('.navigation-menu__link').removeEventListener('click')
   }
 
   loadInitialData = async () => {

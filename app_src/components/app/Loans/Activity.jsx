@@ -87,7 +87,7 @@ class Activity extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Activity Explorer</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Activity Explorer</div>
                                         <div style={{ fontSize: '18px', marginTop: '10px' }}>Explore the protocol's recent activity</div>
                                     </div>
 

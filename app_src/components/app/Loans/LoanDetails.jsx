@@ -855,8 +855,15 @@ class LoanDetails extends Component {
                                 }
                                 activeStep={status >= 2 ? parseInt(status) + 1 : parseInt(status)}
                                 completeBarColor="#32CCDD"
-                                completeColor="#32CCDD"
-                                activeColor="black"
+                                
+                                completeColor={shared?.theme === 'dark' || !shared?.theme ? 'grey' : "#32CCDD"}
+                                defaultColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : "#E0E0E0"}
+                                activeColor={shared?.theme === 'dark' || !shared?.theme ? '#32CCDD' : "black"}
+                                completeTitleColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : '#000'}
+                                
+                                activeTitleColor={shared?.theme === 'dark' || !shared?.theme ? '#32CCDD' : "black"}
+                                defaultTitleColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : "#757575"}
+                                circleFontColor={shared?.theme === 'dark' || !shared?.theme ? 'black' : "#FFF"}
                             />
                         </div>
                     </div>

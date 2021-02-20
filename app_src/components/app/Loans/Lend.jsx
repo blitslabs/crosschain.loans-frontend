@@ -36,7 +36,7 @@ class Lend extends Component {
                                 <div className="col-sm-12 col-md-12">
                                     <div className="mb-4 text-left">
                                         <div className="mb-4 text-left">
-                                            <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Lend</div>
+                                            <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Lend</div>
                                             <div style={{ fontSize: '18px', marginTop: '10px' }}>Lend your stablecoins to earn APY</div>
                                         </div>
                                         <div className="row">

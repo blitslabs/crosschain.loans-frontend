@@ -78,7 +78,7 @@ class MyLoans extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>My Loans</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px', }}>My Loans</div>
                                         {/* <div style={{ fontSize: '18px', marginTop: '10px' }}>Check account's loans</div> */}
                                     </div>
 
@@ -115,7 +115,7 @@ class MyLoans extends Component {
                                                                 Object.values(borrowed).map((l, i) => (
                                                                     <tr key={i}>
                                                                         <td>#{l.id}</td>
-                                                                        <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
+                                                                        <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                         <td>{l.blockchain}</td>
                                                                         <td>
                                                                             {/* <Emoji text="💸" /> */}
@@ -193,7 +193,7 @@ class MyLoans extends Component {
                                                                     Object.values(lent).map((l, i) => (
                                                                         <tr key={i}>
                                                                             <td>#{l.id}</td>
-                                                                            <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
+                                                                            <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
                                                                             <td>{l.blockchain}</td>
                                                                             <td>
                                                                                 {/* <Emoji text="💸" /> */}
@@ -255,7 +255,7 @@ class MyLoans extends Component {
 
 
 function mapStateToProps({ accountLoans, shared }) {
-    return {        
+    return {
         accountLoans,
         shared
     }

@@ -22,7 +22,8 @@
 }
 
 .btn-blits {
-    background: black;
+    background: white;
+    color: black;
 }
 
 .btn-primary {
@@ -142,16 +143,7 @@ footer {
     margin-right: auto; */
 }
 
-.app-card {
-    padding: 60px;
-    color: white;
-    border-radius: 25px;
-    min-height: 250px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    background-color: #f8f9fa;
-}
+
 ::selection {
     background: rgba(164, 47, 255, 0.2);
     color: #a42fff;
@@ -175,6 +167,10 @@ footer {
 }
 
 .text-black {
+    color: white !important;
+}
+
+.text-drk {
     color: black !important;
 }
 
@@ -183,13 +179,13 @@ footer {
 }
 
 .label-title {
-    color: black;
+    /* color: black; */
 }
 
 .label-value {
     font-weight: 600;
     font-size: 20px;
-    color: black;
+    /* color: black; */
 }
 
 .app-form-label {
@@ -239,11 +235,13 @@ table > tbody > tr > td {
 .details-title {
     font-weight: 600;
     font-size: 16px;
+    color: white;
 }
 
 .details-label {
     font-size: 16px;
     padding-left: 5px;
+    color: white;
 }
 
 /* Toast styles */
@@ -254,8 +252,70 @@ table > tbody > tr > td {
     background-color: rgb(233, 30, 99) !important;    
 }
 
+/* DARK THEME */
 body {
     font-family: monospace !important;
+    background: black !important;
+    color: white !important;
+}
+
+.navigation-menu__link {
+    color: white !important;
+}
+
+.table thead th {
+    background: black;
+    color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color:  #18181a !important;
+    color: white;
+}
+
+.loanBook td {
+    font-size: 14px;
+    font-weight: 300;
+    vertical-align: middle;
+    text-align: center;
+    color: white;
+}
+
+.assetCard {
+    background: #18181a;
+    border-radius: 25px; 
+    text-align: center; 
+    padding: 1em; 
+    /* border: 1px solid #e6e6e6; */
+    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
+    /* box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.175) !important; */
+}
+
+.loanBook__apr {
+    color: #00bcd4; 
+    background: #2ec0d126; 
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.app-card {
+    padding: 60px;
+    color: white;
+    border-radius: 25px;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color:black;
+}
+
+h2 {
+    color: white;
+}
+
+.react-tabs__tab-list {
+    border-bottom: none !important;
 }
 
 /* .styles_particles__5dxGv, .styles_wrapper__3KXDn {
@@ -298,6 +358,7 @@ body {
 .modal-wallet-title {
     font-weight: bold;
     font-size: 18px;
+    color: black;
 }
 
 .modal-wallet-name {
@@ -333,8 +394,12 @@ body {
 }
 
 a {
-    color: black;
+    color: white;
     font-weight: bold;
+}
+
+.table th, .table td {
+    border-top: none !important;
 }
 
 /* a:hover {
@@ -358,15 +423,7 @@ a {
     }
 }
 
-.assetCard {
-    background: #f8f9fa;
-    border-radius: 25px; 
-    text-align: center; 
-    padding: 1em; 
-    border: 1px solid #e6e6e6;
-    /* box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175) !important; */
-    /* box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.175) !important; */
-}
+
 
 .card-title {
     font-size: 12px;
@@ -407,20 +464,9 @@ a {
     font-weight: 300;
 }
 
-.loanBook td {
-    font-size: 14px;
-    font-weight: 300;
-    vertical-align: middle;
-    text-align: center;
-}
 
-.loanBook__apr {
-    color: rgb(15, 210, 140); 
-    background: rgb(224, 249, 240); 
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
+
+
 
 .loanBook__status {
     color: rgb(15, 210, 140); 
@@ -435,9 +481,7 @@ a {
     font-size: 16px !important;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgb(248 249 250) !important;
-}
+
 .table-bordered {
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;

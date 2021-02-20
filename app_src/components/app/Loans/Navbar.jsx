@@ -2,14 +2,12 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-
-
 // API
 import { getPrices } from '../../../utils/api'
 
 // Actions
 import { savePrices } from '../../../actions/prices'
-import { setProviderStatus, toggleSidebar } from '../../../actions/shared'
+import { changeTheme, toggleSidebar } from '../../../actions/shared'
 import { saveAccount } from '../../../actions/accounts'
 
 // Libraries
@@ -23,6 +21,15 @@ import Gravatar from 'react-gravatar'
 
 // Components
 import ConnectModal from './ConnectModal'
+
+const NETWORKS = {
+    '1': 'ETH-mainnet',
+    '3': 'ETH-ropsten',
+    '56': 'BNB-mainnet',
+    '97': 'BNB-testnet',
+    '1666600000': 'ONE-mainnet',
+    '1666700000': 'ONE-testnet'
+}
 
 class Navbar extends Component {
 
@@ -60,7 +67,7 @@ class Navbar extends Component {
     }
 
     loandInitialData = async () => {
-         
+
     }
 
     handleToggleConnectModal = async (value) => this.setState({ showConnectModal: value })
@@ -77,12 +84,25 @@ class Navbar extends Component {
         dispatch(toggleSidebar(!shared.sidebar))
     }
 
+    toggleTheme = (e) => {
+        e.preventDefault()
+        console.log('TEST')
+        const { shared, dispatch } = this.props
+        if (shared?.theme === 'dark') {
+            dispatch(changeTheme('light'))
+        } else {
+            dispatch(changeTheme('dark'))
+        }
+        setTimeout(() => {
+            window.location.reload()
+        }, 1000)
+    }
+
     render() {
 
         const { showConnectModal } = this.state
         const { shared, accounts } = this.props
         const { sidebar } = shared
-
 
         return (
             <Fragment>
@@ -95,7 +115,7 @@ class Navbar extends Component {
                                 <div className="col-12">
                                     <div className="navigation-content">
                                         <a href="#" className="navigation__brand">
-                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + '/assets/images/logo.png'} alt="blits logo" />
+                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + ((shared?.theme === 'dark' || !shared?.theme) ? '/assets/images/logo_white.png' : '/assets/images/logo.png')} alt="blits logo" />
                                             <img className="sticky-nav__logo" src={process.env.SERVER_HOST + '/assets/images/logo_white.png'} alt="blits logo" />
                                         </a>
                                         <button onClick={this.toggleMenu} className="navigation__toggler" />
@@ -122,9 +142,9 @@ class Navbar extends Component {
                                                         </li>
                                                         : null
                                                 }
-
                                             </ul>
                                         </nav>
+
                                         {/* nav item end */}
                                         {
                                             !shared?.account
@@ -139,9 +159,17 @@ class Navbar extends Component {
                                                         size={30}
                                                         rating="pg" default="retro" className="gravatar"
                                                     />
-                                                    <a href="#" className='navigation-menu__link'>Account: {shared?.account?.substring(0, 4)}...{shared?.account?.substring(shared?.account?.length - 4)}</a>
+                                                    <a id="#wallet_details" href="#" className='navigation-menu__link'>{NETWORKS[shared?.networkId] ? NETWORKS[shared?.networkId] : 'unsupported network'}: {shared?.account?.substring(0, 4)}...{shared?.account?.substring(shared?.account?.length - 4)}</a>
                                                 </div>
                                         }
+
+                                        <button onClick={this.toggleTheme} className="" style={{ marginLeft: '15px', background: 'transparent'}}>
+                                            {
+                                                shared?.theme === 'dark' || !shared?.theme
+                                                    ? <i className="fa fa-sun" style={{ color: 'white' }} />
+                                                    : <i className="fa fa-moon" style={{ color: 'black' }} />
+                                            }
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +211,7 @@ class Navbar extends Component {
                                                         </li>
                                                         : null
                                                 }
+
                                             </ul>
                                         </nav>
                                         {/* nav item end */}

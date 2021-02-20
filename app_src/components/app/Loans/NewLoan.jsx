@@ -34,6 +34,7 @@ import Emoji from "react-emoji-render"
 import { fromBech32 } from '@harmony-js/crypto'
 
 class NewLoan extends Component {
+    
     state = {
         assetSymbol: 'DAI',
         assetSymbolIsInvalid: false,
@@ -185,9 +186,14 @@ class NewLoan extends Component {
 
         if (!asset || !amount) {
             if (!asset) this.setState({ assetSymbolIsInvalid: true })
-            if (!amount) this.setState({ amountIsInvalid: true })            
-            this.setState({ btnLoading: false })
+            if (!amount) {
+                this.setState({ amountIsInvalid: true })
+                toast.error('Select a valid amount', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+                this.setState({ btnLoading: false })
+                return
+            }            
             toast.error('Missing required fields', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            this.setState({ btnLoading: false })
             return
         }
 
@@ -260,9 +266,9 @@ class NewLoan extends Component {
                                         <div className="form-group">
                                             <div className="app-form-label text-black">1. Asset</div>
                                             <div className="details-container mt-2">
-                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Name: </span> {asset.name}</div>
-                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Blockchain: </span> {asset.blockchain}</div>
-                                                <div className="details-label "><span style={{ fontWeight: 'bold' }}>Contract: </span> {asset.contractAddress}</div>
+                                                <div className="details-label text-drk"><span style={{ fontWeight: 'bold' }}>Name: </span> {asset.name}</div>
+                                                <div className="details-label text-drk"><span style={{ fontWeight: 'bold' }}>Blockchain: </span> {asset.blockchain}</div>
+                                                <div className="details-label text-drk"><span style={{ fontWeight: 'bold' }}>Contract: </span> {asset.contractAddress}</div>
                                             </div>
                                             {/* <div className="input-group mt-3">
                                                 <input value={asset.contractAddress} readOnly={true} type="text" className={"form-control"} placeholder="Harmony Address" autoCorrect="false" autoComplete="false" />
@@ -272,10 +278,10 @@ class NewLoan extends Component {
 
                                         <div className="app-form-label text-black mt-2">2. Account</div>
                                         <div className="details-container mt-2">
-                                            <div className="details-label ">{shared?.account}</div>
+                                            <div className="details-label text-drk">{shared?.account}</div>
 
                                         </div>
-                                        <div style={{ color: this.state.aCoinLenderIsInvalid ? 'red' : 'black' }} className="text-left mt-2 mb-4">You will receive the borrower's seizable collateral to this address if he fails to repay the loan. </div>
+                                        <div className="text-left mt-2 mb-4 text-black">You will receive the borrower's seizable collateral to this address if he fails to repay the loan. </div>
 
 
                                         {/* <div className="form-group mt-4">
@@ -337,14 +343,14 @@ class NewLoan extends Component {
                                         </div>
                                         <div className="text-right text-black">Min: 1 | Max: 30 </div> */}
 
-                                        
+
 
                                         {
                                             !('email' in shared) || shared.email === undefined || shared.email === '' && (
                                                 <Fragment>
                                                     <div className="app-form-label text-black mt-2">4. Receive Email Notifications (Optional)</div>
                                                     <div className="">
-                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-blits mt-3" style={{ fontSize: '14px', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
+                                                        <button onClick={() => this.toggleEmailModal(true)} className="btn btn-blits mt-3" style={{ fontSize: '14px', color: 'white', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                             <Emoji text="✉️" onlyEmojiClassName="sm-emoji" />
                                                             <span style={{ marginLeft: 10 }}> Receive Email Notifications</span>
                                                         </button>

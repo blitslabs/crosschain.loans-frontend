@@ -9,6 +9,7 @@ export const SAVE_NETWORK = 'SAVE_NETWORK'
 export const SAVE_ACCOUNT = 'SAVE_ACCOUNT'
 export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
 export const SAVE_SELECTED_COLLATERAL_ASSET = 'SAVE_SELECTED_COLLATERAL_ASSET'
+export const CHANGE_THEME = 'CHANGE_THEME'
 
 export function saveNotificationEmail(email) {
     return {
@@ -84,5 +85,12 @@ export function toggleSidebar(value) {
     return {
         type: TOGGLE_SIDEBAR,
         sidebar: value
+    }
+}
+
+export function changeTheme(theme) {
+    return {
+        type: CHANGE_THEME,
+        theme,
     }
 }

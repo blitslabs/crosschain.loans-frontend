@@ -65,7 +65,7 @@ class BorrowDashboard extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', color: 'black' }}>Loan Book: Available Loans</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Loan Book: Available Loans</div>
                                         <div style={{ fontSize: '18px', marginTop: '10px' }}>Borrow assets across different blockchains</div>
                                     </div>
 
@@ -97,7 +97,7 @@ class BorrowDashboard extends Component {
                                                                 <tr key={i}>
                                                                     <td>#{l.contractLoanId}</td>
                                                                     <td className="loanBook__amount">{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} </td>
-                                                                    <td>{l.tokenSymbol}<img style={{ height: 20 }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img></td>
+                                                                    <td><img style={{ height: 20, marginRight: '5px' }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img> {l.tokenSymbol}</td>
                                                                     <td>{l.blockchain}</td>
                                                                     <td>
                                                                         <div className="loanBook__apr">
@@ -119,7 +119,7 @@ class BorrowDashboard extends Component {
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <a href={'/app/loan/' + l.id} className="btn btn-blits" style={{}}>Borrow</a>
+                                                                        <a href={'/app/loan/' + l.id} className="btn btn-blits" style={{ padding: '10px 15px' }}>Borrow</a>
                                                                     </td>
                                                                 </tr>
                                                             ))
