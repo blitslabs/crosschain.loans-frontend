@@ -53,8 +53,6 @@ class LoanDetails extends Component {
         loadingBtn: false,
         loanId: '',
         loadingMsg: 'Awaiting Confirmation',
-        eth_account: '',
-        one_account: '',
         showEmailModal: false,
         showCollateralModal: false
     }
@@ -68,8 +66,6 @@ class LoanDetails extends Component {
         if (!loanId) {
             history.push('/borrow')
         }
-
-        this.loadInitialData()
 
         getLoanDetails({ loanId })
             .then(res => res.json())
@@ -89,33 +85,6 @@ class LoanDetails extends Component {
             })
     }
 
-    loadInitialData = async () => {
-        // Get ETH Account
-        let eth_account
-        try {
-            eth_account = await ETH.getAccount()
-            eth_account = eth_account.payload
-        } catch (e) {
-            console.log(e)
-        }
-
-        // Get ONE Account
-        let one_account
-        try {
-            one_account = await ONE.getAccount()
-            one_account = fromBech32(one_account?.payload?.address)
-
-        } catch (e) {
-            console.log(e)
-            one_account = ''
-        }
-
-        this.setState({
-            eth_account,
-            one_account,
-        })
-    }
-
     componentWillUnmount() {
         clearInterval(this.intervalId)
     }
@@ -124,7 +93,7 @@ class LoanDetails extends Component {
      * @dev Lock Collateral
      */
     handleLockCollateralBtn = async (selectedCollateralAsset) => {
-       
+
         const { loanDetails, prices, protocolContracts, shared } = this.props
         const {
             aCoinLenderAddress, secretHashB1, principal, contractLoanId, loansContractAddress
@@ -619,7 +588,7 @@ class LoanDetails extends Component {
 
         const { loanDetails, prices, shared } = this.props
         const {
-            loanId, loading, loadingBtn, eth_account, one_account, loadingMsg, showEmailModal,
+            loanId, loading, loadingBtn, loadingMsg, showEmailModal,
             showCollateralModal
         } = this.state
 
@@ -714,7 +683,7 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 2 && !loadingBtn && eth_account?.toUpperCase() == borrower?.toUpperCase()) && (
+                                                    (status == 2 && !loadingBtn && shared?.account?.toUpperCase() == borrower?.toUpperCase()) && (
                                                         <button onClick={this.handleWithdrawBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Withdraw Principal
@@ -735,7 +704,7 @@ class LoanDetails extends Component {
                                                     (
                                                         status == 4 &&
                                                         !loadingBtn &&
-                                                        eth_account?.toUpperCase() == lender?.toUpperCase() &&
+                                                        shared?.account?.toUpperCase() == lender?.toUpperCase() &&
                                                         parseInt(acceptExpiration) > Math.floor(Date.now() / 1000)
                                                     ) && (
                                                         <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
@@ -749,7 +718,7 @@ class LoanDetails extends Component {
                                                     (
                                                         status == 4 &&
                                                         !loadingBtn &&
-                                                        eth_account?.toUpperCase() == lender?.toUpperCase() &&
+                                                        shared?.account?.toUpperCase() == lender?.toUpperCase() &&
                                                         parseInt(acceptExpiration) < Math.floor(Date.now() / 1000)
                                                     ) && (
                                                         <button onClick={this.handleRefundRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
@@ -760,7 +729,7 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    (status == 4 && !loadingBtn && eth_account?.toUpperCase() != lender?.toUpperCase()) && (
+                                                    (status == 4 && !loadingBtn && shared?.account?.toUpperCase() != lender?.toUpperCase()) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
                                                             Awaiting for Lender to accept repayment. Once it's accepted you'll be able to unlock your collateral.
                                                             If the repayment is not accepted before the expiration, then you'll be able to refund your repayment and unlock your refundable collateral.
@@ -769,7 +738,7 @@ class LoanDetails extends Component {
                                                 }
 
                                                 {
-                                                    ((status == 6 || status == 7) && !loadingBtn && collateralStatus === 'Locked' && one_account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
+                                                    ((status == 6 || status == 7) && !loadingBtn && collateralStatus === 'Locked' && shared?.account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
                                                         <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Unlock Collateral
@@ -782,8 +751,8 @@ class LoanDetails extends Component {
                                                         !loadingBtn &&
                                                         'loanExpiration' in collateralLock && parseInt(collateralLock.loanExpiration) < Math.floor(Date.now() / 1000) &&
                                                         (
-                                                            one_account?.toUpperCase() == collateralLock.borrower?.toUpperCase() ||
-                                                            one_account?.toUpperCase() == collateralLock.lender?.toUpperCase()
+                                                            shared?.account?.toUpperCase() == collateralLock.borrower?.toUpperCase() ||
+                                                            shared?.account?.toUpperCase() == collateralLock.lender?.toUpperCase()
                                                         ) &&
                                                         collateralStatus === 'Locked' &&
                                                         parseInt(status) >= 3
@@ -797,7 +766,7 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (
-                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && eth_account?.toUpperCase() == lender?.toUpperCase()
+                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account?.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
                                                         <button onClick={this.handleApproveBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
@@ -808,7 +777,7 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (
-                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn /*&& eth_account?.toUpperCase() != lender?.toUpperCase()*/
+                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account.toUpperCase() != lender?.toUpperCase()
                                                     ) && (
                                                         <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
                                                             Please wait while the lender approves the loan. We will notify you once it is approved. You are one step away from withdrawing the loan's principal.
@@ -818,7 +787,17 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (
-                                                        status == 1 && !loadingBtn && eth_account?.toUpperCase() == lender?.toUpperCase()
+                                                        (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account.toUpperCase() == lender?.toUpperCase()
+                                                    ) && (
+                                                        <div className="text-left mt-4 mb-4" style={{ color: 'black' }}>
+                                                            Approve the loan if the Borrower Locked enough Collateral. We will notify him once it is approved so he can withdraw the principal.
+                                                        </div>
+                                                    )
+                                                }
+
+                                                {
+                                                    (
+                                                        status == 1 && !loadingBtn && shared?.account?.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
                                                         <button onClick={this.handleCancelBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
