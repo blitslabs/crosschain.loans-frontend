@@ -466,7 +466,7 @@ const BlitsLoans = {
                     lender, secretHashA1, secretHashB1, bCoinBorrowerAddress,
                     bCoinLoanId, loansContractAddress
                 ).send({
-                    value: BigNumber(amount).multipliedBy(1e18),
+                    value: parseInt(BigNumber(amount).multipliedBy(1e18)),
                     from: accounts[0],
                     gasPrice,
                     gasLimit
