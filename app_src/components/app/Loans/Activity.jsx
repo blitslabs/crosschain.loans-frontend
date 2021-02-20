@@ -32,14 +32,12 @@ import { getActivityHistory } from '../../../utils/api'
 const ETHERSCAN = 'https://etherscan.io/'
 
 const EXPLORER = {
-    mainnet: {
-        ETH: 'https://etherscan.io/',
-        ONE: 'https://explorer.harmony.one/#/'
-    },
-    testnet: {
-        ETH: 'https://ropsten.etherscan.io/',
-        ONE: 'https://explorer.testnet.harmony.one/#/'
-    }
+    '1': 'https://etherscan.io/',
+    '3': 'https://ropsten.etherscan.io/',
+    '56': 'https://bscscan.com/',
+    '97': 'https://testnet.bscscan.com/',
+    '1666600000': 'https://explorer.harmony.one/#/',
+    '1666700000': 'https://explorer.testnet.harmony.one/#/'
 }
 
 class Activity extends Component {
@@ -114,7 +112,7 @@ class Activity extends Component {
                                                     {
                                                         Object.values(activity).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
 
-                                                            const explorer = EXPLORER[e.network][e.blockchain]
+                                                            const explorer = EXPLORER[e.networkId]
                                                             const txHashUrl = `${explorer}tx/${e.txHash}`
                                                             const contractUrl = `${explorer}address/${e.contractAddress}`
                                                             const loanId = 'bCoinContractLoanId' in e.details ? e.details.bCoinContractLoanId : e.details.contractLoanId
@@ -129,7 +127,7 @@ class Activity extends Component {
                                                                         </div>
                                                                     </td>
                                                                     <td>{e.blockchain}</td>
-                                                                    <td>{e.network}</td>
+                                                                    <td>{e.networkId}</td>
                                                                     <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
                                                                     <td>{loanId}</td>
                                                                     <td>{moment(e.createdAt).format()}</td>
