@@ -160,9 +160,9 @@ class LoanDetails extends Component {
 
     handleCancelBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { contractLoanId } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
@@ -198,8 +198,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'CancelLoan',
+            networkId: shared?.networkId,
             txHash: response.payload.transactionHash
         }
 
@@ -363,9 +363,9 @@ class LoanDetails extends Component {
 
     handleAcceptRepaymentBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { contractLoanId } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
@@ -378,7 +378,6 @@ class LoanDetails extends Component {
             if (l == contractLoanId) break;
         }
         console.log(userLoansCount)
-
 
         // Generate secretHash        
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to create the loan. Lender Nonce: ${userLoansCount}. Loans Contract: ${loansContract}`
@@ -403,8 +402,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'LoanRepaymentAccepted',
+            networkId: shared?.networkId,            
             txHash: response.payload.transactionHash
         }
 
