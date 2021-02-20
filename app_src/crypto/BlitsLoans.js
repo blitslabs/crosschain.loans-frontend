@@ -506,7 +506,7 @@ const BlitsLoans = {
 
             // Set Gas
             const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()))
-            const gasLimit = '500000'
+            const gasLimit = '100000'
 
             try {
                 const tx = await contract.methods.unlockCollateralAndCloseLoan(
@@ -552,8 +552,8 @@ const BlitsLoans = {
             }
 
             // Set Gas
-            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
-            const gasLimit = '500000'
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()))
+            const gasLimit = '100000'
             
             try {
                 const tx = await contract.methods.seizeCollateral(

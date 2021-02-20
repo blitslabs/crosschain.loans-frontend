@@ -13,36 +13,26 @@ import CollateralModal from './CollateralModal'
 import '../styles.css'
 
 // Libraries
-import Web3 from 'web3'
-import { sha256 } from '@liquality-dev/crypto'
 import moment from 'moment'
-import { Harmony, HarmonyExtension } from '@harmony-js/core'
-import { ChainID, ChainType } from '@harmony-js/utils'
 import ReactLoading from 'react-loading'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import Stepper from 'react-stepper-horizontal'
 import BlitsLoans from '../../../crypto/BlitsLoans'
 import ETH from '../../../crypto/ETH'
-import ONE from '../../../crypto/ONE'
+import { Prompt } from 'react-router'
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
-import ABI from '../../../crypto/ABI'
-import { fromBech32 } from '@harmony-js/crypto'
-import { Prompt } from 'react-router'
 
 // API
 import {
-    getLoanDetails, getNewEngineSecretHash,
-    getAccountLoansCount, getLoanNonce,
+    getLoanDetails,
     confirmLoanOperation,
     confirmCollateralLockOperation
 } from '../../../utils/api'
 
 // Actions
 import { saveLoanDetails } from '../../../actions/loanDetails'
-import { saveLoanSettings } from '../../../actions/loanSettings'
-
 
 class LoanDetails extends Component {
 
@@ -324,7 +314,7 @@ class LoanDetails extends Component {
         const repayment = new BigNumber(principal).plus(interest)
         const allowance = await ETH.getAllowance(loansContract, tokenContractAddress)
         console.log(allowance)
-        
+
         if (!repayment.lt(allowance?.payload)) {
             const allowance_res = await ETH.approveAllowance(loansContract, '10000', tokenContractAddress)
             console.log(allowance_res)
@@ -403,7 +393,7 @@ class LoanDetails extends Component {
 
         const params = {
             operation: 'LoanRepaymentAccepted',
-            networkId: shared?.networkId,            
+            networkId: shared?.networkId,
             txHash: response.payload.transactionHash
         }
 
@@ -433,7 +423,7 @@ class LoanDetails extends Component {
         const response = await BlitsLoans.ETH.unlockCollateral(
             contractLoanId,
             secretB1,
-            collateralLockContract,            
+            collateralLockContract,
         )
 
         if (response.status !== 'OK') {
@@ -465,19 +455,17 @@ class LoanDetails extends Component {
 
     handleSeizeCollateralBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { collateralLock, secretA1 } = loanDetails
-        const collateralLockContract = protocolContracts[providers.ethereum].CollateralLockV2_ONE.address
+        const collateralLockContract = protocolContracts[shared?.networkId].CollateralLockV2.address
         const { contractLoanId } = collateralLock
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
-        const response = await BlitsLoans.ONE.seizeCollateral(
+        const response = await BlitsLoans.ETH.seizeCollateral(
             contractLoanId,
             secretA1,
             collateralLockContract,
-            '0',
-            providers.ethereum === 'mainnet' ? 'mainnet' : 'testnet'
         )
 
         if (response.status !== 'OK') {
@@ -487,10 +475,9 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            txHash: response.payload,
-            blockchain: 'ONE',
-            operation: 'SeizeCollateral'
+            operation: 'SeizeCollateral',
+            networkId: shared?.networkId,
+            txHash: response.payload.transactionHash,
         }
 
         const intervalId = setInterval(() => {
@@ -510,9 +497,9 @@ class LoanDetails extends Component {
 
     handleRefundRepaymentBtn = async (e) => {
         e.preventDefault()
-        const { loanDetails, protocolContracts, providers } = this.props
+        const { loanDetails, protocolContracts, shared } = this.props
         const { contractLoanId } = loanDetails
-        const loansContract = protocolContracts[providers.ethereum].CrosschainLoans.address
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
@@ -525,8 +512,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
-            blockchain: 'ETH',
+            operation: 'RefundPayback',
+            networkId: shared?.networkId,
             txHash: response.payload.transactionHash
         }
 
@@ -553,7 +540,7 @@ class LoanDetails extends Component {
             getLoanDetails({ loanId })
                 .then(data => data.json())
                 .then((res) => {
-                    const { loanDetails, dispatch, providers } = self.props
+                    const { loanDetails, dispatch } = self.props
                     const { status, collateralLock } = loanDetails
                     console.log('Loan Status: ', res.payload.status)
                     if (res.status === 'OK') {
@@ -897,7 +884,7 @@ class LoanDetails extends Component {
 }
 
 
-function mapStateToProps({ loanDetails, prices, loanSettings, providers, protocolContracts, shared }, ownProps) {
+function mapStateToProps({ loanDetails, prices, loanSettings, protocolContracts, shared }, ownProps) {
 
     const loanId = ownProps.match.params.loanId
 
@@ -905,7 +892,6 @@ function mapStateToProps({ loanDetails, prices, loanSettings, providers, protoco
         loanDetails: loanDetails[loanId],
         prices,
         loanSettings,
-        providers,
         protocolContracts,
         shared
     }
