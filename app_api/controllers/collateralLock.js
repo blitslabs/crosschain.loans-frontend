@@ -12,6 +12,213 @@ const { ABI } = require('../config/ABI')
 const { getTxReceipt } = require('../utils/harmony')
 const emailNotification = require('./emailNotification')
 
+module.exports.confirmCollateralLockOperation = async (req, res) => {
+
+    const { networkId, operation, txHash } = req.body
+
+    if (!networkId || !operation || !txHash) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Missing arguments' })
+        return
+    }
+
+    if (!(operation === 'LockCollateral' || operation === 'UnlockAndClose' || operation === 'SeizeCollateral')) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Invalid Lock Collateral Operation' })
+        return
+    }
+
+    // Check if Event (operation) exists
+    const dbLoanEvent = await LoanEvent.findOne({
+        where: {
+            txHash
+        }
+    })
+
+    if (dbLoanEvent) {
+        sendJSONresponse(res, 200, { status: 'OK', message: 'Loan Event already saved' })
+        return
+    }
+
+    // Get Endpoint for Network
+    const endpoint = await Endpoint.findOne({
+        where: {
+            endpointType: 'HTTP',
+            networkId
+        }
+    })
+
+    if (!endpoint) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Endpoint not found' })
+        return
+    }
+
+    // Connect Provider
+    const provider = new Web3.providers.HttpProvider(endpoint.endpoint)
+    const web3 = new Web3(provider)
+
+    // Get Tx Receipt
+    const receipt = await web3.eth.getTransactionReceipt(txHash)
+
+    // Check Tx Status
+    if (receipt.status != true) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Invalid transaction hash' })
+        return
+    }
+
+    // Get Protocol Contract
+    const protocolContract = await ProtocolContract.findOne({
+        where: {
+            address: receipt.to,
+            networkId
+        }
+    })
+
+    if (!protocolContract) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Protocol Contract not found' })
+        return
+    }
+
+    // Get LogTopic
+    const logTopic = await LogTopic.findOne({
+        where: {
+            operation,
+            contractName: protocolContract.name,
+            status: 'ACTIVE'
+        }
+    })
+
+    if (!logTopic) {
+        sendJSONresponse(res, 422, { status: 'ERROR', message: 'Log Topic Not Found' })
+        return
+    }
+
+    // Get Event ABI
+    const eventInputs = ABI[protocolContract.name].abi.filter((e) => e.name === operation)
+
+    // Check Logs
+    // Get Encoded Data and Topics
+    let data, topics
+    for (let log of receipt.logs) {
+        for (let topic of log.topics) {
+            if (topic === logTopic.topic) {
+                data = log.data
+                topics = log.topics
+                break
+            }
+        }
+    }
+
+    // Decode Log
+    const logs = await web3.eth.abi.decodeLog(eventInputs[0].inputs, data, topics)
+
+    // Get LoanId
+    const { loanId } = logs
+
+    // Save Loan Event
+    const [loanEvent, loanEventCreated] = await LoanEvent.findOrCreate({
+        where: {
+            txHash
+        },
+        defaults: {
+            txHash,
+            event: operation,
+            loanId: loanId,
+            blockchain: protocolContract.blockchain,
+            networkId: protocolContract.networkId,
+            contractAddress: protocolContract.address
+        },
+
+    })
+
+    // Instantiate Contract
+    const contract = new web3.eth.Contract(ABI[protocolContract.name].abi, protocolContract.address)
+
+    /// Fetch CollateralLock Details
+    const lock = await contract.methods.fetchLoan(loanId).call()
+
+    // Save CollateralLock Details
+    const [dbCollateralLock, created] = await CollateralLock.findOrCreate({
+        where: {
+            contractLoanId: loanId,
+            blockchain: protocolContract.blockchain,
+            networkId: protocolContract.networkId
+        },
+        defaults: {
+            contractLoanId: loanId,
+            bCoinContractLoanId: lock.bCoinLoanId,
+            borrower: lock.actors[0],
+            lender: lock.actors[1],
+            bCoinBorrowerAddress: lock.actors[2],
+            secretHashA1: lock.secretHashes[0],
+            secretHashB1: lock.secretHashes[1],
+            secretA1: lock.secrets[0],
+            secretB1: lock.secrets[1],
+            loanExpiration: lock.expirations[0].toString(),
+            collateral: (new BigNumber(lock.details[0]).dividedBy(1e18)).toString(),
+            collateralValue: (new BigNumber(lock.details[1]).dividedBy(1e18)).toString(),
+            lockPrice: (new BigNumber(lock.details[2]).dividedBy(1e18)).toString(),
+            liquidationPrice: (new BigNumber(lock.details[3]).dividedBy(1e18)).toString(),
+            status: lock.state,
+            blockchain: protocolContract.blockchain,
+            networkId: protocolContract.networkId,
+            collateralLockContractAddress: protocolContract.address,
+            loansContractAddress: lock.loansContractAddress
+        }
+    })
+
+
+    if (created && lock.state == 0) {
+
+        const dbLoan = await Loan.findOne({
+            where: {
+                contractLoanId: lock.bCoinLoanId,
+                loansContractAddress: lock.loansContractAddress,
+                status: 1
+            },
+        })
+
+        if (!dbLoan) {
+            console.log('Matching loan not found for lock: ', loanId)
+            sendJSONresponse(res, 422, { status: 'ERROR', message: 'Matching Loan Not Found'})
+            return
+        }
+
+        // Hide Loan From Available Loans List
+        dbLoan.status = 1.5
+        await dbLoan.save()
+
+        // Send Email Notification (Borrower & Lender)
+        try {
+            emailNotification.sendCollateralLocked(dbCollateralLock.id)
+                .then(res => console.log(res))
+        } catch (e) {
+            console.error(e)
+        }
+
+    } else {
+        dbCollateralLock.secretA1 = lock.secrets[0]
+        dbCollateralLock.secretB1 = lock.secrets[1]
+        dbCollateralLock.status = lock.state
+        await dbCollateralLock.save()
+
+        if (operation === 'UnlockAndClose') {
+            try {
+                emailNotification.sendCollateralUnlocked(dbCollateralLock.id)
+            } catch (e) {
+                console.error(e)
+            }
+        } else if (operation === 'SeizeCollateral') {
+            try {
+                emailNotification.sendCollateralSeized(dbCollateralLock.id)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
+
+    sendJSONresponse(res, 200, { status: 'OK', message: 'Collateral Lock Operation Confirmed' })
+    return
+}
+
 module.exports.confirmCollateralLockOperation_ONE = async (req, res) => {
 
     let { blockchain, network, operation, txHash } = req.body

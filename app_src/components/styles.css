@@ -455,3 +455,19 @@ a {
     border-radius: 25px;
     margin-right: 10px;
 }
+
+.asset-select-btn {
+    background: white;    
+}
+
+.asset-select-btn:hover, .asset-select-btn:hover div{
+    color: white !important;
+    background: black !important;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 10%) !important;
+}
+
+.asset-select-text {
+    font-size: 12px;
+    margin-top: 15px;
+    color: black;
+}

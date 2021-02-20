@@ -8,6 +8,7 @@ export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SAVE_NETWORK = 'SAVE_NETWORK'
 export const SAVE_ACCOUNT = 'SAVE_ACCOUNT'
 export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
+export const SAVE_SELECTED_COLLATERAL_ASSET = 'SAVE_SELECTED_COLLATERAL_ASSET'
 
 export function saveNotificationEmail(email) {
     return {
@@ -27,6 +28,13 @@ export function saveAccount(account) {
     return {
         type: SAVE_ACCOUNT,
         account
+    }
+}
+
+export function saveSelectedCollateralAsset(asset) {
+    return {
+        type: SAVE_SELECTED_COLLATERAL_ASSET,
+        asset
     }
 }
 

@@ -457,7 +457,7 @@ const BlitsLoans = {
             }
 
             // Set Gas
-            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()).multipliedBy(1e9))
+            const gasPrice = parseInt(new BigNumber(await web3.eth.getGasPrice()))
             const gasLimit = '500000'
 
             try {

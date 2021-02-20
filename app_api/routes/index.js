@@ -26,7 +26,7 @@ router.get('/loans/account/:account/:network', loan.getAccountLoans)
 
 // Collateral Lock
 router.post('/collateralLock/ONE/operation/confirm', collateralLock.confirmCollateralLockOperation_ONE)
-
+router.post('/collateralLock/operation/confirm', collateralLock.confirmCollateralLockOperation)
 
 router.get('/updateCollateralLock_ONE/:network', collateralLock.updateCollateralLockData_ONE)
 router.get('/updateCollateralLock_ETH/:network', collateralLock.updateCollateralLockData_ETH)

@@ -41,7 +41,7 @@ export function confirmLoanOperation(params) {
 }
 
 export function confirmCollateralLockOperation(params) {
-    return fetch(API_HOST + `collateralLock/${params.blockchain}/operation/confirm`, {
+    return fetch(API_HOST + `collateralLock/operation/confirm`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

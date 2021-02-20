@@ -7,6 +7,7 @@ import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Loading from '../../Loading'
 import EmailModal from './EmailModal'
+import CollateralModal from './CollateralModal'
 
 // Styles
 import '../styles.css'
@@ -54,7 +55,8 @@ class LoanDetails extends Component {
         loadingMsg: 'Awaiting Confirmation',
         eth_account: '',
         one_account: '',
-        showEmailModal: false
+        showEmailModal: false,
+        showCollateralModal: false
     }
 
     componentDidMount() {
@@ -121,19 +123,19 @@ class LoanDetails extends Component {
     /**
      * @dev Lock Collateral
      */
-    handleLockCollateralBtn = async (e) => {
-        e.preventDefault()
+    handleLockCollateralBtn = async (selectedCollateralAsset) => {
+       
         const { loanDetails, prices, protocolContracts, shared } = this.props
         const {
             aCoinLenderAddress, secretHashB1, principal, contractLoanId, loansContractAddress
         } = loanDetails
 
-        const collateralLockContract = protocolContracts[shared?.networkId]?.CollateralLockV2?.address        
-        const requiredCollateral = parseFloat(BigNumber(principal).div(prices.ONE.usd).times(1.5)).toFixed(2)
+        const collateralLockContract = protocolContracts[shared?.networkId]?.CollateralLockV2?.address
+        const requiredCollateral = parseFloat(BigNumber(principal).div(prices[selectedCollateralAsset].usd).times(1.5))
 
         this.setState({ loadingBtn: true, loadingMsg: 'Awaiting Confirmation' })
 
-        const bCoinBorrowerAddress = (await ETH.getAccount()).payload        
+        const bCoinBorrowerAddress = (await ETH.getAccount()).payload
 
         // Generate secretHash
         const message = `You are signing this message to generate secrets for the Hash Time Locked Contracts required to lock the collateral. LoanID: ${contractLoanId}. Collateral Lock Contract: ${collateralLockContract}`
@@ -156,7 +158,7 @@ class LoanDetails extends Component {
             collateralLockContract,
             bCoinBorrowerAddress,
             contractLoanId,
-            loansContractAddress,            
+            loansContractAddress,
         )
 
         console.log(response)
@@ -168,9 +170,8 @@ class LoanDetails extends Component {
         }
 
         const params = {
-            network: providers.ethereum,
+            networkId: shared?.networkId,
             txHash: response.payload,
-            blockchain: 'ONE',
             operation: 'LockCollateral'
         }
 
@@ -612,11 +613,15 @@ class LoanDetails extends Component {
     }
 
     toggleEmailModal = (value) => this.setState({ showEmailModal: value })
+    toggleCollateralModal = (value) => this.setState({ showCollateralModal: value })
 
     render() {
 
         const { loanDetails, prices, shared } = this.props
-        const { loanId, loading, loadingBtn, eth_account, one_account, loadingMsg, showEmailModal } = this.state
+        const {
+            loanId, loading, loadingBtn, eth_account, one_account, loadingMsg, showEmailModal,
+            showCollateralModal
+        } = this.state
 
         if (loading) {
             return <Loading />
@@ -627,8 +632,8 @@ class LoanDetails extends Component {
             status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress
         } = loanDetails
 
-        const collateralPrice = BigNumber(prices.ONE.usd)
-        const requiredCollateral = parseFloat(BigNumber(principal).div(collateralPrice).times(1.5)).toFixed(2)
+        const collateralPrice = BigNumber(prices[shared?.collateral_asset].usd)
+        const requiredCollateral = parseFloat(BigNumber(principal).div(collateralPrice).times(1.5))
         const requiredCollateralValue = parseFloat(BigNumber(requiredCollateral).times(collateralPrice)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(principal).plus(interest)).toFixed(8)
         const apr = parseFloat(BigNumber(interest).times(100).div(principal).times(12)).toFixed(2)
@@ -664,7 +669,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title">APR</div>
                                                 <div className="label-value">{apr}%</div>
                                                 <div className="label-title mt-4">Required Collateral</div>
-                                                <div className="label-value">{requiredCollateral} ONE</div>
+                                                <div className="label-value">{requiredCollateral.toFixed(8)} {shared?.collateral_asset}</div>
                                                 <div className="label-title mt-4">Collateral Value</div>
                                                 <div className="label-value">${requiredCollateralValue}</div>
                                                 <div className="label-title mt-4">Coll. Ratio</div>
@@ -674,7 +679,7 @@ class LoanDetails extends Component {
                                                 <div className="label-title">Loan Status</div>
                                                 <div className="label-value" style={{ color: '#32ccdd' }}>{loanStatus}</div>
                                                 <div className="label-title mt-4">Collateral Status</div>
-                                                <div className="label-value" style={{ color: '#32ccdd' }}><span style={{ }}>{collateralStatus === 'Locked' ? loanDetails?.collateralLock.collateral : ''} {loanDetails?.collateralLock?.blockchain}</span>  {collateralStatus} </div>
+                                                <div className="label-value" style={{ color: '#32ccdd' }}><span style={{}}>{collateralStatus === 'Locked' ? parseFloat(loanDetails?.collateralLock?.collateral)?.toFixed(8) : ''} {loanDetails?.collateralLock?.blockchain}</span>  {collateralStatus} </div>
                                                 <div className="label-title mt-4">Lender</div>
                                                 <div className="label-value">
                                                     <a target='_blank' href={'https://etherscan.com/address/' + lender}>{lender.substring(0, 4)}...{lender.substr(lender.length - 4)}</a>
@@ -701,7 +706,7 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (status == 1 && !loadingBtn) && (
-                                                        <button onClick={this.handleLockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button onClick={() => this.toggleCollateralModal(true)} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
                                                             Lock Collateral
                                                         </button>
@@ -847,7 +852,7 @@ class LoanDetails extends Component {
                                         [
                                             { title: 'Funded' },
                                             { title: 'Lock Collateral' },
-                                            { title: 'Approve Loan'},
+                                            { title: 'Approve Loan' },
                                             { title: 'Withdraw Principal' },
                                             { title: 'Repay Loan' },
                                             { title: 'Redund Payback' },
@@ -859,7 +864,7 @@ class LoanDetails extends Component {
                                             [
                                                 { title: 'Funded' },
                                                 { title: 'Lock Collateral' },
-                                                { title: 'Approve Loan'},
+                                                { title: 'Approve Loan' },
                                                 { title: 'Withdraw Principal' },
                                                 { title: 'Seize Collateral' },
                                             ]
@@ -867,7 +872,7 @@ class LoanDetails extends Component {
                                             [
                                                 { title: 'Funded' },
                                                 { title: 'Lock Collateral' },
-                                                { title: 'Approve Loan'},
+                                                { title: 'Approve Loan' },
                                                 { title: 'Withdraw Principal' },
                                                 { title: 'Repay Loan' },
                                                 { title: 'Repayment Accepted' },
@@ -884,6 +889,16 @@ class LoanDetails extends Component {
                 {
                     showEmailModal && <EmailModal isOpen={showEmailModal} toggleModal={this.toggleEmailModal} />
                 }
+
+                {
+                    showCollateralModal &&
+                    <CollateralModal
+                        isOpen={showCollateralModal}
+                        toggleModal={this.toggleCollateralModal}
+                        lockCollateral={this.handleLockCollateralBtn}
+                    />
+                }
+
                 <Prompt
                     when={loadingBtn}
                     message='You have a pending transaction, are you sure you want to leave?'
