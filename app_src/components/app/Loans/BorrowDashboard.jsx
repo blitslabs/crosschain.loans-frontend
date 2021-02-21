@@ -60,6 +60,7 @@ class BorrowDashboard extends Component {
             <Fragment>
                 <div className="main">
                     <Navbar />
+
                     <section className="section " style={{ paddingTop: '10rem' }}>
                         <div className="container">
                             <div className="row">
@@ -79,58 +80,59 @@ class BorrowDashboard extends Component {
                                         availableLoans && Object.values(availableLoans).length > 0
                                             ?
                                             <div className="panel panel-default">
-                                                <table className="table loanBook table-striped ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Amount</th>
-                                                            <th>Asset</th>
-                                                            <th>Chain</th>
-                                                            <th>APR</th>
-                                                            <th>Term</th>
-                                                            <th>Repayment</th>
-                                                            <th>Interest</th>
-                                                            <th>Lender</th>
-                                                            <th>Status</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            Object.values(availableLoans).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
-                                                                <tr key={i}>
-                                                                    <td>#{l.contractLoanId}</td>
-                                                                    <td className="loanBook__amount">{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} </td>
-                                                                    <td><img style={{ height: 20, marginRight: '5px' }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img> {l.tokenSymbol}</td>
-                                                                    <td>{NETWORKS[l?.networkId]}</td>
-                                                                    <td>
-                                                                        <div className="loanBook__apr">
-                                                                            {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
+                                                <div className="table-responsive">
+                                                    <table className="table loanBook table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Amount</th>
+                                                                <th>Asset</th>
+                                                                <th>Chain</th>
+                                                                <th>APR</th>
+                                                                <th>Term</th>
+                                                                <th>Repayment</th>
+                                                                <th>Interest</th>
+                                                                <th>Lender</th>
+                                                                <th>Status</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                Object.values(availableLoans).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
+                                                                    <tr key={i}>
+                                                                        <td>#{l.contractLoanId}</td>
+                                                                        <td className="loanBook__amount">{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} </td>
+                                                                        <td><img style={{ height: 20, marginRight: '5px' }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img> {l.tokenSymbol}</td>
+                                                                        <td>{NETWORKS[l?.networkId]}</td>
+                                                                        <td>
+                                                                            <div className="loanBook__apr">
+                                                                                {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
                                                                     </div>
-                                                                    </td>
-                                                                    <td>30d</td>
+                                                                        </td>
+                                                                        <td>30d</td>
 
-                                                                    <td>
-                                                                        {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                    </td>
-                                                                    <td>
-                                                                        {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                    </td>
-                                                                    <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
-                                                                    <td>
-                                                                        <div className="loanBook__apr">
-                                                                            {l.status === '1' ? 'Funded' : '-'}
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <Link to={'/app/loan/' + l.id} className="btn btn-blits" style={{ padding: '10px 15px' }}>Borrow</Link>
-                                                                    </td>
-                                                                </tr>
-                                                            ))
-                                                        }
-                                                    </tbody>
-
-                                                </table>
+                                                                        <td>
+                                                                            {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
+                                                                        </td>
+                                                                        <td>
+                                                                            {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
+                                                                        </td>
+                                                                        <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
+                                                                        <td>
+                                                                            <div className="loanBook__apr">
+                                                                                {l.status === '1' ? 'Funded' : '-'}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <Link to={'/app/loan/' + l.id} className="btn btn-blits" style={{ padding: '10px 15px' }}>Borrow</Link>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                             : <div className="text-center">No available loans found</div>
                                     }
@@ -139,8 +141,10 @@ class BorrowDashboard extends Component {
                                 </div>
                             </div>
                         </div>
-                    </section>
 
+                    </section>
+                    <img src="http://localhost:3000/assets/images/abs_3.png" className="abstract_img_2" alt="" />
+                    <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
             </Fragment >
         )

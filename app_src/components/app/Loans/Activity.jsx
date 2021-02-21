@@ -81,56 +81,58 @@ class Activity extends Component {
                                         <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Activity Explorer</div>
                                         <div style={{ fontSize: '18px', marginTop: '10px' }}>Explore the protocol's recent activity</div>
                                     </div>
-                                    <TestnetDataCheckbox/>
+                                    <TestnetDataCheckbox />
                                     {
 
                                         (activity && Object.values(activity).length > 0)
                                             ?
-                                            <table className="table loanBook table-striped " >
-                                                <thead>
-                                                    <tr>
-                                                        <th>TxHash</th>
-                                                        <th>Event</th>
-                                                        <th>Blockchain</th>
-                                                        <th>Network</th>
-                                                        <th>Contract</th>
-                                                        <th>Loan ID</th>
-                                                        {/* <th>Account</th> */}
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {
-                                                        Object.values(activity).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
+                                            <div className="table-responsive">
+                                                <table className="table loanBook table-striped" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th>TxHash</th>
+                                                            <th>Event</th>
+                                                            <th>Blockchain</th>
+                                                            <th>Network</th>
+                                                            <th>Contract</th>
+                                                            <th>Loan ID</th>
+                                                            {/* <th>Account</th> */}
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            Object.values(activity).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
 
-                                                            const explorer = EXPLORER[e.networkId]
-                                                            const txHashUrl = `${explorer}tx/${e.txHash}`
-                                                            const contractUrl = `${explorer}address/${e.contractAddress}`
-                                                            const loanId = 'bCoinContractLoanId' in e.details ? e.details.bCoinContractLoanId : e.details.contractLoanId
-                                                            const loanUrl = `${process.env.SERVER_HOST}/app/loan/${loanId}`
+                                                                const explorer = EXPLORER[e.networkId]
+                                                                const txHashUrl = `${explorer}tx/${e.txHash}`
+                                                                const contractUrl = `${explorer}address/${e.contractAddress}`
+                                                                const loanId = 'bCoinContractLoanId' in e.details ? e.details.bCoinContractLoanId : e.details.contractLoanId
+                                                                const loanUrl = `${process.env.SERVER_HOST}/app/loan/${loanId}`
 
-                                                            return (
-                                                                <tr key={i}>
-                                                                    <td><a target='_blank' href={txHashUrl}>{e.txHash.substring(0, 4)}...{e.txHash.substr(e.txHash.length - 4)}</a></td>
-                                                                    <td style={{ textAlign: 'left' }}>
-                                                                        <div className="loanBook__apr">
-                                                                            {e.event}
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{e.blockchain}</td>
-                                                                    <td>{e.networkId}</td>
-                                                                    <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
-                                                                    <td>{loanId}</td>
-                                                                    <td>{moment(e.createdAt).format()}</td>
-                                                                    {/* <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol} ({l.blockchain})</td> */}
+                                                                return (
+                                                                    <tr key={i}>
+                                                                        <td><a target='_blank' href={txHashUrl}>{e.txHash.substring(0, 4)}...{e.txHash.substr(e.txHash.length - 4)}</a></td>
+                                                                        <td style={{ textAlign: 'left' }}>
+                                                                            <div className="loanBook__apr">
+                                                                                {e.event}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>{e.blockchain}</td>
+                                                                        <td>{e.networkId}</td>
+                                                                        <td><a target='_blank' href={contractUrl}>{e.contractAddress.substring(0, 4)}...{e.contractAddress.substring(e.contractAddress.length - 4)}</a></td>
+                                                                        <td>{loanId}</td>
+                                                                        <td>{moment(e.createdAt).format()}</td>
+                                                                        {/* <td style={{ fontWeight: 'bold', color: 'black' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol} ({l.blockchain})</td> */}
 
 
-                                                                </tr>
-                                                            )
-                                                        })
-                                                    }
-                                                </tbody>
-                                            </table>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             :
                                             loading ? (
                                                 <div className="loading-table text-center">
