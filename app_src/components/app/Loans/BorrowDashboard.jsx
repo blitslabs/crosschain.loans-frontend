@@ -143,9 +143,10 @@ class BorrowDashboard extends Component {
                         </div>
 
                     </section>
-                    <img src="http://localhost:3000/assets/images/abs_3.png" className="abstract_img_2" alt="" />
+                    {/* <img src="http://localhost:3000/assets/images/abs_3.png" className="abstract_img_2" alt="" /> */}
                     <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
+                <Footer/>
             </Fragment >
         )
     }

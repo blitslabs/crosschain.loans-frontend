@@ -18,18 +18,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MediaQuery from 'react-responsive'
 import Gravatar from 'react-gravatar'
+import { NETWORKS, MAINNET_NETWORKS } from '../../../crypto/Networks'
 
 // Components
 import ConnectModal from './ConnectModal'
-
-const NETWORKS = {
-    '1': 'ETH-mainnet',
-    '3': 'ETH-ropsten',
-    '56': 'BNB-mainnet',
-    '97': 'BNB-testnet',
-    '1666600000': 'ONE-mainnet',
-    '1666700000': 'ONE-testnet'
-}
 
 class Navbar extends Component {
 
@@ -134,6 +126,7 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
+
                                                 {
                                                     shared?.account
                                                         ?
@@ -142,6 +135,10 @@ class Navbar extends Component {
                                                         </li>
                                                         : null
                                                 }
+
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link" to="/app/supported_networks">Networks</Link>
+                                                </li>
                                             </ul>
                                         </nav>
 
@@ -163,7 +160,7 @@ class Navbar extends Component {
                                                 </div>
                                         }
 
-                                        <button onClick={this.toggleTheme} className="" style={{ marginLeft: '15px', background: 'transparent'}}>
+                                        <button onClick={this.toggleTheme} className="" style={{ marginLeft: '15px', background: 'transparent' }}>
                                             {
                                                 shared?.theme === 'dark' || !shared?.theme
                                                     ? <i className="fa fa-sun" style={{ color: 'white' }} />

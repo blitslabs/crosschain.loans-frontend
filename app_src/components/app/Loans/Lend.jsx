@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 // Components
 import Navbar from './Navbar'
+import Footer from './Footer'
 import AssetCard from './AssetCard'
 import Loading from '../../Loading'
 import TestnetDataCheckbox from './TestnetDataCheckbox'
@@ -65,7 +66,9 @@ class Lend extends Component {
                             </div>
                         </div>
                     </section>
+                    <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
+                <Footer/>
             </Fragment>
         )
     }

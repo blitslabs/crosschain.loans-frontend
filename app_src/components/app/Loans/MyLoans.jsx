@@ -166,7 +166,7 @@ class MyLoans extends Component {
                                                             ⌛ Loading...
                                                         </div>
                                                     )
-                                                        : <div className="loading-table text-center">🔍 No borrows found</div>
+                                                        : <div className="loading-table text-center">🔍 No loans found</div>
                                             }
                                         </TabPanel>
 
@@ -257,8 +257,9 @@ class MyLoans extends Component {
                             </div>
                         </div>
                     </section>
-
+                    <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
+                <Footer/>
             </Fragment >
         )
     }

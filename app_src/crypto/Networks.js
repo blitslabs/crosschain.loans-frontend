@@ -8,6 +8,7 @@ export const NETWORKS = {
     '1666700000': 'ONE-testnet'
 }
 
+export const MAINNET_NETWORKS = ['1', '56', '1666600000']
 export const TESTNET_NETWORKS = ['3', '97', '1666700000']
 
 export const EXPLORER = {

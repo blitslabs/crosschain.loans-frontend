@@ -12,6 +12,7 @@ import LoanDetails from './Loans/LoanDetails'
 import MyLoans from './Loans/MyLoans'
 import Activity from './Loans/Activity'
 import LoanCreated from './Loans/LoanCreated'
+
 // import SelectAsset from './Loans/SelectAsset'
 
 // Styles
@@ -20,18 +21,19 @@ import './Loans/loans_styles.css'
 class AppRouter extends Component {
     render() {
         const { match, auth } = this.props
-        console.log(match.path)
+        console.log(`${match.path}test`)
         return (
             <Fragment>
-                <Route path={match.path} exact component={Home} />
+                {/* <Route path={match.path} exact component={Home} />
                 <Route path={`${match.path}loans`} exact component={Home} />
                 <Route path={`${match.path}borrow`} component={BorrowDashboard} />
                 <Route path={`${match.path}lend`} exact={true} component={NewLoan} />
                 <Route path={`${match.path}lend/confirm`} component={ConfirmLoan} />
                 <Route path={`${match.path}loan/:loanId`} component={LoanDetails} />
                 <Route path={`${match.path}myloans`} component={MyLoans} />
-                <Route path={`${match.path}activity`} component={Activity} />                
-                <Route path={`${match.path}loan_created`} component={LoanCreated} />
+                <Route path={`${match.path}activity`} component={Activity} />
+                <Route path={`${match.path}loan_created`} component={LoanCreated} /> */}
+                
             </Fragment>
         )
     }

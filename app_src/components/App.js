@@ -19,7 +19,7 @@ import LoanCreated from './app/Loans/LoanCreated'
 import LoanDetails from './app/Loans/LoanDetails'
 import Activity from './app/Loans/Activity'
 import MyLoans from './app/Loans/MyLoans'
-
+import SupportedNetworks from './app/Loans/SupportedNetworks'
 // import './styles.css'
 
 // API
@@ -168,6 +168,7 @@ class App extends Component {
                 <Route path='/app/loan/:loanId' component={LoanDetails} />
                 <Route path='/app/activity' component={Activity} />
                 <Route path='/app/myloans' component={MyLoans} />
+                <Route path='/app/supported_networks' component={SupportedNetworks} />
               </Fragment>
           }
         </Fragment>

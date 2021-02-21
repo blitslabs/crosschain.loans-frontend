@@ -23,6 +23,7 @@ import ETH from '../../../crypto/ETH'
 import { Prompt } from 'react-router'
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
+import { NETWORKS, MAINNET_NETWORKS } from '../../../crypto/Networks'
 
 // API
 import {
@@ -594,7 +595,8 @@ class LoanDetails extends Component {
 
         const {
             tokenSymbol, principal, interest, loanExpiration, acceptExpiration,
-            status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress
+            status, lender, borrower, blockchainLoanId, collateralLock, aCoinLenderAddress,
+            networkId
         } = loanDetails
 
         const collateralPrice = BigNumber(prices[shared?.collateral_asset].usd)
@@ -615,14 +617,15 @@ class LoanDetails extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-8 offset-md-2">
                                     <div className="mb-4 text-center">
+                                        <div className="loanBook__apr mb-4">Network: {NETWORKS[networkId]}</div>
                                         <h2>Loan Details ID #{loanId}</h2>
-                                        {/* <div className="app-page-subtitle mt-2">ID #{loanId}</div> */}
+
                                     </div>
                                     <div className="app-card shadow-lg">
                                         <div className="row">
                                             <div className="col-sm-12 col-md-4">
                                                 <div className="label-title">Borrow (Principal)</div>
-                                                <div className="label-value">{principal} {tokenSymbol}</div>
+                                                <div className="label-value">{principal} {tokenSymbol} <span style={{ fontSize: 12 }}>{NETWORKS[networkId]}</span></div>
                                                 <div className="label-title mt-4">Interest</div>
                                                 <div className="label-value">{parseFloat(interest).toFixed(2)} {tokenSymbol}</div>
                                                 <div className="label-title mt-4">Repay</div>
@@ -660,6 +663,15 @@ class LoanDetails extends Component {
 
                                         <div className="row mt-4">
                                             <div className="col-sm-12 col-md-8 offset-md-2 text-center">
+
+                                                {
+                                                    MAINNET_NETWORKS.includes(networkId?.toString()) != MAINNET_NETWORKS.includes(shared?.networkId?.toString())
+                                                    &&
+                                                    <div className="error_msg">
+                                                        This Loan is located in a {MAINNET_NETWORKS.includes(networkId?.toString()) ? 'mainnet' : 'testnet'} and you are connected to a {MAINNET_NETWORKS.includes(networkId?.toString()) ? 'testnet' : 'mainnet'} or an unsupported network. Please connect to a network compatible with {NETWORKS[networkId]}.
+                                                    </div>
+                                                }
+
                                                 {
                                                     loadingBtn && (
                                                         <div style={{ marginTop: '15px', textAlign: 'center' }}>
@@ -671,8 +683,8 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (status == 1 && !loadingBtn) && (
-                                                        <button onClick={() => this.toggleCollateralModal(true)} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
+                                                        <button disabled={MAINNET_NETWORKS.includes(networkId?.toString()) != MAINNET_NETWORKS.includes(shared?.networkId?.toString()) ? true : false} onClick={() => this.toggleCollateralModal(true)} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            {/* <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" /> */}
                                                             Lock Collateral
                                                         </button>
                                                     )
@@ -855,12 +867,12 @@ class LoanDetails extends Component {
                                 }
                                 activeStep={status >= 2 ? parseInt(status) + 1 : parseInt(status)}
                                 completeBarColor="#32CCDD"
-                                
+
                                 completeColor={shared?.theme === 'dark' || !shared?.theme ? 'grey' : "#32CCDD"}
                                 defaultColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : "#E0E0E0"}
                                 activeColor={shared?.theme === 'dark' || !shared?.theme ? '#32CCDD' : "black"}
                                 completeTitleColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : '#000'}
-                                
+
                                 activeTitleColor={shared?.theme === 'dark' || !shared?.theme ? '#32CCDD' : "black"}
                                 defaultTitleColor={shared?.theme === 'dark' || !shared?.theme ? 'white' : "#757575"}
                                 circleFontColor={shared?.theme === 'dark' || !shared?.theme ? 'black' : "#FFF"}

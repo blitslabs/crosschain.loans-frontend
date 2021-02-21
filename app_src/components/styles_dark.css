@@ -68,6 +68,12 @@
 
 footer {
     background:black !important;
+    margin-top:8.75rem;
+}
+
+.footer {
+    padding-top:4.75rem !important;
+    padding-bottom: 0px !important;
 }
 
 .footer-link {
@@ -299,6 +305,14 @@ body {
     border-radius: 5px;
 }
 
+.error_msg {
+    color: #e91e63;
+    background-color: #e91e6324;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
 .app-card {
     padding: 60px;
     color: white;
@@ -310,7 +324,7 @@ body {
     background-color:black;
 }
 
-h2 {
+h2, h5 {
     color: white;
 }
 
@@ -534,4 +548,12 @@ a {
     position: absolute;
     top: 100px;
     left: 70px;
+}
+
+.footer-three {
+    border-top: none;
+}
+
+.brand__name {
+    color: #818992 !important;
 }
