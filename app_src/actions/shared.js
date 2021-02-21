@@ -4,12 +4,14 @@ export const SHOW_SIDEBAR = 'SHOW_SIDEBAR'
 export const HIDE_SIDEBAR = 'HIDE_SIDEBAR'
 export const RESET_SIDEBAR = 'RESET_SIDEBAR'
 export const SET_PROVIDER_STATUS = 'SET_PROVIDER_STATUS'
+
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SAVE_NETWORK = 'SAVE_NETWORK'
 export const SAVE_ACCOUNT = 'SAVE_ACCOUNT'
 export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
 export const SAVE_SELECTED_COLLATERAL_ASSET = 'SAVE_SELECTED_COLLATERAL_ASSET'
 export const CHANGE_THEME = 'CHANGE_THEME'
+export const TOGGLE_TESTNET_DATA = 'TOGGLE_TESTNET_DATA'
 
 export function saveNotificationEmail(email) {
     return {
@@ -92,5 +94,12 @@ export function changeTheme(theme) {
     return {
         type: CHANGE_THEME,
         theme,
+    }
+}
+
+export function toggleTestnetData(value) {
+    return {
+        type: TOGGLE_TESTNET_DATA,
+        value
     }
 }

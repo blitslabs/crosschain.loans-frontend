@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import Navbar from './Navbar'
 import AssetCard from './AssetCard'
 import Loading from '../../Loading'
+import TestnetDataCheckbox from './TestnetDataCheckbox'
+import { NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
 
 class Lend extends Component {
 
@@ -13,8 +15,8 @@ class Lend extends Component {
         loading: true
     }
 
-    componentDidMount() {        
-        document.title = "Lend | Cross-chain Loans"       
+    componentDidMount() {
+        document.title = "Lend | Cross-chain Loans"
         this.setState({ loading: false })
     }
 
@@ -35,15 +37,17 @@ class Lend extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12 col-md-12">
-                                    <div className="mb-4 text-left">
-                                        <div className="mb-4 text-left">
+                                    <div className="mb-2 text-left">
+                                        <div className="mb-2 text-left">
                                             <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Lend</div>
                                             <div style={{ fontSize: '18px', marginTop: '10px' }}>Lend your stablecoins to earn APY</div>
                                         </div>
+                                        <TestnetDataCheckbox />
                                         <div className="row">
                                             {
                                                 Object.values(loanAssets).length > 0
                                                     ? Object.values(loanAssets)
+                                                        .filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true)
                                                         .sort((a, b) => {
                                                             if (a?.networkId == shared?.networkId) return 1
                                                             else if (b?.networkId != shared?.networkId) return 1
@@ -55,11 +59,7 @@ class Lend extends Component {
                                                         ))
                                                     : ''
                                             }
-
-
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -71,9 +71,10 @@ class Lend extends Component {
     }
 }
 
-function mapStateToProps({ loanAssets }) {
+function mapStateToProps({ loanAssets, shared }) {
     return {
-        loanAssets
+        loanAssets,
+        shared
     }
 }
 

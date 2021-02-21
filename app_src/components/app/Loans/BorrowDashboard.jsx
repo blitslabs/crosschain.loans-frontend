@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 // Components
 import Navbar from './Navbar'
 import Footer from './Footer'
+import TestnetDataCheckbox from './TestnetDataCheckbox'
 
 // Styles
 import '../styles.css'
@@ -23,12 +25,11 @@ import Particles from 'react-particles-js'
 import Emoji from "react-emoji-render"
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
+import { NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
+
 
 class BorrowDashboard extends Component {
     state = {
-        loans: '',
-        myLoans: '',
-        contracts: ''
     }
 
     componentDidMount() {
@@ -50,10 +51,10 @@ class BorrowDashboard extends Component {
         history.push('/app/loan/' + loanId)
     }
 
+
     render() {
 
-        const { availableLoans } = this.props
-
+        const { availableLoans, shared } = this.props
 
         return (
             <Fragment>
@@ -64,11 +65,14 @@ class BorrowDashboard extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-12">
 
-                                    <div className="mb-4 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Loan Book: Available Loans</div>
-                                        <div style={{ fontSize: '18px', marginTop: '10px' }}>Borrow assets across different blockchains</div>
-                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-12 text-left">
+                                            <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Loan Book: Available Loans</div>
+                                            <div style={{ fontSize: '18px', marginTop: '10px' }}>Borrow assets across different blockchains</div>
+                                        </div>
 
+                                    </div>
+                                    <TestnetDataCheckbox />
 
                                     {
 
@@ -93,12 +97,12 @@ class BorrowDashboard extends Component {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            Object.values(availableLoans).map((l, i) => (
+                                                            Object.values(availableLoans).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
                                                                 <tr key={i}>
                                                                     <td>#{l.contractLoanId}</td>
                                                                     <td className="loanBook__amount">{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} </td>
                                                                     <td><img style={{ height: 20, marginRight: '5px' }} src={process.env.SERVER_HOST + '/api/logo/ETH/' + l.tokenSymbol}></img> {l.tokenSymbol}</td>
-                                                                    <td>{l.blockchain}</td>
+                                                                    <td>{NETWORKS[l?.networkId]}</td>
                                                                     <td>
                                                                         <div className="loanBook__apr">
                                                                             {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
@@ -119,7 +123,7 @@ class BorrowDashboard extends Component {
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <a href={'/app/loan/' + l.id} className="btn btn-blits" style={{ padding: '10px 15px' }}>Borrow</a>
+                                                                        <Link to={'/app/loan/' + l.id} className="btn btn-blits" style={{ padding: '10px 15px' }}>Borrow</Link>
                                                                     </td>
                                                                 </tr>
                                                             ))

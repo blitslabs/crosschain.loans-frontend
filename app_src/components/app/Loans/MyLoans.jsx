@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 // Components
 import Navbar from './Navbar'
 import Footer from './Footer'
+import TestnetDataCheckbox from './TestnetDataCheckbox'
 
 // Libraries
 import Web3 from 'web3'
@@ -19,6 +20,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 import { fromBech32 } from '@harmony-js/crypto'
 import ReactLoading from 'react-loading'
+import { EXPLORER, NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
 
 // Styles
 import '../styles.css'
@@ -77,10 +79,11 @@ class MyLoans extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-12">
 
-                                    <div className="mb-4 text-left">
+                                    <div className="mb-2 text-left">
                                         <div style={{ fontWeight: 'bold', fontSize: '24px', }}>My Loans</div>
                                         {/* <div style={{ fontSize: '18px', marginTop: '10px' }}>Check account's loans</div> */}
                                     </div>
+                                    <TestnetDataCheckbox />
 
                                     <Tabs>
                                         <TabList>
@@ -113,7 +116,7 @@ class MyLoans extends Component {
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                Object.values(borrowed).map((l, i) => (
+                                                                Object.values(borrowed).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
                                                                     <tr key={i}>
                                                                         <td>#{l.id}</td>
                                                                         <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
@@ -193,7 +196,7 @@ class MyLoans extends Component {
                                                             </thead>
                                                             <tbody>
                                                                 {
-                                                                    Object.values(lent).map((l, i) => (
+                                                                    Object.values(lent).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
                                                                         <tr key={i}>
                                                                             <td>#{l.id}</td>
                                                                             <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
@@ -242,7 +245,7 @@ class MyLoans extends Component {
                                                                 ⌛ Loading...
                                                             </div>
                                                         )
-                                                            : <div className="loading-table text-center">🔍 No lends found</div>
+                                                            : <div className="loading-table text-center">🔍 No loans found</div>
                                             }
                                         </TabPanel>
                                     </Tabs>

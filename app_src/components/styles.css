@@ -417,6 +417,8 @@ a {
 .loanBook__apr {
     color: rgb(15, 210, 140); 
     background: rgb(224, 249, 240); 
+    /* color: #00bcd4; 
+    background: #2ec0d126; */
     display: inline-block;
     padding: 5px 10px;
     border-radius: 5px;

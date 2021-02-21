@@ -2,13 +2,14 @@ import {
     SET_PROVIDER_STATUS, TOGGLE_SIDEBAR,
     SAVE_NETWORK, SAVE_NOTIFICATION_EMAIL,
     SAVE_ACCOUNT, SAVE_SELECTED_COLLATERAL_ASSET,
-    CHANGE_THEME
+    CHANGE_THEME, TOGGLE_TESTNET_DATA
 } from '../actions/shared'
 
 const initialState = {
     sidebar: false,
     collatera_asset: 'ONE',
-    theme: 'dark'
+    theme: 'dark',
+    hide_testnet_data: true,
 }
 
 export default function shared(state = initialState, action) {
@@ -54,7 +55,13 @@ export default function shared(state = initialState, action) {
                 ...state,
                 theme: action.theme
             }
-        
+
+        case TOGGLE_TESTNET_DATA:
+            return {
+                ...state,
+                hide_testnet_data: action.value
+            }
+
         default:
             return state
     }

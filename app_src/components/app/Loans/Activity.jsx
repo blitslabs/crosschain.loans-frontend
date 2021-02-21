@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 // Components
 import Navbar from './Navbar'
 import Footer from './Footer'
+import TestnetDataCheckbox from './TestnetDataCheckbox'
 
 // Libraries
 import Web3 from 'web3'
@@ -19,7 +20,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 import { fromBech32 } from '@harmony-js/crypto'
 import ReactLoading from 'react-loading'
-
+import { EXPLORER, NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
 // Styles
 import '../styles.css'
 
@@ -29,16 +30,6 @@ import { saveActivityHistory } from '../../../actions/activity'
 // API
 import { getActivityHistory } from '../../../utils/api'
 
-const ETHERSCAN = 'https://etherscan.io/'
-
-const EXPLORER = {
-    '1': 'https://etherscan.io/',
-    '3': 'https://ropsten.etherscan.io/',
-    '56': 'https://bscscan.com/',
-    '97': 'https://testnet.bscscan.com/',
-    '1666600000': 'https://explorer.harmony.one/#/',
-    '1666700000': 'https://explorer.testnet.harmony.one/#/'
-}
 
 class Activity extends Component {
     state = {
@@ -74,7 +65,7 @@ class Activity extends Component {
 
     render() {
         const { loading } = this.state
-        const { activity } = this.props
+        const { activity, shared } = this.props
 
         return (
             <Fragment>
@@ -86,11 +77,11 @@ class Activity extends Component {
                             <div className="row">
                                 <div className="col-sm-12 col-md-12">
 
-                                    <div className="mb-4 text-left">
+                                    <div className="mb-2 text-left">
                                         <div style={{ fontWeight: 'bold', fontSize: '24px' }}>Activity Explorer</div>
                                         <div style={{ fontSize: '18px', marginTop: '10px' }}>Explore the protocol's recent activity</div>
                                     </div>
-
+                                    <TestnetDataCheckbox/>
                                     {
 
                                         (activity && Object.values(activity).length > 0)
@@ -110,7 +101,7 @@ class Activity extends Component {
                                                 </thead>
                                                 <tbody>
                                                     {
-                                                        Object.values(activity).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
+                                                        Object.values(activity).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((e, i) => {
 
                                                             const explorer = EXPLORER[e.networkId]
                                                             const txHashUrl = `${explorer}tx/${e.txHash}`
@@ -161,9 +152,10 @@ class Activity extends Component {
 }
 
 
-function mapStateToProps({ activity }) {
+function mapStateToProps({ activity, shared }) {
     return {
-        activity
+        activity,
+        shared
     }
 }
 
