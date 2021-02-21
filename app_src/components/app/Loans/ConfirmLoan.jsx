@@ -220,14 +220,14 @@ class ConfirmLoan extends Component {
                                                         this.state.showAllowanceBtn
                                                             ?
 
-                                                            <button onClick={this.handleAllowanceBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <button onClick={this.handleAllowanceBtn} className="btn btn-blits mt-4" style={{ width: '100%', color: 'white', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                                 <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                                 Approve Allowance
                                                             </button>
 
                                                             :
 
-                                                            <button onClick={this.handleCreateLoanBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <button onClick={this.handleCreateLoanBtn} className="btn btn-blits mt-4" style={{ width: '100%', color: 'white', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                                 <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                                 Lend
                                                             </button>

@@ -34,7 +34,7 @@ import Emoji from "react-emoji-render"
 import { fromBech32 } from '@harmony-js/crypto'
 
 class NewLoan extends Component {
-    
+
     state = {
         assetSymbol: 'DAI',
         assetSymbolIsInvalid: false,
@@ -191,7 +191,7 @@ class NewLoan extends Component {
                 toast.error('Select a valid amount', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
                 this.setState({ btnLoading: false })
                 return
-            }            
+            }
             toast.error('Missing required fields', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
             this.setState({ btnLoading: false })
             return
@@ -396,7 +396,7 @@ class NewLoan extends Component {
                                                     hidden={this.state.btnLoading}
                                                     type="triangle"
                                                 >
-                                                    <button onClick={this.handleContinueBtn} className="btn btn-blits" style={{ fontSize: '16px' }}>
+                                                    <button onClick={this.handleContinueBtn} className="btn btn-blits" style={{ fontSize: '16px', color: 'white', background: 'linear-gradient(-47deg, #8731E8 0%, #4528DC 100%)' }}>
                                                         <img style={{ height: 15 }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAMFBMVEVHcEz/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDP/rDNIzNElAAAAD3RSTlMA7xBgnzDPgCDfj0C/r3DHfpOdAAABLklEQVR42q2XSxLDIAzFbCCBJml9/9v2s3kbdwGKDsBoRvXL1OY5IrpxyjM+GKbs8aUYZPP40gxyevwYxqgRTEi57hAqLSSEc3GhTe80nv2HD5RLkPPoIbzYMi1uESpX3CI09sBCysWFqgcTUnYupFziBUY1QjzYlYoKcmGh0wMLKRcXOiKhglEFQsqFhbb8nYtlF+d0rln6n1GdJ7/SBdJRXeDIRnWBmuWax2s2qvP4RrKLfSRXusCVLHgs0MzAQ/QXzcfg/JtrkivPtZHtFnuxWR5prmJMSFcKhG7/uvlpTEjZsZBycaHn2juv5EpXKI5yiZ6MKhFSLiakUWVCGlUmpFxUiP9DQ9nFcJRLNOVC7wx2paIlo4qEDmM05UIMjSqjKTuiKBdEowrpS7neXD5UXwGvjogAAAAASUVORK5CYII=" />
                                                         Sign & Continue
                                                     </button>
