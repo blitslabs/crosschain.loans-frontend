@@ -3,6 +3,7 @@ module.exports.ABI = {
         abi: [
             {
                 "inputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "constructor"
             },
@@ -61,7 +62,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -130,7 +131,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -168,7 +169,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -205,7 +206,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -230,7 +231,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -281,6 +282,56 @@ module.exports.ABI = {
                 "inputs": [
                     {
                         "indexed": false,
+                        "internalType": "address",
+                        "name": "_referral",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "_referrer",
+                        "type": "address"
+                    }
+                ],
+                "name": "NewReferral",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "_referral",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "_referrer",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "_token",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "_amount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "PayReferrer",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
                         "internalType": "uint256",
                         "name": "loanId",
                         "type": "uint256"
@@ -299,7 +350,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -330,7 +381,7 @@ module.exports.ABI = {
                     },
                     {
                         "indexed": false,
-                        "internalType": "enum CrosschainLoans.State",
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
                         "name": "state",
                         "type": "uint8"
                     }
@@ -352,6 +403,7 @@ module.exports.ABI = {
                 "type": "event"
             },
             {
+                "constant": true,
                 "inputs": [],
                 "name": "acceptExpirationPeriod",
                 "outputs": [
@@ -361,11 +413,32 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_secretB1",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "acceptRepayment",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -400,10 +473,12 @@ module.exports.ABI = {
                 ],
                 "name": "addAssetType",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -413,10 +488,32 @@ module.exports.ABI = {
                 ],
                 "name": "addAuthorization",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_marketAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "addMoneyMarket",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -472,11 +569,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -492,11 +590,32 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_secretB1",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "cancelLoanBeforePrincipalWithdraw",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [],
                 "name": "contractEnabled",
                 "outputs": [
@@ -506,11 +625,89 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_secretHashB1",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_principal",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_aCoinLenderAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "createLoan",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "loanId",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_secretHashB1",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_principal",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_contractAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_aCoinLenderAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_referrer",
+                        "type": "address"
+                    }
+                ],
+                "name": "createLoan",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "loanId",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -520,17 +717,21 @@ module.exports.ABI = {
                 ],
                 "name": "disableAssetType",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [],
                 "name": "disableContract",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -540,17 +741,98 @@ module.exports.ABI = {
                 ],
                 "name": "enableAssetType",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [],
                 "name": "enableContract",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "fetchLoan",
+                "outputs": [
+                    {
+                        "internalType": "address payable[2]",
+                        "name": "actors",
+                        "type": "address[2]"
+                    },
+                    {
+                        "internalType": "bytes32[2]",
+                        "name": "secretHashes",
+                        "type": "bytes32[2]"
+                    },
+                    {
+                        "internalType": "bytes32[2]",
+                        "name": "secrets",
+                        "type": "bytes32[2]"
+                    },
+                    {
+                        "internalType": "uint256[2]",
+                        "name": "expirations",
+                        "type": "uint256[2]"
+                    },
+                    {
+                        "internalType": "uint256[2]",
+                        "name": "details",
+                        "type": "uint256[2]"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "aCoinLenderAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "enum CrosschainLoansMoneyMarket.State",
+                        "name": "state",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "contractAddress",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_account",
+                        "type": "address"
+                    }
+                ],
+                "name": "getAccountLoans",
+                "outputs": [
+                    {
+                        "internalType": "uint256[]",
+                        "name": "",
+                        "type": "uint256[]"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -566,11 +848,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -631,11 +914,33 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_account",
+                        "type": "address"
+                    }
+                ],
+                "name": "getReferrer",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [],
                 "name": "loanExpirationPeriod",
                 "outputs": [
@@ -645,11 +950,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
                 "inputs": [],
                 "name": "loanIdCounter",
                 "outputs": [
@@ -659,11 +965,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -683,10 +990,12 @@ module.exports.ABI = {
                 ],
                 "name": "modifyAssetTypeLoanParameters",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "bytes32",
@@ -701,10 +1010,135 @@ module.exports.ABI = {
                 ],
                 "name": "modifyLoanParameters",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "contract CToken",
+                        "name": "_market",
+                        "type": "address"
+                    }
+                ],
+                "name": "modifyMoneyMarket",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "moneyMarkets",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "isEnabled",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "contract CToken",
+                        "name": "market",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "payback",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "referrals",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "referrers",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "refundPayback",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -714,10 +1148,27 @@ module.exports.ABI = {
                 ],
                 "name": "removeAuthorization",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_referrer",
+                        "type": "address"
+                    }
+                ],
+                "name": "saveReferrer",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [],
                 "name": "secondsPerYear",
                 "outputs": [
@@ -727,11 +1178,78 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_loanId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address payable",
+                        "name": "_borrower",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_secretHashA1",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "setBorrowerAndApprove",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "_status",
+                        "type": "bool"
+                    }
+                ],
+                "name": "toggleMoneyMarket",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "totalReferrals",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -752,11 +1270,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "address",
@@ -772,11 +1291,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "view",
-                "type": "function",
-                "constant": true
+                "type": "function"
             },
             {
+                "constant": true,
                 "inputs": [
                     {
                         "internalType": "uint256",
@@ -797,78 +1317,12 @@ module.exports.ABI = {
                         "type": "uint256"
                     }
                 ],
+                "payable": false,
                 "stateMutability": "pure",
-                "type": "function",
-                "constant": true
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_lenderAuto",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_secretHashB1",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_secretHashAutoB1",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_principal",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "_contractAddress",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "_aCoinLenderAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "createLoan",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "loanId",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address payable",
-                        "name": "_borrower",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_secretHashA1",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "setBorrowerAndApprove",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
+                "constant": false,
                 "inputs": [
                     {
                         "internalType": "uint256",
@@ -883,145 +1337,9 @@ module.exports.ABI = {
                 ],
                 "name": "withdraw",
                 "outputs": [],
+                "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_secretB1",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "acceptRepayment",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_secretB1",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "cancelLoanBeforePrincipalWithdraw",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "payback",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "refundPayback",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_loanId",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "fetchLoan",
-                "outputs": [
-                    {
-                        "internalType": "address[3]",
-                        "name": "actors",
-                        "type": "address[3]"
-                    },
-                    {
-                        "internalType": "bytes32[3]",
-                        "name": "secretHashes",
-                        "type": "bytes32[3]"
-                    },
-                    {
-                        "internalType": "bytes32[3]",
-                        "name": "secrets",
-                        "type": "bytes32[3]"
-                    },
-                    {
-                        "internalType": "uint256[2]",
-                        "name": "expirations",
-                        "type": "uint256[2]"
-                    },
-                    {
-                        "internalType": "uint256[2]",
-                        "name": "details",
-                        "type": "uint256[2]"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "aCoinLenderAddress",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "enum CrosschainLoans.State",
-                        "name": "state",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "contractAddress",
-                        "type": "address"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function",
-                "constant": true
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_account",
-                        "type": "address"
-                    }
-                ],
-                "name": "getAccountLoans",
-                "outputs": [
-                    {
-                        "internalType": "uint256[]",
-                        "name": "",
-                        "type": "uint256[]"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function",
-                "constant": true
             }
         ]
     },

@@ -15,6 +15,7 @@ import ReactLoading from 'react-loading'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import BlitsLoans from '../../../crypto/BlitsLoans'
+import CrosschainLoans from '../../../crypto/CrosschainLoans'
 import ETH from '../../../crypto/ETH'
 import MyParticles from './MyParticles'
 import { Prompt } from 'react-router'
@@ -72,7 +73,7 @@ class ConfirmLoan extends Component {
 
                 if (allowanceRes.status === 'OK') {
                     console.log('Allowance: ', allowanceRes)
-                    let allowance = BigNumber(allowanceRes.payload)
+                    let allowance = new BigNumber(allowanceRes.payload)
                     if (allowance.gte(amount)) {
                         clearInterval(allowanceInterval)
                         this.setState({ showAllowanceBtn: false, loading: false, btnLoading: false })
@@ -98,23 +99,22 @@ class ConfirmLoan extends Component {
 
         this.setState({ loading: true, btnLoading: true })
 
-        let arbiter
-        try {
-            arbiter = (await (await getNewEngineSecretHash({ blockchain: 'ETH' })).json()).payload
-        } catch (e) {
-            toast.error('Error fetching arbiter data', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
-            this.setState({ loading: false, btnLoading: false })
-            return
-        }
+        // let arbiter
+        // try {
+        //     arbiter = (await (await getNewEngineSecretHash({ blockchain: 'ETH' })).json()).payload
+        // } catch (e) {
+        //     toast.error('Error fetching arbiter data', { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+        //     this.setState({ loading: false, btnLoading: false })
+        //     return
+        // }
 
-        const response = await BlitsLoans.ETH.createLoan(
-            arbiter.account,
-            secretHash,
-            arbiter.secretHash,
+        const response = await CrosschainLoans.createLoan(            
+            secretHash,            
             amount,
             tokenContractAddress,
             loansContract,
-            aCoinLender
+            aCoinLender,
+            shared?.referrer
         )
 
         console.log(response)

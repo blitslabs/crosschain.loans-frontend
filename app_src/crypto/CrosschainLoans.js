@@ -5,7 +5,7 @@ import ETH from './ETH'
 
 const CrosschainLoans = {
 
-    createLoanRef: async (secretHashB1, principal, tokenContractAddress, loansContractAddress, aCoinLenderAddress, referrer) => {
+    createLoan: async (secretHashB1, principal, tokenContractAddress, loansContractAddress, aCoinLenderAddress, referrer = '') => {
 
         if (!window.ethereum) {
             return { status: 'ERROR', message: 'No web3 provider detected' }
@@ -16,7 +16,7 @@ const CrosschainLoans = {
         if (!tokenContractAddress) return { status: 'ERROR', message: 'Missing token address' }
         if (!loansContractAddress) return { status: 'ERROR', message: 'Missing loans contract address' }
         if (!aCoinLenderAddress) return { status: 'ERROR', message: 'Missing lender\'s acoin address ' }
-        if (!referrer) return { status: 'ERROR', message: 'Missing referrer' }
+        // if (!referrer) return { status: 'ERROR', message: 'Missing referrer' }
 
         await window.ethereum.enable()
 
@@ -51,7 +51,7 @@ const CrosschainLoans = {
 
         // Get Token Balance
         let balance = await token.methods.balanceOf(lender).call()
-        balance = BigNumber(balance)
+        balance = new BigNumber(balance)
 
         // Check Balance
         if (balance.lt(amount)) {
@@ -60,17 +60,26 @@ const CrosschainLoans = {
 
         // Allowance
         let allowance = await token.methods.allowance(lender, loansContractAddress).call()
-        allowance = BigNumber(allowance)
+        allowance = new BigNumber(allowance)
 
         if (!allowance || allowance.lt(amount)) {
             return { status: 'ERROR', message: 'Insufficient allowance' }
         }
 
         try {
-            const tx = await contract.methods.createLoan(
-                secretHashB1, amount, tokenContractAddress,
-                aCoinLenderAddress, referrer
-            ).send({ from: lender })
+            let tx
+
+            if (referrer && referrer != '') {
+                tx = await contract.methods.createLoan(
+                    secretHashB1, amount, tokenContractAddress,
+                    aCoinLenderAddress, referrer
+                ).send({ from: lender })
+            } else {
+                tx = await contract.methods.createLoan(
+                    secretHashB1, amount, tokenContractAddress,
+                    aCoinLenderAddress
+                ).send({ from: lender })
+            }
             return { status: 'OK', payload: tx }
         } catch (e) {
             console.log(e)
