@@ -599,7 +599,7 @@ class LoanDetails extends Component {
             networkId
         } = loanDetails
 
-        const collateralPrice = BigNumber(prices[shared?.collateral_asset].usd)
+        const collateralPrice = BigNumber(prices[shared?.collateral_asset]?.usd)
         const requiredCollateral = parseFloat(BigNumber(principal).div(collateralPrice).times(1.5))
         const requiredCollateralValue = parseFloat(BigNumber(requiredCollateral).times(collateralPrice)).toFixed(2)
         const repaymentAmount = parseFloat(BigNumber(principal).plus(interest)).toFixed(8)

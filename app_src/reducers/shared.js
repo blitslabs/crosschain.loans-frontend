@@ -8,7 +8,7 @@ import {
 
 const initialState = {
     sidebar: false,
-    collatera_asset: 'ONE',
+    collateral_asset: 'ONE',
     theme: 'dark',
     hide_testnet_data: true,
 }
