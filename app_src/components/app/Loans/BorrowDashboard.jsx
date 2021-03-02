@@ -12,6 +12,7 @@ import '../styles.css'
 
 // Actions
 import { saveAvailableLoans } from '../../../actions/availableLoans'
+import { saveReferrer } from '../../../actions/shared'
 
 // API
 import { getAvailableLoans } from '../../../utils/api'
@@ -26,7 +27,8 @@ import Emoji from "react-emoji-render"
 import ParticleEffectButton from 'react-particle-effect-button'
 import MyParticles from './MyParticles'
 import { NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
-
+import queryString from 'query-string'
+import ETH from '../../../crypto/ETH'
 
 class BorrowDashboard extends Component {
     state = {
@@ -44,6 +46,22 @@ class BorrowDashboard extends Component {
                     dispatch(saveAvailableLoans(res.payload))
                 }
             })
+
+        this.safeReferrer()
+    }
+
+    safeReferrer = async () => {
+        const { dispatch, location } = this.props
+        // Save Referrer
+        const params = queryString.parse(location.search)
+        if ('rid' in params && params.rif != '') {
+            const addressIsValid = await ETH.isAddressValid(params.rid)            
+            // Check if rif is valid address
+            if (addressIsValid) {
+                dispatch(saveReferrer(params.rid))
+                return
+            }
+        }
     }
 
     handleViewDetailsBtn = async (loanId) => {
@@ -146,7 +164,7 @@ class BorrowDashboard extends Component {
                     {/* <img src="http://localhost:3000/assets/images/abs_3.png" className="abstract_img_2" alt="" /> */}
                     <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
-                <Footer/>
+                <Footer />
             </Fragment >
         )
     }

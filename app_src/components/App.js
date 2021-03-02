@@ -159,7 +159,7 @@ class App extends Component {
               ? <Loading />
               :
               <Fragment>
-                <Route path='/app' exact component={Home} />
+                <Route path='/app' exact component={BorrowDashboard} />
                 <Route path='/app/borrow' component={BorrowDashboard} />
                 <Route path='/app/lend' exact component={Lend} />
                 <Route path='/app/lend/new' component={NewLoan} />

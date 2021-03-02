@@ -8,6 +8,11 @@ import AssetCard from './AssetCard'
 import Loading from '../../Loading'
 import TestnetDataCheckbox from './TestnetDataCheckbox'
 import { NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
+import queryString from 'query-string'
+import ETH from '../../../crypto/ETH'
+
+// Actions
+import { saveReferrer } from '../../../actions/shared'
 
 class Lend extends Component {
 
@@ -19,7 +24,25 @@ class Lend extends Component {
     componentDidMount() {
         document.title = "Lend | Cross-chain Loans"
         this.setState({ loading: false })
+
+        this.safeReferrer()
     }
+
+    safeReferrer = async () => {
+        const { dispatch, location } = this.props
+        // Save Referrer
+        const params = queryString.parse(location.search)
+        if ('rid' in params && params.rif != '') {
+            const addressIsValid = await ETH.isAddressValid(params.rid)             
+            console.log('REFERRER', params.rid)      
+            // Check if rif is valid address
+            if (addressIsValid) {
+                dispatch(saveReferrer(params.rid))
+                return
+            }
+        }
+    }
+
 
     render() {
         const { loanAssets, shared } = this.props

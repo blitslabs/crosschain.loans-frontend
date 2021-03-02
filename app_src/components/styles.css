@@ -72,11 +72,15 @@ footer {
 
 .footer {
     padding-top:4.75rem !important;
-    padding-bottom: 0px !important;
+    padding-bottom: 2rem !important;
 }
 
 .footer-link {
     color: white;
+}
+
+.footer-widget li a {
+    font-family: 'Poppins', sans-serif !important; 
 }
 
 .social-icons > a.blits {

@@ -21,11 +21,14 @@ import 'react-tabs/style/react-tabs.css'
 import { fromBech32 } from '@harmony-js/crypto'
 import ReactLoading from 'react-loading'
 import { EXPLORER, NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
+import queryString from 'query-string'
+import ETH from '../../../crypto/ETH'
 // Styles
 import '../styles.css'
 
 // Actions
 import { saveActivityHistory } from '../../../actions/activity'
+import { saveReferrer } from '../../../actions/shared'
 
 // API
 import { getActivityHistory } from '../../../utils/api'
@@ -40,6 +43,7 @@ class Activity extends Component {
     componentDidMount() {
         document.title = 'Activity | Cross-chain Loans'
         this.loadInitialData()
+        this.safeReferrer()
     }
 
     loadInitialData = async () => {
@@ -56,6 +60,21 @@ class Activity extends Component {
                     dispatch(saveActivityHistory(res.payload))
                 }
             })
+    }
+
+    safeReferrer = async () => {
+        const { dispatch, location } = this.props
+        // Save Referrer
+        const params = queryString.parse(location.search)
+        if ('rid' in params && params.rif != '') {
+            const addressIsValid = await ETH.isAddressValid(params.rid)             
+            console.log('REFERRER', params.rid)      
+            // Check if rif is valid address
+            if (addressIsValid) {
+                dispatch(saveReferrer(params.rid))
+                return
+            }
+        }
     }
 
     handleViewDetailsBtn = async (loanId) => {

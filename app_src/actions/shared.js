@@ -12,6 +12,14 @@ export const SAVE_NOTIFICATION_EMAIL = 'SAVE_NOTIFICATION_EMAIL'
 export const SAVE_SELECTED_COLLATERAL_ASSET = 'SAVE_SELECTED_COLLATERAL_ASSET'
 export const CHANGE_THEME = 'CHANGE_THEME'
 export const TOGGLE_TESTNET_DATA = 'TOGGLE_TESTNET_DATA'
+export const SAVE_REFERRER = 'SAVE_REFERRER'
+
+export function saveReferrer(referrer) {
+    return {
+        type: SAVE_REFERRER,
+        referrer
+    }
+}
 
 export function saveNotificationEmail(email) {
     return {

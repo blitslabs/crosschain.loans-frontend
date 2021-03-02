@@ -2,7 +2,8 @@ import {
     SET_PROVIDER_STATUS, TOGGLE_SIDEBAR,
     SAVE_NETWORK, SAVE_NOTIFICATION_EMAIL,
     SAVE_ACCOUNT, SAVE_SELECTED_COLLATERAL_ASSET,
-    CHANGE_THEME, TOGGLE_TESTNET_DATA
+    CHANGE_THEME, TOGGLE_TESTNET_DATA,
+    SAVE_REFERRER
 } from '../actions/shared'
 
 const initialState = {
@@ -60,6 +61,12 @@ export default function shared(state = initialState, action) {
             return {
                 ...state,
                 hide_testnet_data: action.value
+            }
+
+        case SAVE_REFERRER:
+            return {
+                ...state,
+                referrer: action.referrer
             }
 
         default:

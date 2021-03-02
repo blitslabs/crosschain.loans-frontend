@@ -4,6 +4,17 @@ import ABI from './ABI'
 import BigNumber from 'bignumber.js'
 
 const ETH = {
+
+    isAddressValid: async (address) => {
+        try {
+            if (address === '0x0000000000000000000000000000000000000000') return false
+            const web3 = new Web3()
+            return web3.utils.isAddress(address)
+        } catch (e) {
+            return false
+        }
+    },
+
     generateSecret: async (message) => {
         if (!window.ethereum) {
             return { status: 'ERROR', message: 'No web3 provider detected' }
@@ -57,7 +68,7 @@ const ETH = {
 
         try {
             const decimals = await token.methods.decimals().call()
-            let balance = await token.methods.balanceOf(account).call()            
+            let balance = await token.methods.balanceOf(account).call()
             balance = BigNumber(balance).dividedBy(ETH.pad(1, decimals)).toString()
             return { status: 'OK', payload: balance }
         } catch (e) {
@@ -123,12 +134,12 @@ const ETH = {
         } catch (e) {
             return { status: 'ERROR', message: 'Error instantiating token contract' }
         }
-        
+
         const decimals = await token.methods.decimals().call()
         amount = ETH.pad(amount, decimals)
 
         try {
-            const receipt = await token.methods.approve(spender, amount).send({ from: account })            
+            const receipt = await token.methods.approve(spender, amount).send({ from: account })
             console.log(receipt)
             return { status: 'OK', payload: receipt }
 
