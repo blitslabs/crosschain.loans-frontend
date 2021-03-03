@@ -71,14 +71,19 @@ class Navbar extends Component {
     }
 
     toggleMenu = (e) => {
-        e.preventDefault()
+        e.preventDefault()        
         const { dispatch, shared } = this.props
         dispatch(toggleSidebar(!shared.sidebar))
     }
 
+    closeMenu = (e) => {
+        e.preventDefault()
+        const { dispatch } = this.props
+        dispatch(toggleSidebar(false))
+    }
+
     toggleTheme = (e) => {
         e.preventDefault()
-        console.log('TEST')
         const { shared, dispatch } = this.props
         if (shared?.theme === 'dark') {
             dispatch(changeTheme('light'))
@@ -113,7 +118,7 @@ class Navbar extends Component {
                                         <button onClick={this.toggleMenu} className="navigation__toggler" />
                                         {/* offcanvas toggle button */}
                                         <nav className={sidebar ? "navigation-wrapper offcanvas__is-open" : "navigation-wrapper"}>
-                                            <button onClick={this.toggleMenu} className="offcanvas__close">✕</button>
+                                            <button onClick={this.closeMenu} className="offcanvas__close">✕</button>
                                             {/* offcanvas close button */}
                                             <ul className="navigation-menu" id="nav">
 
@@ -126,7 +131,12 @@ class Navbar extends Component {
                                                 <li className="navigation-menu__item">
                                                     <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
                                                 </li>
-
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link" to="/app/referrals">Referrals</Link>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link" to="/app/supported_networks">Networks</Link>
+                                                </li>
                                                 {
                                                     shared?.account
                                                         ?
@@ -135,10 +145,6 @@ class Navbar extends Component {
                                                         </li>
                                                         : null
                                                 }
-
-                                                <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/supported_networks">Networks</Link>
-                                                </li>
                                             </ul>
                                         </nav>
 
@@ -181,30 +187,36 @@ class Navbar extends Component {
                                 <div className="col-12">
                                     <div className="navigation-content">
                                         <a href="#" className="navigation__brand">
-                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + '/assets/images/logo.png'} alt="blits logo" />
+                                            <img className="navigation-main__logo" src={process.env.SERVER_HOST + ((shared?.theme === 'dark' || !shared?.theme) ? '/assets/images/logo_white.png' : '/assets/images/logo.png')} alt="blits logo" />
                                             <img className="sticky-nav__logo" src={process.env.SERVER_HOST + '/assets/images/logo_white.png'} alt="blits logo" />
                                         </a>
                                         <button onClick={this.toggleMenu} className="navigation__toggler" />
                                         {/* offcanvas toggle button */}
                                         <nav className={sidebar ? "navigation-wrapper offcanvas__is-open" : "navigation-wrapper"}>
-                                            <button onClick={this.toggleMenu} className="offcanvas__close">✕</button>
+                                            <button onClick={this.closeMenu} className="offcanvas__close">✕</button>
                                             {/* offcanvas close button */}
                                             <ul className="navigation-menu" id="nav">
 
                                                 <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/borrow">Borrow</Link>
+                                                    <Link className="navigation-menu__link nav-link" to="/app/borrow">Borrow</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/lend">Lend</Link>
+                                                    <Link className="navigation-menu__link nav-link" to="/app/lend">Lend</Link>
                                                 </li>
                                                 <li className="navigation-menu__item">
-                                                    <Link className="navigation-menu__link" to="/app/activity">Activity</Link>
+                                                    <Link className="navigation-menu__link nav-link" to="/app/activity">Activity</Link>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link nav-link" to="/app/referrals">Referrals</Link>
+                                                </li>
+                                                <li className="navigation-menu__item">
+                                                    <Link className="navigation-menu__link nav-link" to="/app/supported_networks">Networks</Link>
                                                 </li>
                                                 {
                                                     shared?.account
                                                         ?
                                                         <li className="navigation-menu__item">
-                                                            <Link className="navigation-menu__link" to="/app/myloans">My Loans</Link>
+                                                            <Link className="navigation-menu__link nav-link" to="/app/myloans">My Loans</Link>
                                                         </li>
                                                         : null
                                                 }

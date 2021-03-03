@@ -439,6 +439,9 @@ a {
     .navbar-toggler-icon.active {
         background: transparent !important;
     }
+    .abstract_img_1{
+        display: none;
+    }
 }
 
 
@@ -455,8 +458,12 @@ a {
 }
 
 .navigation__portrait .navigation__toggler:before {
-    box-shadow: 0 0.5em 0 0 #000, 0 1em 0 0 #000;
-    background-color: #000;
+    box-shadow: 0 0.5em 0 0 white, 0 1em 0 0 white;
+    background-color:white;
+}
+
+.nav-link {
+    color: black !important;
 }
 
 .details-container {
