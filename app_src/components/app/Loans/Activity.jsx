@@ -43,7 +43,7 @@ class Activity extends Component {
     componentDidMount() {
         document.title = 'Activity | Cross-chain Loans'
         this.loadInitialData()
-        this.safeReferrer()
+        this.saveReferrer()
     }
 
     loadInitialData = async () => {
@@ -62,7 +62,7 @@ class Activity extends Component {
             })
     }
 
-    safeReferrer = async () => {
+    saveReferrer = async () => {
         const { dispatch, location } = this.props
         // Save Referrer
         const params = queryString.parse(location.search)

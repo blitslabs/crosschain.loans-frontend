@@ -47,10 +47,10 @@ class BorrowDashboard extends Component {
                 }
             })
 
-        this.safeReferrer()
+        this.saveReferrer()
     }
 
-    safeReferrer = async () => {
+    saveReferrer = async () => {
         const { dispatch, location } = this.props
         // Save Referrer
         const params = queryString.parse(location.search)

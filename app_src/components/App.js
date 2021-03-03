@@ -20,6 +20,7 @@ import LoanDetails from './app/Loans/LoanDetails'
 import Activity from './app/Loans/Activity'
 import MyLoans from './app/Loans/MyLoans'
 import SupportedNetworks from './app/Loans/SupportedNetworks'
+import Referrals from './app/Loans/Referrals'
 // import './styles.css'
 
 // API
@@ -169,6 +170,7 @@ class App extends Component {
                 <Route path='/app/activity' component={Activity} />
                 <Route path='/app/myloans' component={MyLoans} />
                 <Route path='/app/supported_networks' component={SupportedNetworks} />
+                <Route path='/app/referrals' component={Referrals} />
               </Fragment>
           }
         </Fragment>

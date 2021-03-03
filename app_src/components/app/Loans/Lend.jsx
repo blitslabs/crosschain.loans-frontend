@@ -25,10 +25,10 @@ class Lend extends Component {
         document.title = "Lend | Cross-chain Loans"
         this.setState({ loading: false })
 
-        this.safeReferrer()
+        this.saveReferrer()
     }
 
-    safeReferrer = async () => {
+    saveReferrer = async () => {
         const { dispatch, location } = this.props
         // Save Referrer
         const params = queryString.parse(location.search)
