@@ -44,7 +44,7 @@ class Footer extends Component {
                                                 <a href="https://t.me/blitslabs">Telegram</a>
                                             </li>
                                             <li>
-                                                <a href="https://t.me/blitslabs">Blog</a>
+                                                <a href="https://medium.com/blits-labs">Blog</a>
                                             </li>
                                         </ul>
                                     </nav>
