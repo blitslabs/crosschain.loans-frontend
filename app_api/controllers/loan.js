@@ -51,7 +51,9 @@ module.exports.getLoanDetails = async (req, res) => {
 
     const collateralLock = await CollateralLock.findOne({
         where: {
-            bCoinContractLoanId: loan.contractLoanId
+            bCoinContractLoanId: loan.contractLoanId,
+            secretHashB1: loan.secretHashB1,
+            loansContractAddress: loan.loansContractAddress
         },
         raw: true
     })

@@ -427,7 +427,7 @@ module.exports.sendLoanApproved = async (loanId) => {
                 
                 console.log({ status: 'OK', message: 'Email notification sent' })
             })
-            res.send(resu)
+            
             console.log({ status: 'OK', message: 'Email notification sent' })
 
         } catch (e) {
