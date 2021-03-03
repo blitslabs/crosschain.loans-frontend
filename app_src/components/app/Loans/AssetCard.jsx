@@ -105,8 +105,8 @@ class AssetCard extends Component {
                             <div className="card-value">{currencyFormatter.format(apy, { code: 'USD', symbol: '' })}%</div>
                         </div>
                         <div>
-                            <div className="card-title">Liquidity</div>
-                            <div className="card-value">${currencyFormatter.format(liquidity, { code: 'USD', symbol: '' })}</div>
+                            <div className="card-title">Liquidity Providing</div>
+                            <div className="card-value" style={{ fontSize: 14 }}>{asset?.networkId == 56 || asset?.networkId == 97 ? 'Venus + Cross-chain Loans' : 'Cross-chain Loans'}</div>
                         </div>
                     </div>
                 </div>
