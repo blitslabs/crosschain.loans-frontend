@@ -5,6 +5,41 @@ import ETH from './ETH'
 
 const CrosschainLoans = {
 
+    getReferrals: async (loansContractAddress) => {
+        // Check provider
+        if (!window.ethereum) {
+            return { status: 'ERROR', message: 'No web3 provider detected' }
+        }
+
+        // Enable metamask
+        await window.ethereum.enable()
+
+        // Connect to HTTP Provider
+        const web3 = new Web3(window.ethereum)
+
+        // Get account
+        const accounts = await web3.eth.getAccounts()
+
+        // Instantiate contract
+        const contract = new web3.eth.Contract(ABI.LOANS.abi, loansContractAddress)
+
+        // Get total referrals
+        const totalReferrals = parseInt(await contract.methods.totalReferrals(accounts[0]).call())
+
+        const referrals = []
+
+        // Get all referrals
+        if (totalReferrals > 0) {
+            for (let i = 0; i < totalReferrals; i++) {
+                // Get referral by index
+                const ref = await contract.methods.referrals(accounts[0], i).call()
+                referrals.push(ref)
+            }
+        }
+
+        return referrals
+    },
+
     createLoan: async (secretHashB1, principal, tokenContractAddress, loansContractAddress, aCoinLenderAddress, referrer = '') => {
 
         if (!window.ethereum) {

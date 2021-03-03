@@ -22,7 +22,7 @@ import { fromBech32 } from '@harmony-js/crypto'
 import ReactLoading from 'react-loading'
 import { EXPLORER, NETWORKS, TESTNET_NETWORKS } from '../../../crypto/Networks'
 import queryString from 'query-string'
-import ETH from '../../../crypto/ETH'
+import CrosschainLoans from '../../../crypto/CrosschainLoans'
 
 // Styles
 import '../styles.css'
@@ -37,6 +37,7 @@ import { getAccountLoans, getLockedCollateral } from '../../../utils/api'
 
 class MyLoans extends Component {
     state = {
+        referrals: [],
         loading: true,
     }
 
@@ -47,19 +48,14 @@ class MyLoans extends Component {
     }
 
     loadInitialData = async () => {
-        const { shared, dispatch } = this.props
-
-        console.log(shared?.account)
-        getAccountLoans({ account: shared?.account })
-            .then(data => data.json())
-            .then((res) => {
-                console.log(res)
-                if (res.status === 'OK') {
-                    const loans = { ...res.payload }
-                    dispatch(saveAccountLoans(loans))
-                    this.setState({ loading: false })
-                }
-            })
+        const { shared, protocolContracts, dispatch } = this.props
+        const loansContract = protocolContracts[shared?.networkId].CrosschainLoans.address
+        const referrals = await CrosschainLoans.getReferrals(loansContract)
+        console.log(referrals)
+        this.setState({
+            referrals,
+            loading: false
+        })
     }
 
     saveReferrer = async () => {
@@ -67,8 +63,8 @@ class MyLoans extends Component {
         // Save Referrer
         const params = queryString.parse(location.search)
         if ('rid' in params && params.rif != '') {
-            const addressIsValid = await ETH.isAddressValid(params.rid)             
-            console.log('REFERRER', params.rid)      
+            const addressIsValid = await ETH.isAddressValid(params.rid)
+            console.log('REFERRER', params.rid)
             // Check if rif is valid address
             if (addressIsValid) {
                 dispatch(saveReferrer(params.rid))
@@ -83,10 +79,8 @@ class MyLoans extends Component {
     }
 
     render() {
-        const { loading } = this.state
-        const { shared, accountLoans } = this.props
-        const borrowed = Object.values(accountLoans).filter((l, i) => l?.borrower?.toUpperCase() == shared?.account?.toUpperCase())
-        const lent = Object.values(accountLoans).filter((l, i) => l?.lender?.toUpperCase() == shared?.account?.toUpperCase())
+        const { loading, referrals } = this.state
+        const { shared, protocolContracts } = this.props
 
         return (
             <Fragment>
@@ -99,94 +93,23 @@ class MyLoans extends Component {
                                 <div className="col-sm-12 col-md-12">
 
                                     <div className="mb-2 text-left">
-                                        <div style={{ fontWeight: 'bold', fontSize: '24px', }}>My Loans</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '24px', }}>Referrals</div>
                                         {/* <div style={{ fontSize: '18px', marginTop: '10px' }}>Check account's loans</div> */}
                                     </div>
-                                    <TestnetDataCheckbox />
-
+                                    
                                     <Tabs>
                                         <TabList>
-                                            <Tab>Borrowed</Tab>
-                                            <Tab>Lent</Tab>
+                                            <Tab>My URL</Tab>
+                                            <Tab>Referrals</Tab>
                                         </TabList>
 
-
                                         <TabPanel>
-
-                                            {
-
-                                                (borrowed && Object.values(borrowed).length > 0)
-                                                    ?
-                                                    <div className="table-responsive">
-                                                        <table className="table loanBook table-striped" >
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>Amount</th>
-                                                                    <th>Blockchain</th>
-                                                                    <th>Network</th>
-                                                                    <th>Repayment</th>
-                                                                    <th>Interest</th>
-                                                                    <th>APR</th>
-                                                                    <th>Duration</th>
-                                                                    <th>Lender</th>
-                                                                    <th>Status</th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-                                                                    Object.values(borrowed).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
-                                                                        <tr key={i}>
-                                                                            <td>#{l.id}</td>
-                                                                            <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
-                                                                            <td>{l.blockchain}</td>
-                                                                            <td>{l.networkId}</td>
-                                                                            <td>
-                                                                                {/* <Emoji text="💸" /> */}
-                                                                                {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                            </td>
-                                                                            <td>
-                                                                                {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                            </td>
-                                                                            <td>
-                                                                                <div className="loanBook__apr">
-                                                                                    {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
-                                                                            </div>
-                                                                            </td>
-                                                                            <td>30 days</td>
-                                                                            <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
-                                                                            <td>
-                                                                                <div className="loanBook__apr">
-                                                                                    {
-                                                                                        l.status == 1 ? 'Funded' :
-                                                                                            l.status == 1.5 ? 'Awaiting Approval' :
-                                                                                                l.status == 2 ? 'Approved' :
-                                                                                                    l.status == 3 ? 'Withdrawn' :
-                                                                                                        l.status == 4 ? 'Repaid' :
-                                                                                                            l.status == 5 ? 'PaybackRefunded' :
-                                                                                                                l.status == 6 ? 'Closed' :
-                                                                                                                    l.status == 7 ? 'Canceled' : ''
-                                                                                    }
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <a href={'/app/loan/' + l.id}>Details</a>
-                                                                            </td>
-                                                                        </tr>
-                                                                    ))
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    :
-                                                    loading ? (
-                                                        <div className="loading-table text-center">
-                                                            ⌛ Loading...
-                                                        </div>
-                                                    )
-                                                        : <div className="loading-table text-center">🔍 No loans found</div>
-                                            }
+                                            <div className="row mt-4">
+                                                <div className="col-sm-12 text-center">
+                                                    <div style={{ fontWeight: 'bold', fontSize: 18 }}>Share this link to earn up to 10% of the yield of your referrals</div>
+                                                    <input style={{ borderRadius: '5px', fontSize: '18px' }} className="mt-4" readOnly={true} type='text' value={process.env.SERVER_HOST + '?rid=' + shared?.account} />
+                                                </div>
+                                            </div>
                                         </TabPanel>
 
                                         <TabPanel>
@@ -197,78 +120,36 @@ class MyLoans extends Component {
                                                     </div>
                                                 )
                                                     :
-                                                    lent && Object.values(lent).length > 0
-                                                        ?
-                                                        <div className="table-responsive">
-                                                            <table className="table loanBook table-striped" >
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>ID</th>
-                                                                        <th>Amount</th>
-                                                                        <th>Blockchain</th>
-                                                                        <th>Network</th>
-                                                                        <th>Repayment</th>
-                                                                        <th>Interest</th>
-                                                                        <th>APR</th>
-                                                                        <th>Duration</th>
-                                                                        <th>Lender</th>
-                                                                        <th>Status</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {
-                                                                        Object.values(lent).filter(l => shared?.hide_testnet_data ? !TESTNET_NETWORKS.includes(l?.networkId) : true).map((l, i) => (
+
+                                                    <div className="table-responsive">
+                                                        <table className="table loanBook table-striped" >
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Referral</th>
+                                                                    <th>Network</th>
+                                                                    <th>Loans Contract</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {console.log(referrals)}
+                                                                {
+                                                                    referrals.length > 0
+                                                                        ?
+                                                                        referrals.map((r, i) => (
                                                                             <tr key={i}>
-                                                                                <td>#{l.id}</td>
-                                                                                <td style={{ fontWeight: 'bold' }}>{currencyFormatter.format(l.principal, { code: 'USD', symbol: '' })} {l.tokenSymbol}</td>
-                                                                                <td>{l.blockchain}</td>
-                                                                                <td>{l.networkId}</td>
-                                                                                <td>
-                                                                                    {/* <Emoji text="💸" /> */}
-                                                                                    {currencyFormatter.format((parseFloat(l.principal) + parseFloat(l.interest)), { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {/* <Emoji text="🧃" /> */}
-                                                                                    {currencyFormatter.format(l.interest, { code: 'USD', symbol: '' })} {l.tokenSymbol}
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className="loanBook__apr">
-                                                                                        {parseFloat(BigNumber(l.interest).times(100).div(l.principal).times(12)).toFixed(2)}%
-                                                                                </div>
-                                                                                </td>
-                                                                                <td>30 days</td>
-                                                                                <td><a href={"#"}>{l.lender.substring(0, 4)}...{l.lender.substr(l.lender.length - 4)}</a></td>
-                                                                                <td>
-                                                                                    <div className="loanBook__apr">
-                                                                                        {
-                                                                                            l.status == 1 ? 'Funded' :
-                                                                                                l.status == 1.5 ? 'Awaiting Approval' :
-                                                                                                    l.status == 2 ? 'Approved' :
-                                                                                                        l.status == 3 ? 'Withdrawn' :
-                                                                                                            l.status == 4 ? 'Repaid' :
-                                                                                                                l.status == 5 ? 'PaybackRefunded' :
-                                                                                                                    l.status == 6 ? 'Closed' :
-                                                                                                                        l.status == 7 ? 'Canceled' : ''
-                                                                                        }
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href={'/app/loan/' + l.id}>Details</a>
-                                                                                </td>
+                                                                                <td>#{i}</td>
+                                                                                <td>{r}</td>
+                                                                                <td>{shared?.networkId}</td>
+                                                                                <td>{protocolContracts[shared?.networkId].CrosschainLoans.address}</td>
                                                                             </tr>
                                                                         ))
-                                                                    }
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                        :
-                                                        loading ? (
-                                                            <div className="loading-table text-center">
-                                                                ⌛ Loading...
-                                                            </div>
-                                                        )
-                                                            : <div className="loading-table text-center">🔍 No loans found</div>
+                                                                        :
+                                                                        <div className="loading-table text-center">🔍 No loans found</div>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                             }
                                         </TabPanel>
                                     </Tabs>
@@ -278,17 +159,18 @@ class MyLoans extends Component {
                     </section>
                     <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
                 </div>
-                <Footer/>
+                <Footer />
             </Fragment >
         )
     }
 }
 
 
-function mapStateToProps({ accountLoans, shared }) {
+function mapStateToProps({ accountLoans, shared, protocolContracts }) {
     return {
         accountLoans,
-        shared
+        shared,
+        protocolContracts
     }
 }
 
