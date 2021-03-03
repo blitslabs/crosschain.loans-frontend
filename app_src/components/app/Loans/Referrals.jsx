@@ -144,7 +144,12 @@ class MyLoans extends Component {
                                                                             </tr>
                                                                         ))
                                                                         :
-                                                                        <div className="loading-table text-center">🔍 No loans found</div>
+                                                                        <tr>
+                                                                            <td>-</td>
+                                                                            <td>-</td>
+                                                                            <td>-</td>
+                                                                            <td>-</td>
+                                                                        </tr>
                                                                 }
                                                             </tbody>
                                                         </table>
