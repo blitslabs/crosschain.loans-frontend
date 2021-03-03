@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
-import Web3 from 'web3'
+import { toast } from 'react-toastify'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import { NETWORKS, MAINNET_NETWORKS, ASSET_NETWORKS } from '../../../crypto/Networks'
 
 // Actions
 import { saveSelectedCollateralAsset } from '../../../actions/shared'
@@ -21,7 +22,20 @@ class CollateralModal extends Component {
     handleSaveBtn = (e) => {
         e.preventDefault()
         const { selectedAsset } = this.state
-        const { lockCollateral, toggleModal, dispatch } = this.props
+        const { lockCollateral, toggleModal, dispatch, shared, loanDetails } = this.props
+
+        // Check testnet / mainnet
+        const networkType = MAINNET_NETWORKS.includes(loanDetails?.networkId?.toString()) ? 'mainnet' : 'testnet'
+        
+        // Get selected asset network
+        const selectedAssetNetwork = ASSET_NETWORKS[selectedAsset][networkType]
+
+        // Check if user is connected to the network of the selected asset
+        if(shared?.networkId != selectedAssetNetwork) {            
+            toast.error(`Connect to ${NETWORKS[selectedAssetNetwork]}`, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, });
+            return
+        }
+
         dispatch(saveSelectedCollateralAsset(selectedAsset))
         lockCollateral(selectedAsset)
         toggleModal(false)

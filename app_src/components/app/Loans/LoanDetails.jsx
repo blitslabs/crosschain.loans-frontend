@@ -684,7 +684,7 @@ class LoanDetails extends Component {
                                                 {
                                                     (status == 1 && !loadingBtn) && (
                                                         <button disabled={MAINNET_NETWORKS.includes(networkId?.toString()) != MAINNET_NETWORKS.includes(shared?.networkId?.toString()) ? true : false} onClick={() => this.toggleCollateralModal(true)} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                            {/* <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" /> */}
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
                                                             Lock Collateral
                                                         </button>
                                                     )
@@ -807,9 +807,9 @@ class LoanDetails extends Component {
                                                     (
                                                         status == 1 && !loadingBtn && shared?.account?.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
-                                                        <button onClick={this.handleCancelBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleCancelBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Cancel Loan
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to` } Cancel Loan 
                                                         </button>
                                                     )
                                                 }
@@ -890,6 +890,7 @@ class LoanDetails extends Component {
                         isOpen={showCollateralModal}
                         toggleModal={this.toggleCollateralModal}
                         lockCollateral={this.handleLockCollateralBtn}
+                        loanDetails={loanDetails}
                     />
                 }
 

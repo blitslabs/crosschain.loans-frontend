@@ -19,3 +19,14 @@ export const EXPLORER = {
     '1666600000': 'https://explorer.harmony.one/#/',
     '1666700000': 'https://explorer.testnet.harmony.one/#/'
 }
+
+export const ASSET_NETWORKS = {
+    'ONE': {
+        'mainnet': '1666600000',
+        'testnet': '1666700000'
+    },
+    'BNB': {
+        'mainnet': '56',
+        'testnet': '97'
+    }
+}
