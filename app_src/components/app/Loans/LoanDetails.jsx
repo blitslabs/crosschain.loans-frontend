@@ -692,18 +692,18 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (status == 2 && !loadingBtn && shared?.account?.toUpperCase() == borrower?.toUpperCase()) && (
-                                                        <button onClick={this.handleWithdrawBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleWithdrawBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Withdraw Principal
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Withdraw Principal
                                                         </button>
                                                     )
                                                 }
 
                                                 {
                                                     (status == 3 && !loadingBtn) && (
-                                                        <button onClick={this.handleRepayBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleRepayBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Repay Loan
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Repay Loan
                                                         </button>
                                                     )
                                                 }
@@ -715,9 +715,9 @@ class LoanDetails extends Component {
                                                         shared?.account?.toUpperCase() == lender?.toUpperCase() &&
                                                         parseInt(acceptExpiration) > Math.floor(Date.now() / 1000)
                                                     ) && (
-                                                        <button onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleAcceptRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Accept Repayment
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Accept Repayment
                                                         </button>
                                                     )
                                                 }
@@ -747,9 +747,9 @@ class LoanDetails extends Component {
 
                                                 {
                                                     ((status == 6 || status == 7) && !loadingBtn && collateralStatus === 'Locked' && shared?.account?.toUpperCase() == collateralLock.borrower?.toUpperCase()) && (
-                                                        <button onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
-                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
-                                                            Unlock Collateral
+                                                        <button disabled={collateralLock?.networkId != shared?.networkId ? true : false} onClick={this.handleUnlockCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                            <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
+                                                            {collateralLock?.networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Unlock Collateral
                                                         </button>
                                                     )
                                                 }
@@ -776,9 +776,9 @@ class LoanDetails extends Component {
                                                     (
                                                         (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account?.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
-                                                        <button onClick={this.handleApproveBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleApproveBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Approve Loan
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Approve Loan
                                                         </button>
                                                     )
                                                 }
@@ -809,7 +809,7 @@ class LoanDetails extends Component {
                                                     ) && (
                                                         <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleCancelBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to` } Cancel Loan 
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Cancel Loan
                                                         </button>
                                                     )
                                                 }
