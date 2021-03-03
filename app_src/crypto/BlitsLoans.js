@@ -226,7 +226,7 @@ const BlitsLoans = {
             try {
                 const tx = await contract.methods.setBorrowerAndApprove(
                     loanId, borrower, secretHashA1
-                ).send({ from: lender })
+                ).send({ from: lender, gasLimit: 200000 })
 
                 return { status: 'OK', payload: tx }
             } catch (e) {
