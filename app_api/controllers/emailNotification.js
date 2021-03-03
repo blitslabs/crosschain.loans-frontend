@@ -141,7 +141,7 @@ module.exports.sendLoanCreatedEmailNotification = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -211,7 +211,7 @@ module.exports.sendLoanCanceled = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -290,7 +290,7 @@ module.exports.sendCollateralLocked = async (collateralLockId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id,
         collateral: {
             secretHashA1: collateralLock.secretHashA1,
@@ -405,7 +405,7 @@ module.exports.sendLoanApproved = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -507,7 +507,7 @@ module.exports.sendPrincipalWithdrawn = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -610,7 +610,7 @@ module.exports.sendPayback = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -711,7 +711,7 @@ module.exports.sendPaybackAccepted = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -812,7 +812,7 @@ module.exports.sendPaybackRefunded = async (loanId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -922,7 +922,7 @@ module.exports.sendCollateralSeized = async (collateralLockId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id
     }
 
@@ -1023,7 +1023,7 @@ module.exports.sendCollateralUnlocked = async (collateralLockId) => {
         loansContract: `${loan.loansContractAddress.substring(0, 8)}...${loan.loansContractAddress.substring(loan.loansContractAddress.length - 8)}`,
         blockchain: loan.blockchain,
         networkId: loan.networkId,
-        allowedCollateral: 'ONE',
+        allowedCollateral: 'ONE | BNB',
         loanId: loan.id,
         collateral: {
             secretHashA1: collateralLock.secretHashA1,

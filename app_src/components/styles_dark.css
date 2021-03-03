@@ -561,3 +561,7 @@ a {
 .brand__name {
     color: #818992 !important;
 }
+
+.description-text{
+    color: white;
+}

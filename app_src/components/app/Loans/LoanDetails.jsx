@@ -797,7 +797,7 @@ class LoanDetails extends Component {
                                                     (
                                                         (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account.toUpperCase() == lender?.toUpperCase()
                                                     ) && (
-                                                        <div className="text-left mt-4 mb-4" style={{ color: 'black' }}>
+                                                        <div className="text-left mt-4 mb-4" className="description-text" style={{ marginTop: '10px' }}>
                                                             Approve the loan if the Borrower Locked enough Collateral. We will notify him once it is approved so he can withdraw the principal.
                                                         </div>
                                                     )
