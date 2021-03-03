@@ -162,7 +162,7 @@ class SupportedNetworks extends Component {
                             </div>
                         </div>
                     </section>
-                    <img src='http://localhost:3000/assets/images/abs_2_1.png' className="abstract_img_1" />
+                    <img src={process.env.SERVER_HOST + '/assets/images/abs_2_1.png'} className="abstract_img_1" />
                 </div>
                 <Footer/>
             </Fragment>

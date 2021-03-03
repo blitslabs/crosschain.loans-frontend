@@ -738,7 +738,7 @@ class LoanDetails extends Component {
 
                                                 {
                                                     (status == 4 && !loadingBtn && shared?.account?.toUpperCase() != lender?.toUpperCase()) && (
-                                                        <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
+                                                        <div className="text-left mt-2 mb-4" className="description-text">
                                                             Awaiting for the Lender to accept the payback. Once it's accepted you'll be able to unlock your collateral.
                                                             If the payback is not accepted before the expiration, then you'll be able to refund your payback and unlock your refundable collateral.
                                                         </div>
@@ -787,7 +787,7 @@ class LoanDetails extends Component {
                                                     (
                                                         (status == 1 || status == 1.5) && collateralStatus === 'Locked' && !loadingBtn && shared?.account.toUpperCase() != lender?.toUpperCase()
                                                     ) && (
-                                                        <div className="text-left mt-2 mb-4" style={{ color: 'black' }}>
+                                                        <div className="text-left mt-4 mb-4" className="description-text">
                                                             Please wait while the lender approves the loan. We will notify you once it is approved. You are one step away from withdrawing the loan's principal.
                                                         </div>
                                                     )
