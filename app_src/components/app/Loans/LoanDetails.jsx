@@ -729,9 +729,9 @@ class LoanDetails extends Component {
                                                         shared?.account?.toUpperCase() == lender?.toUpperCase() &&
                                                         parseInt(acceptExpiration) < Math.floor(Date.now() / 1000)
                                                     ) && (
-                                                        <button onClick={this.handleRefundRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={networkId != shared?.networkId ? true : false} onClick={this.handleRefundRepaymentBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/metamask_logo.png'} alt="" />
-                                                            Refund Payback
+                                                            {networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Refund Payback
                                                         </button>
                                                     )
                                                 }
@@ -765,9 +765,9 @@ class LoanDetails extends Component {
                                                         collateralStatus === 'Locked' &&
                                                         parseInt(status) >= 3
                                                     ) && (
-                                                        <button onClick={this.handleSeizeCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
+                                                        <button disabled={collateralLock?.networkId != shared?.networkId ? true : false} onClick={this.handleSeizeCollateralBtn} className="btn btn-blits mt-4" style={{ width: '100%' }}>
                                                             <img className="metamask-btn-img" src={process.env.SERVER_HOST + '/assets/images/one_logo.png'} alt="" />
-                                                            Seize Collateral
+                                                            {collateralLock?.networkId != shared?.networkId && `CONNECT ${NETWORKS[networkId]} to`} Seize Collateral
                                                         </button>
                                                     )
                                                 }
