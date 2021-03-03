@@ -38,15 +38,29 @@ global.APP_ROOT = path.resolve(__dirname)
 const { CronJob } = require('cron')
 const rp = require('request-promise')
 
-const matching_engine = new CronJob('*/30 * * * * *', async function () {
-    await rp(process.env.API_LOCALHOST + 'engine/match/pending')
-    console.log('Matching Engine Activated...')
-})
+// const matching_engine = new CronJob('*/30 * * * * *', async function () {
+//     await rp(process.env.API_LOCALHOST + 'engine/match/pending')
+//     console.log('Matching Engine Activated...')
+// })
 
-const oracle = new CronJob('0 * * * *', async function () {
-    await rp(process.env.API_LOCALHOST + 'oracle/ONE/mainnet')
-    await rp(process.env.API_LOCALHOST + 'oracle/ONE/testnet')
-    console.log('Testnet Oracle prices updated...')
+// Update oracle prices
+// 0 */12 * * * => every 12 hours
+// 0 0 * * * => every 24 hours
+// * * * * * => every minute
+const oracle = new CronJob('0 0 * * *', async function () {
+    const options_1 = { method: 'PUT', headers: { 'Content-Type': 'application/json' }, json: true }
+    // Mainnet
+    // Harmony Mainnet
+    // await rp(process.env.API_LOCALHOST + 'oracle/1666600000', options_1)
+    // BSC Mainnet
+    // await rp(process.env.API_LOCALHOST + 'oracle/56', options_1)
+    
+    // Testnet
+    // Harmony Testnet
+    await rp(process.env.API_LOCALHOST + 'oracle/1666700000', options_1)
+    // BSC Testnet
+    await rp(process.env.API_LOCALHOST + 'oracle/97', options_1)
+    console.log('Oracle prices updated...')
 })
 
 const sync_eth_loans = new CronJob('*/5 * * * *', async function () {
@@ -69,10 +83,10 @@ app.use((err, req, res, next) => {
 })
 
 app.set('port', process.env.PORT || 3000)
-app.listen(app.get('port'), function() {
+app.listen(app.get('port'), function () {
     console.log('Listening on port ' + app.get('port'))
     // matching_engine.start()
-    // oracle.start()
+    oracle.start()
     // sync_eth_loans.start()
 })
 

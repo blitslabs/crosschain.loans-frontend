@@ -49,7 +49,8 @@ router.post('/notification/email', emailNotification.saveEmailNotificationAccoun
 router.get('/emailNotification/test', emailNotification.test)
 
 // Price Oracles
-router.get('/oracle/ONE/:network', oracle.updateAggregatorPrice_ONE)
+// router.get('/oracle/ONE/:network', oracle.updateAggregatorPrice_ONE)
+router.put('/oracle/:networkId', oracle.updateAggregatorPrice)
 
 // Cronjobs
 router.get('/sync/ETH/loans/:network', cronjob.confirmLoanOperations_ETH)
