@@ -106,8 +106,8 @@ class MyLoans extends Component {
                                         <TabPanel>
                                             <div className="row mt-4">
                                                 <div className="col-sm-12 text-center">
-                                                    <div style={{ fontWeight: 'bold', fontSize: 18 }}>Share this link to earn up to 10% of the yield of your referrals</div>
-                                                    <input style={{ borderRadius: '5px', fontSize: '18px' }} className="mt-4" readOnly={true} type='text' value={process.env.SERVER_HOST + '?rid=' + shared?.account} />
+                                                    <div className="mt-5" style={{ fontWeight: 'bold', fontSize: 18 }}>Share this link to earn up to 10% of the yield of your referrals</div>
+                                                    <input style={{ borderRadius: '5px', fontSize: '18px' }} className="mt-4" readOnly={true} type='text' value={process.env.SERVER_HOST + '/app/lend?rid=' + shared?.account} />
                                                 </div>
                                             </div>
                                         </TabPanel>
@@ -131,8 +131,7 @@ class MyLoans extends Component {
                                                                     <th>Loans Contract</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-                                                                {console.log(referrals)}
+                                                            <tbody>                                                               
                                                                 {
                                                                     referrals.length > 0
                                                                         ?
