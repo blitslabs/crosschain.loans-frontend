@@ -57,9 +57,9 @@ const oracle = new CronJob('0 0 * * *', async function () {
     
     // Testnet
     // Harmony Testnet
-    await rp(process.env.API_LOCALHOST + 'oracle/1666700000', options_1)
+    await rp(process.env.API_HOST + 'oracle/1666700000', options_1)
     // BSC Testnet
-    await rp(process.env.API_LOCALHOST + 'oracle/97', options_1)
+    await rp(process.env.API_HOST + 'oracle/97', options_1)
     console.log('Oracle prices updated...')
 })
 
